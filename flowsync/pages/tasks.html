@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FlowSync - 任务</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: '#d97757',
+            'brand-hover': '#c46a4c',
+            dark: '#1b1b19',
+            'dark-mid': '#262624',
+            card: '#2c2c2b',
+            text: '#faf9f5',
+            muted: '#b7b5a9',
+            success: '#8ca06f',
+            border: '#908e84',
+          },
+          fontFamily: {
+            sans: ['"Noto Sans SC"', 'sans-serif'],
+          },
+        }
+      }
+    }
+  </script>
+  <style>
+    :root {
+      --brand: #d97757;
+      --brand-hover: #c46a4c;
+      --dark: #1b1b19;
+      --dark-mid: #262624;
+      --card: #2c2c2b;
+      --text: #faf9f5;
+      --muted: #b7b5a9;
+      --success: #8ca06f;
+      --border: #908e84;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Noto Sans SC', sans-serif;
+      background-color: var(--dark);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .phone-frame {
+      max-width: 430px;
+      width: 100%;
+      min-height: 100vh;
+      position: relative;
+      padding-bottom: 40px;
+    }
+
+    .task-card:active {
+      transform: scale(0.98);
+      transition: transform 0.1s ease;
+    }
+
+    .fab:active {
+      transform: scale(0.92);
+      transition: transform 0.1s ease;
+    }
+
+    .tab-btn {
+      transition: color 0.2s ease;
+      position: relative;
+    }
+
+    .tab-btn.active::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60%;
+      height: 2px;
+      background-color: var(--brand);
+      border-radius: 1px;
+    }
+
+    .gesture-bar {
+      width: 134px;
+      height: 5px;
+      border-radius: 100px;
+      background: rgba(255,255,255,0.2);
+      margin: 0 auto;
+    }
+  </style>
+</head>
+<body>
+  <div class="phone-frame">
+
+    <!-- Top Bar -->
+    <div class="flex items-center justify-between px-5 pt-4">
+      <button data-dom-id="back-home" class="w-9 h-9 flex items-center justify-center rounded-full hover:bg-dark-mid active:bg-dark-mid/80 transition-colors">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-text">
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+      </button>
+      <span class="text-sm font-semibold text-text">任务</span>
+      <div class="w-9 h-9"></div>
+    </div>
+
+    <!-- Concept Image -->
+    <div class="px-5 mt-4">
+      <div class="rounded-2xl overflow-hidden">
+        <img src="../assets/android-tasks.jpg" alt="任务管理" class="w-full h-auto object-cover" />
+      </div>
+    </div>
+
+    <!-- Segmented Filter -->
+    <div class="px-5 mt-6">
+      <div class="bg-card rounded-full flex items-center justify-between px-1 py-1.5">
+        <button class="tab-btn active flex-1 text-center py-2 text-sm font-medium text-text rounded-full transition-colors">
+          全部
+        </button>
+        <button class="tab-btn flex-1 text-center py-2 text-sm font-medium text-muted rounded-full transition-colors hover:text-text">
+          今天
+        </button>
+        <button class="tab-btn flex-1 text-center py-2 text-sm font-medium text-muted rounded-full transition-colors hover:text-text">
+          本周
+        </button>
+      </div>
+    </div>
+
+    <!-- Task List -->
+    <div class="px-5 mt-4 flex flex-col gap-3">
+
+      <!-- Task 1: High Priority -->
+      <div class="task-card bg-card rounded-xl p-4 flex items-center gap-3 cursor-pointer transition-shadow hover:shadow-lg hover:shadow-black/20">
+        <div class="w-2 h-2 rounded-full bg-brand shrink-0" style="width:8px;height:8px;"></div>
+        <div class="flex-1 min-w-0">
+          <p class="text-sm font-medium text-text truncate">完成产品方案初稿</p>
+        </div>
+        <span class="text-xs text-muted shrink-0">今天 18:00</span>
+      </div>
+
+      <!-- Task 2: Normal Priority -->
+      <div class="task-card bg-card rounded-xl p-4 flex items-center gap-3 cursor-pointer transition-shadow hover:shadow-lg hover:shadow-black/20">
+        <div class="w-2 h-2 rounded-full bg-success shrink-0" style="width:8px;height:8px;"></div>
+        <div class="flex-1 min-w-0">
+          <p class="text-sm text-text truncate">回复客户邮件</p>
+        </div>
+        <span class="text-xs text-muted shrink-0">明天</span>
+      </div>
+
+      <!-- Task 3: Low Priority -->
+      <div class="task-card bg-card rounded-xl p-4 flex items-center gap-3 cursor-pointer transition-shadow hover:shadow-lg hover:shadow-black/20">
+        <div class="w-2 h-2 rounded-full bg-muted shrink-0" style="width:8px;height:8px;"></div>
+        <div class="flex-1 min-w-0">
+          <p class="text-sm text-text truncate">整理会议笔记</p>
+        </div>
+        <span class="text-xs text-muted shrink-0">本周</span>
+      </div>
+
+      <!-- Task 4: Normal Priority -->
+      <div class="task-card bg-card rounded-xl p-4 flex items-center gap-3 cursor-pointer transition-shadow hover:shadow-lg hover:shadow-black/20">
+        <div class="w-2 h-2 rounded-full bg-success shrink-0" style="width:8px;height:8px;"></div>
+        <div class="flex-1 min-w-0">
+          <p class="text-sm text-text truncate">更新设计稿</p>
+        </div>
+        <span class="text-xs text-muted shrink-0">后天</span>
+      </div>
+
+    </div>
+
+    <!-- Empty State Hint -->
+    <div class="flex justify-center mt-6">
+      <span class="text-xs text-muted/50">向下滑动查看更多任务</span>
+    </div>
+
+    <!-- Floating Add Button -->
+    <button data-dom-id="cta-voice-input" class="fab fixed w-14 h-14 rounded-full bg-brand shadow-lg flex items-center justify-center transition-transform z-50" style="bottom:60px;right:max(20px, calc((100vw - 430px)/2 + 20px));box-shadow:0 10px 25px rgba(217,119,87,0.25);">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="12" y1="5" x2="12" y2="19"></line>
+        <line x1="5" y1="12" x2="19" y2="12"></line>
+      </svg>
+    </button>
+
+    <!-- Android Gesture Bar -->
+    <div class="fixed bottom-2 left-1/2 -translate-x-1/2 z-40" style="left:max(calc((100vw - 430px)/2 + 50%), calc(50% - 67px));">
+      <div class="gesture-bar"></div>
+    </div>
+
+  </div>
+
+  <script>
+    // Segmented tab switching
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => {
+          b.classList.remove('active');
+          b.classList.remove('text-text');
+          b.classList.add('text-muted');
+        });
+        btn.classList.add('active');
+        btn.classList.remove('text-muted');
+        btn.classList.add('text-text');
+      });
+    });
+  </script>
+</body>
+</html>

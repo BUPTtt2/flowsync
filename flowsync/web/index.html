@@ -1,0 +1,1293 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FlowSync - 给 P 型人格的 AI 任务伙伴</title>
+<meta name="description" content="FlowSync 用语音输入、情绪感知和沉浸式聚焦，帮 P 型人格创意工作者告别启动困难与决策疲劳。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&family=Noto+Serif+SC:wght@400;600;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --paper: #faf8f5;
+  --paper-warm: #fdfbf7;
+  --paper-muted: #a8a69d;
+  --paper-dim: #c5c3ba;
+  --ink: #242422;
+  --ink-soft: #3a3a38;
+  --ink-light: #5a5a58;
+  
+  --terracotta: #d97757;
+  --terracotta-deep: #b85c3e;
+  --terracotta-soft: rgba(217, 119, 87, 0.08);
+  --terracotta-warm: rgba(217, 119, 87, 0.12);
+  
+  --moss: #7a8c5e;
+  --moss-soft: rgba(122, 140, 94, 0.08);
+  
+  --ochre: #c89968;
+  --ochre-soft: rgba(200, 153, 104, 0.08);
+  
+  --line: rgba(168, 166, 157, 0.25);
+  --line-soft: rgba(168, 166, 157, 0.12);
+  
+  --font: 'Noto Sans SC', system-ui, sans-serif;
+  --serif: 'Noto Serif SC', 'Songti SC', serif;
+  --mono: 'JetBrains Mono', monospace;
+  
+  --max: 1400px;
+  --gut: clamp(1.5rem, 4vw, 3.5rem);
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body {
+  font-family: var(--font);
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--ink);
+  background-color: var(--paper-warm);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+img { display: block; max-width: 100%; height: auto; }
+a { text-decoration: none; color: inherit; }
+button { border: none; cursor: pointer; font-family: inherit; background: none; }
+
+::selection { background: var(--terracotta); color: var(--paper); }
+
+[hidden] { display: none !important; }
+
+/* ============================================
+   MOTION
+   ============================================ */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 1s var(--ease), transform 1s var(--ease);
+  will-change: opacity, transform;
+}
+[data-reveal].is-in {
+  opacity: 1;
+  transform: none;
+}
+
+[data-stagger] > * {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.8s var(--ease), transform 0.8s var(--ease);
+}
+[data-stagger].is-in > * { opacity: 1; transform: none; }
+[data-stagger].is-in > *:nth-child(1) { transition-delay: 0.08s; }
+[data-stagger].is-in > *:nth-child(2) { transition-delay: 0.16s; }
+[data-stagger].is-in > *:nth-child(3) { transition-delay: 0.24s; }
+[data-stagger].is-in > *:nth-child(4) { transition-delay: 0.32s; }
+
+@keyframes breathe {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(1.05); }
+}
+@keyframes pulse-soft {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(217, 119, 87, 0); }
+  50% { box-shadow: 0 0 0 12px rgba(217, 119, 87, 0.08); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+  [data-reveal], [data-stagger] > * {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* ============================================
+   NAV
+   ============================================ */
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  padding: 0 var(--gut);
+  background: rgba(253, 251, 247, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--line-soft);
+}
+.nav__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: var(--max);
+  margin: 0 auto;
+}
+.nav__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+}
+.nav__brand-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--terracotta);
+}
+.nav__links {
+  display: flex;
+  align-items: center;
+  gap: 2.5rem;
+  list-style: none;
+}
+.nav__links a {
+  font-size: 0.9rem;
+  color: var(--ink-light);
+  transition: color 0.25s ease;
+}
+.nav__links a:hover { color: var(--ink); }
+.nav__cta {
+  padding: 0.65rem 1.5rem;
+  background: var(--ink);
+  color: var(--paper);
+  font-size: 0.9rem;
+  font-weight: 500;
+  border-radius: 999px;
+  transition: all 0.25s ease;
+}
+.nav__cta:hover { background: var(--ink-soft); }
+.nav__hamburger { display: none; }
+
+@media (max-width: 768px) {
+  .nav__links { display: none; }
+  .nav__hamburger {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 4px;
+  }
+  .nav__hamburger span {
+    display: block;
+    width: 22px; height: 2px;
+    background: var(--ink);
+    border-radius: 2px;
+  }
+}
+
+/* ============================================
+   HERO
+   ============================================ */
+.hero {
+  min-height: 92dvh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 var(--gut) clamp(6rem, 12vw, 10rem);
+  position: relative;
+  background: linear-gradient(180deg, var(--paper) 0%, var(--paper-warm) 100%);
+}
+.hero__inner {
+  max-width: var(--max);
+  margin: 0 auto;
+  width: 100%;
+}
+.hero__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--terracotta);
+  background: var(--terracotta-soft);
+  padding: 0.45rem 1rem;
+  border-radius: 999px;
+  margin-bottom: 2.5rem;
+  letter-spacing: 0.02em;
+}
+.hero__title {
+  font-family: var(--serif);
+  font-size: clamp(3rem, 7vw, 5.5rem);
+  font-weight: 900;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+  max-width: 14ch;
+  margin-bottom: 1.75rem;
+}
+.hero__title span {
+  color: var(--terracotta);
+  position: relative;
+}
+.hero__title span::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0;
+  bottom: 0.08em;
+  height: 0.1em;
+  background: var(--terracotta);
+  opacity: 0.25;
+  filter: blur(8px);
+}
+.hero__sub {
+  font-size: clamp(1.06rem, 1.6vw, 1.3rem);
+  font-weight: 300;
+  color: var(--ink-light);
+  line-height: 1.8;
+  max-width: 42ch;
+  margin-bottom: 3rem;
+}
+.hero__actions {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+}
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem 1.75rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-radius: 999px;
+  transition: all 0.25s ease;
+}
+.btn--primary {
+  background: var(--terracotta);
+  color: var(--paper);
+  animation: pulse-soft 4s ease-in-out infinite;
+}
+.btn--primary:hover { background: var(--terracotta-deep); }
+.btn--ghost {
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--line);
+}
+.btn--ghost:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.btn__arrow { transition: transform 0.25s ease; }
+.btn:hover .btn__arrow { transform: translateX(4px); }
+
+/* ============================================
+   COMPARE (核心交互 - 拖拽对比)
+   ============================================ */
+.compare {
+  padding: clamp(6rem, 12vw, 10rem) 0;
+  background: var(--paper);
+}
+.compare__inner {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0 var(--gut);
+}
+.compare__head {
+  text-align: center;
+  margin-bottom: clamp(4rem, 8vw, 7rem);
+}
+.compare__eyebrow {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--terracotta);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-bottom: 1.25rem;
+}
+.compare__title {
+  font-family: var(--serif);
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-weight: 700;
+  line-height: 1.15;
+  color: var(--ink);
+  max-width: 22ch;
+  margin: 0 auto 1.25rem;
+}
+.compare__sub {
+  font-size: 1.06rem;
+  font-weight: 300;
+  color: var(--ink-light);
+  max-width: 48ch;
+  margin: 0 auto;
+}
+
+.compare__wrapper {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 24px 64px rgba(36, 36, 34, 0.08);
+}
+.compare__container {
+  position: relative;
+  display: flex;
+  overflow: hidden;
+}
+.compare__panel {
+  flex: 1;
+  min-width: 0;
+  position: relative;
+}
+.compare__panel--before {
+  background: linear-gradient(180deg, #f5f3ef 0%, #edebe6 100%);
+}
+.compare__panel--after {
+  background: linear-gradient(180deg, var(--paper) 0%, var(--paper-warm) 100%);
+}
+.compare__panel-inner {
+  padding: clamp(2rem, 4vw, 3.5rem);
+  height: 580px;
+  display: flex;
+  flex-direction: column;
+}
+
+.compare__label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-bottom: 2rem;
+}
+.compare__panel--before .compare__label { color: #9a9890; }
+.compare__panel--after .compare__label { color: var(--terracotta); }
+
+.compare__content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Before 状态：混乱 */
+.compare__task-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.compare__task {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  background: rgba(255,255,255,0.6);
+  border-radius: 8px;
+  border: 1px solid rgba(168, 166, 157, 0.2);
+  transition: all 0.25s ease;
+}
+.compare__panel--before .compare__task {
+  opacity: 0.9;
+}
+.compare__panel--before .compare__task:nth-child(odd) { margin-left: 8px; }
+.compare__panel--before .compare__task:nth-child(even) { margin-left: -4px; }
+.compare__panel--before .compare__task:nth-child(3n) { margin-left: 12px; }
+.compare__panel--before .compare__task:nth-child(4n) { margin-left: -8px; }
+
+.compare__task-check {
+  width: 18px; height: 18px;
+  border: 1.5px solid #c5c3ba;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+.compare__panel--before .compare__task-check { border-color: #d4d2ca; }
+
+.compare__task-title {
+  font-size: 0.95rem;
+  color: #6b6962;
+  flex: 1;
+}
+.compare__panel--before .compare__task-title { color: #7a7870; }
+
+.compare__task-meta {
+  font-size: 0.75rem;
+  color: #a8a69d;
+  font-family: var(--mono);
+}
+.compare__panel--before .compare__task-meta { color: #b8b6ad; }
+
+.compare__overload {
+  margin-top: 24px;
+  padding: 16px;
+  background: rgba(217, 119, 87, 0.08);
+  border-radius: 8px;
+  border-left: 3px solid rgba(217, 119, 87, 0.4);
+}
+.compare__overload-text {
+  font-size: 0.85rem;
+  color: #8a6550;
+  line-height: 1.6;
+}
+
+/* After 状态：有序 */
+.compare__panel--after .compare__task {
+  background: rgba(255,255,255,0.85);
+  border-color: rgba(217, 119, 87, 0.15);
+}
+.compare__panel--after .compare__task-check {
+  border-color: var(--terracotta);
+}
+.compare__panel--after .compare__task-check.done {
+  background: var(--terracotta);
+}
+.compare__panel--after .compare__task-check.done::after {
+  content: '';
+  display: block;
+  width: 6px; height: 6px;
+  background: var(--paper);
+  border-radius: 50%;
+  margin: 4px auto;
+}
+.compare__panel--after .compare__task-title {
+  color: var(--ink);
+}
+.compare__panel--after .compare__task-title.done {
+  color: var(--paper-muted);
+  text-decoration: line-through;
+}
+.compare__panel--after .compare__task-meta {
+  color: var(--paper-muted);
+}
+
+.compare__priority {
+  display: inline-block;
+  padding: 2px 8px;
+  font-size: 0.7rem;
+  font-weight: 500;
+  border-radius: 4px;
+}
+.compare__priority--high {
+  background: rgba(217, 119, 87, 0.12);
+  color: var(--terracotta);
+}
+.compare__priority--medium {
+  background: rgba(200, 153, 104, 0.12);
+  color: var(--ochre);
+}
+.compare__priority--low {
+  background: rgba(122, 140, 94, 0.12);
+  color: var(--moss);
+}
+
+.compare__energy-bar {
+  margin-top: 20px;
+}
+.compare__energy-label {
+  font-size: 0.8rem;
+  color: var(--paper-muted);
+  margin-bottom: 8px;
+}
+.compare__energy-track {
+  height: 6px;
+  background: rgba(168, 166, 157, 0.2);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.compare__energy-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--ochre) 0%, var(--terracotta) 100%);
+  border-radius: 3px;
+  width: 65%;
+}
+
+.compare__ai-tip {
+  margin-top: 16px;
+  padding: 14px;
+  background: rgba(122, 140, 94, 0.08);
+  border-radius: 8px;
+}
+.compare__ai-tip-text {
+  font-size: 0.85rem;
+  color: var(--moss);
+  line-height: 1.6;
+}
+
+/* 分界线 */
+.compare__divider {
+  position: absolute;
+  top: 0; bottom: 0;
+  width: 4px;
+  background: var(--terracotta);
+  cursor: col-resize;
+  z-index: 20;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.compare__divider::before,
+.compare__divider::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--terracotta);
+}
+.compare__divider::before {
+  top: 20px;
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.compare__divider::after {
+  bottom: 20px;
+  width: 32px; height: 32px;
+  border-radius: 50%;
+}
+.compare__divider-handle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 48px; height: 48px;
+  background: var(--terracotta);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 20px rgba(217, 119, 87, 0.35);
+}
+.compare__divider-handle svg {
+  width: 18px; height: 18px;
+  fill: none;
+  stroke: var(--paper);
+  stroke-width: 2;
+}
+
+.compare__hint {
+  text-align: center;
+  margin-top: 1.5rem;
+  font-size: 0.85rem;
+  color: var(--paper-muted);
+}
+
+/* ============================================
+   FEATURES
+   ============================================ */
+.features {
+  padding: clamp(6rem, 12vw, 10rem) 0;
+  background: var(--paper-warm);
+}
+.features__inner {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0 var(--gut);
+}
+.features__head {
+  text-align: center;
+  margin-bottom: clamp(5rem, 10vw, 8rem);
+}
+.features__eyebrow {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--terracotta);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-bottom: 1.25rem;
+}
+.features__title {
+  font-family: var(--serif);
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-weight: 700;
+  line-height: 1.15;
+  color: var(--ink);
+  max-width: 24ch;
+  margin: 0 auto 1.25rem;
+}
+
+.features__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(2rem, 4vw, 3.5rem);
+}
+
+.feature-card {
+  padding: clamp(2rem, 3vw, 2.75rem);
+  background: var(--paper);
+  border-radius: 12px;
+  border: 1px solid var(--line-soft);
+  transition: all 0.3s var(--ease);
+}
+.feature-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 48px rgba(36, 36, 34, 0.06);
+}
+.feature-card__icon {
+  width: 48px; height: 48px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+.feature-card__icon--orange { background: var(--terracotta-soft); }
+.feature-card__icon--green { background: var(--moss-soft); }
+.feature-card__icon--yellow { background: var(--ochre-soft); }
+.feature-card__icon svg {
+  width: 22px; height: 22px;
+  fill: none;
+  stroke-width: 2;
+}
+.feature-card__icon--orange svg { stroke: var(--terracotta); }
+.feature-card__icon--green svg { stroke: var(--moss); }
+.feature-card__icon--yellow svg { stroke: var(--ochre); }
+
+.feature-card__title {
+  font-family: var(--serif);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 0.75rem;
+}
+.feature-card__desc {
+  font-size: 0.95rem;
+  color: var(--ink-light);
+  line-height: 1.7;
+}
+
+.feature-card__steps {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.feature-card__step {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.85rem;
+  color: var(--ink-light);
+}
+.feature-card__step-num {
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: var(--terracotta-soft);
+  color: var(--terracotta);
+  font-size: 0.7rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (max-width: 1024px) {
+  .features__grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 640px) {
+  .features__grid { grid-template-columns: 1fr; }
+}
+
+/* ============================================
+   DEMO
+   ============================================ */
+.demo {
+  padding: clamp(6rem, 12vw, 10rem) 0;
+  background: var(--paper);
+}
+.demo__inner {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0 var(--gut);
+}
+.demo__head {
+  text-align: center;
+  margin-bottom: clamp(4rem, 8vw, 6rem);
+}
+.demo__title {
+  font-family: var(--serif);
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-weight: 700;
+  line-height: 1.15;
+  color: var(--ink);
+  max-width: 20ch;
+  margin: 0 auto 1.25rem;
+}
+.demo__sub {
+  font-size: 1.06rem;
+  font-weight: 300;
+  color: var(--ink-light);
+  max-width: 48ch;
+  margin: 0 auto;
+}
+
+.demo__mockup {
+  position: relative;
+  max-width: 360px;
+  margin: 0 auto;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 32px 80px rgba(36, 36, 34, 0.12);
+  border: 8px solid var(--ink);
+}
+.demo__mockup-screen {
+  background: var(--paper-warm);
+  padding: 16px;
+}
+.demo__mockup-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.demo__mockup-logo {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+.demo__mockup-avatar {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: var(--terracotta);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--paper);
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.demo__mockup-task {
+  background: rgba(255,255,255,0.8);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 16px;
+  border: 1px solid var(--line-soft);
+}
+.demo__mockup-task-title {
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 12px;
+}
+.demo__mockup-task-meta {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.demo__mockup-chip {
+  font-size: 0.7rem;
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+.demo__mockup-chip--high {
+  background: var(--terracotta-soft);
+  color: var(--terracotta);
+}
+.demo__mockup-chip--time {
+  background: var(--ochre-soft);
+  color: var(--ochre);
+}
+
+.demo__mockup-subtasks {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.demo__mockup-subtask {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.demo__mockup-check {
+  width: 16px; height: 16px;
+  border: 1.5px solid var(--line);
+  border-radius: 4px;
+}
+.demo__mockup-check.done {
+  background: var(--moss);
+  border-color: var(--moss);
+}
+.demo__mockup-check.done::after {
+  content: '';
+  display: block;
+  width: 5px; height: 5px;
+  background: var(--paper);
+  border-radius: 50%;
+  margin: 3px auto;
+}
+.demo__mockup-subtask-text {
+  font-size: 0.85rem;
+  color: var(--ink-light);
+}
+.demo__mockup-subtask-text.done {
+  color: var(--paper-muted);
+  text-decoration: line-through;
+}
+
+.demo__mockup-progress {
+  margin-top: 16px;
+}
+.demo__mockup-progress-label {
+  font-size: 0.75rem;
+  color: var(--paper-muted);
+  margin-bottom: 6px;
+}
+.demo__mockup-progress-bar {
+  height: 4px;
+  background: var(--line-soft);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.demo__mockup-progress-fill {
+  height: 100%;
+  background: var(--moss);
+  width: 60%;
+}
+
+.demo__mockup-energy {
+  display: flex;
+  gap: 6px;
+  margin-top: 16px;
+}
+.demo__mockup-energy-cell {
+  flex: 1;
+  height: 8px;
+  border-radius: 4px;
+  background: var(--line-soft);
+}
+.demo__mockup-energy-cell:nth-child(1),
+.demo__mockup-energy-cell:nth-child(2),
+.demo__mockup-energy-cell:nth-child(3) {
+  background: var(--terracotta);
+}
+
+/* ============================================
+   CTA
+   ============================================ */
+.cta {
+  padding: clamp(6rem, 12vw, 10rem) 0;
+  background: var(--ink);
+  color: var(--paper);
+}
+.cta__inner {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0 var(--gut);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.cta__title {
+  font-family: var(--serif);
+  font-size: clamp(2.25rem, 5vw, 4rem);
+  font-weight: 900;
+  line-height: 1.1;
+  color: var(--paper);
+  max-width: 16ch;
+  margin-bottom: 1.5rem;
+}
+.cta__sub {
+  font-size: 1.1rem;
+  font-weight: 300;
+  color: rgba(255,255,255,0.7);
+  max-width: 44ch;
+  margin-bottom: 3rem;
+}
+.cta__btn {
+  padding: 1.125rem 2rem;
+  background: var(--terracotta);
+  color: var(--paper);
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 999px;
+  transition: all 0.25s ease;
+  animation: pulse-soft 4s ease-in-out infinite;
+}
+.cta__btn:hover { background: var(--terracotta-deep); }
+.cta__note {
+  margin-top: 1.5rem;
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.5);
+}
+
+/* ============================================
+   FOOTER
+   ============================================ */
+.footer {
+  padding: clamp(2.5rem, 5vw, 4rem) 0;
+  background: var(--ink);
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+.footer__inner {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0 var(--gut);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+.footer__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--paper);
+}
+.footer__brand-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--terracotta);
+}
+.footer__copy {
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.5);
+}
+.footer__links {
+  display: flex;
+  gap: 1.75rem;
+}
+.footer__links a {
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.6);
+  transition: color 0.25s ease;
+}
+.footer__links a:hover { color: var(--paper); }
+
+@media (max-width: 640px) {
+  .footer__inner { flex-direction: column; text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<!-- Nav -->
+<nav class="nav" role="navigation" aria-label="主导航">
+  <div class="nav__inner">
+    <a href="#" class="nav__brand"><span class="nav__brand-dot"></span>FlowSync</a>
+    <ul class="nav__links">
+      <li><a href="#compare">对比体验</a></li>
+      <li><a href="#features">核心能力</a></li>
+      <li><a href="#demo">界面预览</a></li>
+      <li><a href="#cta" class="nav__cta">开始使用</a></li>
+    </ul>
+    <button class="nav__hamburger" aria-label="切换菜单">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero__inner">
+    <span class="hero__eyebrow">给 P 型人格的 AI 任务伙伴</span>
+    <h1 class="hero__title">
+      你的待办清单<br>
+      又在对你<span>撒谎</span>了
+    </h1>
+    <p class="hero__sub">
+      27 条未完成，你打开 App，关掉，开始刷手机。<br>
+      不是你不够自律，是工具不认识你。
+    </p>
+    <div class="hero__actions">
+      <a href="#compare" class="btn btn--primary">
+        亲手体验变化
+        <svg class="btn__arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+      <a href="#features" class="btn btn--ghost">看核心能力</a>
+    </div>
+  </div>
+</section>
+
+<!-- Compare -->
+<section class="compare" id="compare">
+  <div class="compare__inner">
+    <div class="compare__head" data-reveal>
+      <span class="compare__eyebrow">Before / After</span>
+      <h2 class="compare__title">拖动分界线，感受区别</h2>
+      <p class="compare__sub">左侧是你熟悉的焦虑日常，右侧是 FlowSync 帮你整理后的状态</p>
+    </div>
+
+    <div class="compare__wrapper" data-reveal>
+      <div class="compare__container" id="compareContainer">
+        <div class="compare__panel compare__panel--before">
+          <div class="compare__panel-inner">
+            <span class="compare__label">Before</span>
+            <div class="compare__content">
+              <div class="compare__task-list">
+                <div class="compare__task">
+                  <div class="compare__task-check"></div>
+                  <span class="compare__task-title">完成产品方案初稿</span>
+                  <span class="compare__task-meta">今天</span>
+                </div>
+                <div class="compare__task">
+                  <div class="compare__task-check"></div>
+                  <span class="compare__task-title">回复客户邮件</span>
+                  <span class="compare__task-meta">今天</span>
+                </div>
+                <div class="compare__task">
+                  <div class="compare__task-check"></div>
+                  <span class="compare__task-title">代码审查</span>
+                  <span class="compare__task-meta">今天</span>
+                </div>
+                <div class="compare__task">
+                  <div class="compare__task-check"></div>
+                  <span class="compare__task-title">更新项目文档</span>
+                  <span class="compare__task-meta">明天</span>
+                </div>
+                <div class="compare__task">
+                  <div class="compare__task-check"></div>
+                  <span class="compare__task-title">整理会议笔记</span>
+                  <span class="compare__task-meta">明天</span>
+                </div>
+              </div>
+              <div class="compare__overload">
+                <p class="compare__overload-text">还有 7 条任务未显示...</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="compare__panel compare__panel--after">
+          <div class="compare__panel-inner">
+            <span class="compare__label">After</span>
+            <div class="compare__content">
+              <div class="compare__task-list">
+                <div class="compare__task">
+                  <div class="compare__task-check done"></div>
+                  <span class="compare__task-title done">整理桌面</span>
+                  <span class="compare__task-meta">5 min</span>
+                  <span class="compare__priority compare__priority--low">低</span>
+                </div>
+                <div class="compare__task">
+                  <div class="compare__task-check"></div>
+                  <span class="compare__task-title">回复客户邮件</span>
+                  <span class="compare__task-meta">30 min</span>
+                  <span class="compare__priority compare__priority--medium">中</span>
+                </div>
+                <div class="compare__task">
+                  <div class="compare__task-check"></div>
+                  <span class="compare__task-title">完成产品方案初稿</span>
+                  <span class="compare__task-meta">2h</span>
+                  <span class="compare__priority compare__priority--high">高</span>
+                </div>
+              </div>
+              <div class="compare__energy-bar">
+                <span class="compare__energy-label">今日能量 65%</span>
+                <div class="compare__energy-track">
+                  <div class="compare__energy-fill"></div>
+                </div>
+              </div>
+              <div class="compare__ai-tip">
+                <p class="compare__ai-tip-text">AI 建议：先做简单任务唤醒状态，再挑战核心工作</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="compare__divider" id="compareDivider">
+          <div class="compare__divider-handle">
+            <svg viewBox="0 0 24 24"><path d="M11 18l-5-5 5-5"/><path d="M13 6l5 5-5 5"/></svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p class="compare__hint">← 拖动中间橙色手柄 →</p>
+  </div>
+</section>
+
+<!-- Features -->
+<section class="features" id="features">
+  <div class="features__inner">
+    <div class="features__head" data-reveal>
+      <span class="features__eyebrow">Core Features</span>
+      <h2 class="features__title">让 AI 替你做选择</h2>
+    </div>
+
+    <div class="features__grid" data-stagger>
+      <div class="feature-card">
+        <div class="feature-card__icon feature-card__icon--orange">
+          <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        </div>
+        <h3 class="feature-card__title">智能任务拆解</h3>
+        <p class="feature-card__desc">一个大目标碎成 5 分钟能启动的小步骤，你只需要做第一步</p>
+        <div class="feature-card__steps">
+          <div class="feature-card__step"><span class="feature-card__step-num">1</span>说一个想法</div>
+          <div class="feature-card__step"><span class="feature-card__step-num">2</span>AI 自动拆解</div>
+          <div class="feature-card__step"><span class="feature-card__step-num">3</span>从最小的开始</div>
+        </div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-card__icon feature-card__icon--green">
+          <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </div>
+        <h3 class="feature-card__title">情绪自适应</h3>
+        <p class="feature-card__desc">告诉 AI 你今天几格电，它据此安排任务难度，不强迫高负荷</p>
+        <div class="feature-card__steps">
+          <div class="feature-card__step"><span class="feature-card__step-num">1</span>能量打卡</div>
+          <div class="feature-card__step"><span class="feature-card__step-num">2</span>智能推荐</div>
+          <div class="feature-card__step"><span class="feature-card__step-num">3</span>顺应节奏</div>
+        </div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-card__icon feature-card__icon--yellow">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <h3 class="feature-card__title">沉浸式聚焦</h3>
+        <p class="feature-card__desc">一次只看一件事，做完下一件自动浮上来，没有停顿</p>
+        <div class="feature-card__steps">
+          <div class="feature-card__step"><span class="feature-card__step-num">1</span>打开即专注</div>
+          <div class="feature-card__step"><span class="feature-card__step-num">2</span>番茄钟内嵌</div>
+          <div class="feature-card__step"><span class="feature-card__step-num">3</span>滑动完成</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Demo -->
+<section class="demo" id="demo">
+  <div class="demo__inner">
+    <div class="demo__head" data-reveal>
+      <h2 class="demo__title">真实界面预览</h2>
+      <p class="demo__sub">完整可操作的 Web 端 Demo，打开即可体验所有核心功能</p>
+    </div>
+
+    <div class="demo__mockup" data-reveal>
+      <div class="demo__mockup-screen">
+        <div class="demo__mockup-header">
+          <span class="demo__mockup-logo">FlowSync</span>
+          <div class="demo__mockup-avatar">李</div>
+        </div>
+        <div class="demo__mockup-task">
+          <h3 class="demo__mockup-task-title">回复客户邮件</h3>
+          <div class="demo__mockup-task-meta">
+            <span class="demo__mockup-chip demo__mockup-chip--high">中优先级</span>
+            <span class="demo__mockup-chip demo__mockup-chip--time">30 min</span>
+          </div>
+          <div class="demo__mockup-subtasks">
+            <div class="demo__mockup-subtask">
+              <div class="demo__mockup-check done"></div>
+              <span class="demo__mockup-subtask-text done">查阅往来邮件</span>
+            </div>
+            <div class="demo__mockup-subtask">
+              <div class="demo__mockup-check"></div>
+              <span class="demo__mockup-subtask-text">起草回复</span>
+            </div>
+            <div class="demo__mockup-subtask">
+              <div class="demo__mockup-check"></div>
+              <span class="demo__mockup-subtask-text">检查附件</span>
+            </div>
+          </div>
+          <div class="demo__mockup-progress">
+            <span class="demo__mockup-progress-label">进度 1/3</span>
+            <div class="demo__mockup-progress-bar">
+              <div class="demo__mockup-progress-fill"></div>
+            </div>
+          </div>
+        </div>
+        <div class="demo__mockup-energy">
+          <div class="demo__mockup-energy-cell"></div>
+          <div class="demo__mockup-energy-cell"></div>
+          <div class="demo__mockup-energy-cell"></div>
+          <div class="demo__mockup-energy-cell"></div>
+          <div class="demo__mockup-energy-cell"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta" id="cta">
+  <div class="cta__inner" data-reveal>
+    <h2 class="cta__title">准备好了吗？</h2>
+    <p class="cta__sub">让 AI 成为你最可靠的工作伙伴。不替你生活，只替你开始。</p>
+    <a href="app.html" class="cta__btn">进入操作面板</a>
+    <p class="cta__note">Web 端完整可操作 Demo · 移动端即将上线</p>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="footer__inner">
+    <span class="footer__brand"><span class="footer__brand-dot"></span>FlowSync</span>
+    <span class="footer__copy">© 2025 FlowSync. 流同步，不流断。</span>
+    <div class="footer__links">
+      <a href="#">Twitter</a>
+      <a href="#">GitHub</a>
+      <a href="#">微信</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ============ Reveal system ============
+(function () {
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var targets = document.querySelectorAll('[data-reveal], [data-stagger]');
+  
+  if (reduce || !('IntersectionObserver' in window)) {
+    targets.forEach(function (el) { el.classList.add('is-in'); });
+    return;
+  }
+  
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-in');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15, rootMargin: '0px 0px -8% 0px' });
+  
+  targets.forEach(function (el) { io.observe(el); });
+})();
+
+// ============ Compare drag interaction ============
+(function () {
+  var container = document.getElementById('compareContainer');
+  var divider = document.getElementById('compareDivider');
+  if (!container || !divider) return;
+  
+  var isDragging = false;
+  var containerRect;
+  
+  function onStart(e) {
+    isDragging = true;
+    containerRect = container.getBoundingClientRect();
+    document.body.style.cursor = 'col-resize';
+    document.body.style.userSelect = 'none';
+  }
+  
+  function onMove(e) {
+    if (!isDragging) return;
+    
+    var clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    var x = clientX - containerRect.left;
+    var percentage = Math.max(20, Math.min(80, (x / containerRect.width) * 100));
+    
+    divider.style.left = percentage + '%';
+  }
+  
+  function onEnd() {
+    isDragging = false;
+    document.body.style.cursor = '';
+    document.body.style.userSelect = '';
+  }
+  
+  divider.addEventListener('mousedown', onStart);
+  divider.addEventListener('touchstart', onStart, { passive: true });
+  document.addEventListener('mousemove', onMove);
+  document.addEventListener('touchmove', onMove, { passive: true });
+  document.addEventListener('mouseup', onEnd);
+  document.addEventListener('touchend', onEnd);
+})();
+</script>
+</body>
+</html>

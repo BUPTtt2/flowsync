@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FlowSync Demo — 说一句话，AI 帮你把事做完</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&family=Noto+Serif+SC:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --paper: #faf8f5;
+  --paper-warm: #fdfbf7;
+  --paper-muted: #a8a69d;
+  --ink: #242422;
+  --ink-soft: #3a3a38;
+  --ink-light: #5a5a58;
+  --terracotta: #d97757;
+  --terracotta-deep: #b85c3e;
+  --terracotta-soft: rgba(217, 119, 87, 0.08);
+  --terracotta-warm: rgba(217, 119, 87, 0.12);
+  --ochre: #c89968;
+  --line: rgba(168, 166, 157, 0.25);
+  --line-soft: rgba(168, 166, 157, 0.12);
+  --font: 'Noto Sans SC', system-ui, sans-serif;
+  --serif: 'Noto Serif SC', serif;
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+}
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body {
+  font-family: var(--font);
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--ink);
+  background: var(--paper-warm);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+button { border: none; cursor: pointer; font-family: inherit; background: none; }
+a { text-decoration: none; color: inherit; }
+::selection { background: var(--terracotta); color: #fff; }
+
+.banner {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 0.55rem 1rem;
+  text-align: center;
+  font-size: 0.78rem;
+  letter-spacing: 0.02em;
+}
+.banner strong { color: var(--terracotta); }
+
+.nav {
+  position: sticky; top: 0; z-index: 100;
+  height: 64px;
+  display: flex; align-items: center;
+  padding: 0 1.5rem;
+  background: rgba(253, 251, 247, 0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--line-soft);
+}
+.nav__brand { display: inline-flex; align-items: center; gap: 8px; font-weight: 600; font-size: 0.95rem; }
+.nav__dot { width: 8px; height: 8px; border-radius: 50%; background: var(--terracotta); }
+.nav__sub { margin-left: auto; font-size: 0.78rem; color: var(--paper-muted); font-family: 'SF Mono', Consolas, monospace; }
+
+.workspace { max-width: 720px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+.ws__header { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 1.75rem; }
+.ws__title { font-family: var(--serif); font-size: 1.85rem; font-weight: 700; letter-spacing: -0.02em; }
+.ws__date { font-size: 0.8rem; color: var(--paper-muted); font-family: 'SF Mono', Consolas, monospace; }
+
+.ai-input {
+  background: #fff;
+  border: 1.5px solid var(--line);
+  border-radius: 14px;
+  padding: 1.1rem 1.25rem;
+  margin-bottom: 2.25rem;
+  transition: border-color 0.3s var(--ease), box-shadow 0.3s var(--ease);
+}
+.ai-input:focus-within { border-color: var(--terracotta); box-shadow: 0 0 0 4px var(--terracotta-soft); }
+.ai-input__label { display: flex; align-items: center; gap: 6px; font-size: 0.72rem; color: var(--terracotta); font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 0.5rem; }
+.ai-input__dot { width: 6px; height: 6px; border-radius: 50%; background: var(--terracotta); animation: blink 2s ease-in-out infinite; }
+@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+.ai-input__row { display: flex; align-items: center; gap: 0.75rem; }
+.ai-input__field { flex: 1; border: none; outline: none; font-family: inherit; font-size: 1rem; color: var(--ink); background: transparent; }
+.ai-input__field::placeholder { color: var(--paper-muted); }
+.ai-input__btn { padding: 0.55rem 1.15rem; background: var(--ink); color: var(--paper); border-radius: 999px; font-size: 0.85rem; font-weight: 600; transition: background 0.25s ease, transform 0.15s ease; }
+.ai-input__btn:hover:not(:disabled) { background: var(--terracotta); }
+.ai-input__btn:active:not(:disabled) { transform: scale(0.96); }
+.ai-input__btn:disabled { opacity: 0.6; cursor: not-allowed; }
+.ai-input__hint { margin-top: 0.65rem; font-size: 0.78rem; color: var(--paper-muted); }
+.ai-input__chips { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.75rem; }
+.chip { padding: 0.35rem 0.8rem; font-size: 0.78rem; background: var(--terracotta-soft); color: var(--terracotta-deep); border-radius: 999px; cursor: pointer; transition: background 0.2s ease; }
+.chip:hover { background: var(--terracotta-warm); }
+
+.projects__head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
+.projects__title { font-size: 0.85rem; color: var(--ink-light); font-weight: 500; letter-spacing: 0.02em; }
+.projects__count { font-size: 0.78rem; color: var(--paper-muted); font-family: 'SF Mono', Consolas, monospace; }
+
+.empty {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--paper-muted);
+  font-size: 0.9rem;
+  border: 1.5px dashed var(--line);
+  border-radius: 12px;
+  background: rgba(255,255,255,0.4);
+}
+.empty__icon { font-size: 2rem; margin-bottom: 0.5rem; opacity: 0.6; }
+
+.project {
+  background: #fff;
+  border: 1px solid var(--line-soft);
+  border-radius: 12px;
+  margin-bottom: 0.85rem;
+  overflow: hidden;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+.project:hover { border-color: var(--terracotta-warm); }
+.project.is-open { box-shadow: 0 4px 20px rgba(36,36,34,0.04); }
+.project__head { padding: 1rem 1.25rem; display: flex; align-items: center; gap: 0.85rem; cursor: pointer; }
+.project__icon { width: 36px; height: 36px; border-radius: 9px; background: var(--terracotta-soft); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0; }
+.project__main { flex: 1; min-width: 0; }
+.project__name { font-size: 0.98rem; font-weight: 600; margin-bottom: 0.25rem; }
+.project__meta { font-size: 0.76rem; color: var(--paper-muted); display: flex; align-items: center; gap: 0.5rem; }
+.project__progress { display: inline-block; width: 80px; height: 4px; background: var(--line-soft); border-radius: 2px; overflow: hidden; vertical-align: middle; }
+.project__progress-fill { height: 100%; background: var(--terracotta); border-radius: 2px; transition: width 0.4s var(--ease); }
+.project__caret { color: var(--paper-muted); font-size: 0.85rem; transition: transform 0.3s var(--ease); }
+.project.is-open .project__caret { transform: rotate(90deg); }
+
+.modules { padding: 0 1.25rem 1rem; border-top: 1px solid var(--line-soft); margin-top: 0.25rem; display: none; }
+.project.is-open .modules { display: block; }
+.module { padding: 0.85rem 0; border-bottom: 1px solid var(--line-soft); }
+.module:last-child { border-bottom: none; }
+.module__head { display: flex; align-items: center; gap: 0.6rem; cursor: pointer; padding: 0.25rem 0; }
+.module__bullet { width: 8px; height: 8px; border-radius: 2px; background: var(--ochre); flex-shrink: 0; }
+.module__name { flex: 1; font-size: 0.88rem; font-weight: 500; color: var(--ink-soft); }
+.module__count { font-size: 0.72rem; color: var(--paper-muted); font-family: 'SF Mono', Consolas, monospace; }
+.module__tasks { margin-top: 0.5rem; padding-left: 1.25rem; display: none; }
+.module.is-open .module__tasks { display: block; }
+.task { display: flex; align-items: center; gap: 0.65rem; padding: 0.5rem 0; font-size: 0.85rem; color: var(--ink-light); }
+.task__check { width: 18px; height: 18px; border: 1.5px solid var(--paper-muted); border-radius: 4px; flex-shrink: 0; cursor: pointer; transition: all 0.2s ease; position: relative; }
+.task__check.done { background: var(--terracotta); border-color: var(--terracotta); }
+.task__check.done::after { content: ''; position: absolute; left: 5px; top: 1px; width: 5px; height: 9px; border: solid #fff; border-width: 0 2px 2px 0; transform: rotate(45deg); }
+.task__title { flex: 1; }
+.task.done .task__title { text-decoration: line-through; color: var(--paper-muted); }
+.task__tools { display: flex; gap: 4px; flex-wrap: wrap; }
+.tool-btn { padding: 3px 8px; font-size: 0.7rem; background: var(--terracotta-soft); color: var(--terracotta-deep); border-radius: 4px; text-decoration: none; transition: background 0.2s ease; }
+.tool-btn:hover { background: var(--terracotta); color: #fff; }
+
+.loading-overlay {
+  position: fixed; inset: 0;
+  background: rgba(253, 251, 247, 0.96);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 1000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+.loading-overlay.is-show { display: flex; }
+.loading__dots { display: flex; gap: 10px; margin-bottom: 1.5rem; }
+.loading__dot { width: 12px; height: 12px; border-radius: 50%; background: var(--terracotta); animation: bounce 1.4s ease-in-out infinite both; }
+.loading__dot:nth-child(1) { animation-delay: -0.32s; }
+.loading__dot:nth-child(2) { animation-delay: -0.16s; }
+@keyframes bounce { 0%, 80%, 100% { transform: scale(0.5); opacity: 0.4; } 40% { transform: scale(1); opacity: 1; } }
+.loading__title { font-family: var(--serif); font-size: 1.2rem; font-weight: 600; color: var(--ink); margin-bottom: 0.5rem; }
+.loading__sub { font-size: 0.82rem; color: var(--paper-muted); letter-spacing: 0.04em; }
+
+.toast { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%) translateY(120%); background: var(--ink); color: var(--paper); padding: 0.7rem 1.25rem; border-radius: 999px; font-size: 0.85rem; z-index: 2000; transition: transform 0.4s var(--ease); box-shadow: 0 8px 24px rgba(0,0,0,0.15); }
+.toast.is-show { transform: translateX(-50%) translateY(0); }
+
+.fade-in { opacity: 0; transform: translateY(16px); animation: fadeIn 0.7s var(--ease) forwards; }
+@keyframes fadeIn { to { opacity: 1; transform: none; } }
+
+@media (max-width: 600px) {
+  .workspace { padding: 1.5rem 1rem 3rem; }
+  .ws__title { font-size: 1.5rem; }
+  .ai-input { padding: 0.9rem 1rem; }
+  .project__head { padding: 0.85rem 1rem; }
+  .modules { padding: 0 1rem 0.85rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="banner">
+  <strong>FlowSync Demo</strong> · 输入任何想做的事，AI 实时拆解为可执行任务 · 数据仅存本机浏览器
+</div>
+
+<nav class="nav">
+  <div class="nav__brand">
+    <span class="nav__dot"></span>
+    FlowSync
+  </div>
+  <div class="nav__sub">Demo · v1.0</div>
+</nav>
+
+<main class="workspace">
+  <div class="ws__header fade-in">
+    <h1 class="ws__title">工作台</h1>
+    <span class="ws__date" id="todayDate"></span>
+  </div>
+
+  <div class="ai-input fade-in" style="animation-delay:0.1s">
+    <div class="ai-input__label">
+      <span class="ai-input__dot"></span>
+      Agent 在线 · 等待指令
+    </div>
+    <div class="ai-input__row">
+      <input type="text" class="ai-input__field" id="aiInput" placeholder="说一句话，AI 帮你拆解任务…">
+      <button class="ai-input__btn" id="genBtn" onclick="generateProject()">生成</button>
+    </div>
+    <div class="ai-input__hint">试试这些：</div>
+    <div class="ai-input__chips">
+      <span class="chip" onclick="quickFill('我要养一只猫')">我要养一只猫</span>
+      <span class="chip" onclick="quickFill('上海旅游3天')">上海旅游3天</span>
+      <span class="chip" onclick="quickFill('准备暑期实习')">准备暑期实习</span>
+      <span class="chip" onclick="quickFill('考研复习计划')">考研复习计划</span>
+    </div>
+  </div>
+
+  <div class="projects__head fade-in" style="animation-delay:0.2s">
+    <span class="projects__title">进行中的项目</span>
+    <span class="projects__count" id="projectCount">0 个项目</span>
+  </div>
+  <div id="projectList"></div>
+</main>
+
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loading__dots">
+    <span class="loading__dot"></span>
+    <span class="loading__dot"></span>
+    <span class="loading__dot"></span>
+  </div>
+  <div class="loading__title">Agent 正在虚空排布…</div>
+  <div class="loading__sub">推演卦象 · 拆解因缘 · 生成模块</div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ====== API 地址配置 ======
+// 部署时改为公网地址，或在外部注入 window.FLOWSYNC_API_BASE
+const API_BASE = window.FLOWSYNC_API_BASE || 'http://localhost:3000';
+
+// ====== 工具类型映射 ======
+const TOOL_LABELS = {
+  'map-search': '地图',
+  'map-route':  '路线',
+  'weather':    '天气',
+  'flight':     '航班',
+  'train':      '高铁',
+  'calendar':   '日历',
+  'reminder':   '提醒'
+};
+function toolHref(tool, taskTitle) {
+  const enc = encodeURIComponent(taskTitle || '');
+  switch (tool) {
+    case 'map-search': return 'https://uri.amap.com/search?keyword=' + enc;
+    case 'map-route':  return 'https://uri.amap.com/trip?from=' + enc;
+    case 'weather':    return 'https://www.qweather.com/weather/shanghai-101020100.html';
+    case 'flight':     return 'https://www.ctrip.com/';
+    case 'train':      return 'https://www.12306.cn/';
+    case 'calendar':   return '#calendar';
+    case 'reminder':   return '#reminder';
+    default: return '#';
+  }
+}
+
+// ====== 状态 ======
+let projects = [];
+let nextId = 1;
+
+// ====== 工具函数 ======
+function $(id) { return document.getElementById(id); }
+function showToast(msg) {
+  const t = $('toast');
+  t.textContent = msg;
+  t.classList.add('is-show');
+  setTimeout(() => t.classList.remove('is-show'), 2200);
+}
+function todayStr() {
+  const d = new Date();
+  const days = ['周日','周一','周二','周三','周四','周五','周六'];
+  return `${d.getMonth()+1}月${d.getDate()}日 · ${days[d.getDay()]}`;
+}
+function progressOf(project) {
+  const all = project.modules.flatMap(m => m.tasks);
+  if (all.length === 0) return 0;
+  const done = all.filter(t => t.done).length;
+  return Math.round(done / all.length * 100);
+}
+function pickIcon(name) {
+  const map = [
+    {k:['猫','狗','宠物','养'], i:'🐱'},
+    {k:['旅游','旅行','出游','度假'], i:'🎒'},
+    {k:['面试','实习','工作','入职','简历'], i:'💼'},
+    {k:['考研','考试','学习','复习','课程'], i:'📚'},
+    {k:['装修','搬家','房子'], i:'🏠'},
+    {k:['健身','运动','减肥'], i:'💪'},
+    {k:['结婚','婚礼'], i:'💍'},
+    {k:['做饭','菜谱','下厨'], i:'🍳'},
+  ];
+  for (const m of map) {
+    if (m.k.some(kw => name.includes(kw))) return m.i;
+  }
+  return '✨';
+}
+
+// ====== 渲染 ======
+function renderProjects() {
+  const list = $('projectList');
+  $('projectCount').textContent = projects.length + ' 个项目';
+  if (projects.length === 0) {
+    list.innerHTML = `
+      <div class="empty fade-in">
+        <div class="empty__icon">✦</div>
+        <div>还没有项目</div>
+        <div style="font-size:0.78rem;margin-top:0.3rem;">在上方输入框说一句话，AI 帮你拆解</div>
+      </div>
+    `;
+    return;
+  }
+  list.innerHTML = projects.map(p => `
+    <div class="project fade-in ${p.open ? 'is-open' : ''}" data-id="${p.id}">
+      <div class="project__head" onclick="toggleProject(${p.id})">
+        <div class="project__icon">${p.icon}</div>
+        <div class="project__main">
+          <div class="project__name">${p.name}</div>
+          <div class="project__meta">
+            <span>${p.modules.length} 模块 · ${p.modules.flatMap(m=>m.tasks).length} 任务</span>
+            <span class="project__progress">
+              <span class="project__progress-fill" style="width:${progressOf(p)}%"></span>
+            </span>
+            <span>${progressOf(p)}%</span>
+          </div>
+        </div>
+        <span class="project__caret">›</span>
+      </div>
+      <div class="modules">
+        ${p.modules.map((m, mi) => `
+          <div class="module ${m.open ? 'is-open' : ''}" data-module="${mi}">
+            <div class="module__head" onclick="toggleModule(${p.id}, ${mi})">
+              <span class="module__bullet"></span>
+              <span class="module__name">${m.name}</span>
+              <span class="module__count">${m.tasks.filter(t=>t.done).length}/${m.tasks.length}</span>
+            </div>
+            <div class="module__tasks">
+              ${m.tasks.map((t, ti) => `
+                <div class="task ${t.done ? 'done' : ''}">
+                  <span class="task__check ${t.done ? 'done' : ''}" onclick="toggleTask(${p.id}, ${mi}, ${ti})"></span>
+                  <span class="task__title">${t.title}</span>
+                  <span class="task__tools">
+                    ${t.tools.map(tool => `<a class="tool-btn" href="${tool.href}" target="_blank" rel="noopener" onclick="event.stopPropagation(); showToast('已跳转 ${tool.label} 工具');">${tool.label}</a>`).join('')}
+                  </span>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+// ====== 交互 ======
+function toggleProject(id) {
+  const p = projects.find(x => x.id === id);
+  p.open = !p.open;
+  renderProjects();
+}
+function toggleModule(pid, mi) {
+  const p = projects.find(x => x.id === pid);
+  p.modules[mi].open = !p.modules[mi].open;
+  renderProjects();
+}
+function toggleTask(pid, mi, ti) {
+  const p = projects.find(x => x.id === pid);
+  p.modules[mi].tasks[ti].done = !p.modules[mi].tasks[ti].done;
+  renderProjects();
+  if (p.modules[mi].tasks[ti].done) {
+    showToast('任务完成 ✦ 下一个已为你准备好');
+  }
+}
+function quickFill(text) {
+  $('aiInput').value = text;
+  $('aiInput').focus();
+}
+
+// ====== 调用后端 AI 生成 ======
+function generateProject() {
+  const input = $('aiInput').value.trim();
+  if (!input) {
+    showToast('请先输入你想做的事');
+    return;
+  }
+  $('loadingOverlay').classList.add('is-show');
+  const btn = $('genBtn');
+  btn.disabled = true;
+  btn.textContent = '生成中…';
+
+  fetch(API_BASE + '/api/demo/generate', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name: input })
+  })
+    .then(r => r.json())
+    .then(res => {
+      $('loadingOverlay').classList.remove('is-show');
+      btn.disabled = false;
+      btn.textContent = '生成';
+
+      if (res.success && res.data && res.data.modules) {
+        const data = res.data;
+        const newProject = {
+          id: nextId++,
+          name: data.name || input,
+          icon: pickIcon(data.name || input),
+          modules: (data.modules || []).map(m => ({
+            name: m.name || m.title || '未命名模块',
+            open: false,
+            tasks: (m.tasks || []).map(t => ({
+              title: t.title || t.name || '任务',
+              tools: (t.tools || []).map(tool => ({
+                label: TOOL_LABELS[tool] || (typeof tool === 'string' ? tool : (tool.label || '工具')),
+                href: typeof tool === 'string' ? toolHref(tool, t.title || '') : (tool.href || '#')
+              })),
+              done: false
+            }))
+          })),
+          open: true
+        };
+        if (!projects.find(p => p.name === newProject.name)) {
+          projects.unshift(newProject);
+          showToast('Agent 已生成 ' + newProject.modules.length + ' 个模块');
+        } else {
+          showToast('该项目已存在，已为你展开');
+        }
+      } else {
+        showToast(res.message || '生成失败，请稍后再试');
+      }
+      $('aiInput').value = '';
+      renderProjects();
+    })
+    .catch(err => {
+      $('loadingOverlay').classList.remove('is-show');
+      btn.disabled = false;
+      btn.textContent = '生成';
+      console.error(err);
+      showToast('网络错误，请检查网络后重试');
+    });
+}
+
+// ====== 初始化 ======
+$('todayDate').textContent = todayStr();
+renderProjects();
+
+$('aiInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') generateProject();
+});
+</script>
+
+</body>
+</html>

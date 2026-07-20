@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>用户创造性空间 - 两种模式对比</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Noto Sans SC', system-ui, sans-serif; background: #fdfbf7; color: #242422; line-height: 1.7; padding: 40px; }
+h1 { font-family: 'Noto Serif SC', serif; font-size: 1.8rem; font-weight: 900; margin-bottom: 8px; }
+.subtitle { color: #5a5a58; font-size: 0.95rem; margin-bottom: 32px; }
+.container { max-width: 1000px; margin: 0 auto; }
+
+/* 对比卡片 */
+.compare-container { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.card { background: #fff; border-radius: 12px; padding: 28px; border: 2px solid; }
+.card--option-a { border-color: rgba(168,166,157,0.2); }
+.card--option-b { border-color: #d97757; }
+
+.card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+.card-badge { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9rem; }
+.card--option-a .card-badge { background: #f0f0f0; color: #999; }
+.card--option-b .card-badge { background: #d97757; color: #fff; }
+.card-title { font-size: 1.15rem; font-weight: 700; }
+
+.card-desc { font-size: 0.85rem; color: #5a5a58; margin-bottom: 20px; line-height: 1.6; }
+
+/* 对比项 */
+.feature-row { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid rgba(168,166,157,0.1); }
+.feature-row:last-child { border-bottom: none; }
+.feature-icon { font-size: 1rem; }
+.feature-text { font-size: 0.85rem; flex: 1; }
+.feature-status { font-size: 0.75rem; padding: 3px 8px; border-radius: 4px; }
+.feature-status--yes { background: rgba(122,140,94,0.1); color: #7a8c5e; }
+.feature-status--no { background: rgba(168,166,157,0.1); color: #999; }
+.feature-status--partial { background: rgba(200,153,104,0.1); color: #c89968; }
+
+/* 场景对比图 */
+.scene-box { background: #faf8f5; border-radius: 10px; padding: 16px; margin-top: 16px; }
+.scene-title { font-size: 0.8rem; font-weight: 600; color: #999; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.04em; }
+
+/* 模拟界面 */
+.mock-ui { background: #fff; border-radius: 8px; padding: 14px; border: 1px solid rgba(168,166,157,0.15); }
+.mock-ui-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.mock-ui-title { font-size: 0.85rem; font-weight: 600; color: #242422; }
+.mock-ui-action { font-size: 0.7rem; color: #d97757; }
+
+.mock-items { list-style: none; }
+.mock-item { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid rgba(168,166,157,0.08); }
+.mock-item:last-child { border-bottom: none; }
+.mock-check { width: 14px; height: 14px; border: 1.5px solid #c5c3ba; border-radius: 3px; }
+.mock-text { font-size: 0.78rem; color: #5a5a58; flex: 1; }
+.mock-add { font-size: 0.7rem; color: #999; }
+
+/* Option A 是封闭的 */
+.card--option-a .mock-add { display: none; }
+.card--option-a .mock-item:nth-child(4),
+.card--option-a .mock-item:nth-child(5) { display: none; }
+
+/* Option B 是开放的 */
+.card--option-b .mock-add { display: block; }
+
+/* 决策提示 */
+.decision-box { background: rgba(217,119,87,0.06); border: 1px solid rgba(217,119,87,0.2); border-radius: 10px; padding: 20px; margin-top: 32px; }
+.decision-box h3 { font-size: 0.95rem; font-weight: 600; color: #d97757; margin-bottom: 8px; }
+.decision-box p { font-size: 0.85rem; color: #5a5a58; }
+
+/* 选择题选项 */
+.options-box { display: flex; gap: 16px; margin-top: 24px; }
+.option-btn { flex: 1; padding: 16px 20px; border-radius: 10px; border: 2px solid; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.25s; }
+.option-btn--a { border-color: rgba(168,166,157,0.3); color: #5a5a58; background: #fff; }
+.option-btn--a:hover { border-color: #999; }
+.option-btn--b { border-color: #d97757; color: #d97757; background: rgba(217,119,87,0.06); }
+.option-btn--b:hover { background: rgba(217,119,87,0.12); }
+.option-btn.selected { box-shadow: 0 4px 16px rgba(217,119,87,0.2); }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>用户创造性空间：两种模式</h1>
+<p class="subtitle">系统生成项目模板后，用户能做什么？</p>
+
+<div class="compare-container">
+  <!-- Option A: 封闭式 -->
+  <div class="card card--option-a">
+    <div class="card-header">
+      <div class="card-badge">A</div>
+      <div>
+        <div class="card-title">封闭式：系统定好，用户确认</div>
+        <div class="card-desc">系统生成完整模板，用户只能打勾、修改文本、跳过某个步骤。没有自由发挥的空间。</div>
+      </div>
+    </div>
+
+    <div class="feature-row">
+      <span class="feature-icon">✅</span>
+      <span class="feature-text">打勾完成任务</span>
+      <span class="feature-status feature-status--yes">是</span>
+    </div>
+    <div class="feature-row">
+      <span class="feature-icon">📝</span>
+      <span class="feature-text">修改任务名称/时间</span>
+      <span class="feature-status feature-status--yes">是</span>
+    </div>
+    <div class="feature-row">
+      <span class="feature-icon">➕</span>
+      <span class="feature-text">自由添加自定义子任务</span>
+      <span class="feature-status feature-status--no">否</span>
+    </div>
+    <div class="feature-row">
+      <span class="feature-icon">🔄</span>
+      <span class="feature-text">重新排列模块顺序</span>
+      <span class="feature-status feature-status--no">否</span>
+    </div>
+    <div class="feature-row">
+      <span class="feature-icon">✨</span>
+      <span class="feature-text">添加系统没预设的模块</span>
+      <span class="feature-status feature-status--no">否</span>
+    </div>
+    <div class="feature-row">
+      <span class="feature-icon">🎨</span>
+      <span class="feature-text">自定义项目结构</span>
+      <span class="feature-status feature-status--no">否</span>
+    </div>
+
+    <div class="scene-box">
+      <div class="scene-title">模拟：旅行规划模板</div>
+      <div class="mock-ui">
+        <div class="mock-ui-header">
+          <span class="mock-ui-title">成都 3 天行程</span>
+          <span class="mock-ui-action">编辑</span>
+        </div>
+        <ul class="mock-items">
+          <li class="mock-item"><div class="mock-check"></div><span class="mock-text">预订机票（往返）</span></li>
+          <li class="mock-item"><div class="mock-check"></div><span class="mock-text">预订酒店（3 晚）</span></li>
+          <li class="mock-item"><div class="mock-check"></div><span class="mock-text">规划景点路线</span></li>
+          <li class="mock-item"><div class="mock-check"></div><span class="mock-text">✏️ 添加自定义子任务</span><span class="mock-add">+ 添加</span></li>
+          <li class="mock-item"><div class="mock-check"></div><span class="mock-text">✏️ 自己新增一个模块（比如：准备清单）</span><span class="mock-add">+ 添加模块</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Option B: 开放式 -->
+  <div class="card card--option-b">
+    <div class="card-header">
+      <div class="card-badge">B</div>
+      <div>
+        <div class="card-title">开放式：系统生成，用户创造</div>
+        <div class="card-desc">系统生成模板只是起点。用户可以自由添加、删除、重组模块，甚至创造系统没预设的结构。</div>
+      </div>
+    </div>
+
+    <div class="feature-row">
+      <span class="feature-icon">✅</span>
+      <span class="feature-text">打勾完成任务</span>
+      <span class="feature-status feature-status--yes">是</span>
+    </div>
+    <div class="feature-row">
+      <span class="feature-icon">📝</span>
+      <span class="feature-text">修改任务名称/时间</span>
+      <span class="feature-status feature-status--yes">是</span>
+    </div>
+    <div class="feature-row">
+      <span class="feature-icon">➕</span>
+      <span class="feature-text">自由添加自定义子任务</span>
+      <span class="feature-status feature-status--yes">是</span>
+    </div>
+    <div class="feature-row">
+      <span class="feature-icon">🔄</span>
+      <span class="feature-text">重新排列模块顺序</span>
+      <span class="feature-status feature-status--yes">是</span>
+    </div>
+    <div class="feature-row">
+      <span class="feature-icon">✨</span>
+      <span class="feature-text">添加系统没预设的模块</span>
+      <span class="feature-status feature-status--yes">是</span>
+    </div>
+    <div class="feature-row">
+      <span class="feature-icon">🎨</span>
+      <span class="feature-text">自定义项目结构</span>
+      <span class="feature-status feature-status--yes">是</span>
+    </div>
+
+    <div class="scene-box">
+      <div class="scene-title">模拟：旅行规划模板</div>
+      <div class="mock-ui">
+        <div class="mock-ui-header">
+          <span class="mock-ui-title">成都 3 天行程</span>
+          <span class="mock-ui-action">编辑</span>
+        </div>
+        <ul class="mock-items">
+          <li class="mock-item"><div class="mock-check"></div><span class="mock-text">预订机票（往返）</span></li>
+          <li class="mock-item"><div class="mock-check"></div><span class="mock-text">预订酒店（3 晚）</span></li>
+          <li class="mock-item"><div class="mock-check"></div><span class="mock-text">规划景点路线</span></li>
+          <li class="mock-item"><div class="mock-check"></div><span class="mock-text">✏️ 添加自定义子任务</span><span class="mock-add">+ 添加</span></li>
+          <li class="mock-item"><div class="mock-check"></div><span class="mock-text">✏️ 自己新增一个模块（比如：准备清单）</span><span class="mock-add">+ 添加模块</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="decision-box">
+  <h3>你的选择是？</h3>
+  <p>核心问题：系统生成的模板是「最终答案」还是「起点」？你希望用户有多大的自由度去修改和创造？</p>
+</div>
+
+<div class="options-box">
+  <button class="option-btn option-btn--a" onclick="selectOption('a')">A. 封闭式 — 系统定好，用户确认</button>
+  <button class="option-btn option-btn--b" onclick="selectOption('b')">B. 开放式 — 系统生成，用户创造</button>
+</div>
+
+<script>
+function selectOption(opt) {
+  document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+  event.target.classList.add('selected');
+  
+  // 记录选择
+  fetch('/save-choice', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ choice: opt })
+  }).catch(() => {});
+}
+</script>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,197 @@
+      <!-- 区域 1：今日概览卡片行 -->
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-bottom:24px;max-width:1200px">
+        <!-- 能量状态 -->
+        <div class="card fade-up" id="today-energy-section">
+          <div class="card__label">能量状态</div>
+          <div class="mood__slider-wrap" style="padding:20px">
+            <div class="mood__gauge" style="width:140px;height:140px">
+              <svg class="gauge__svg" viewBox="0 0 120 120">
+                <circle class="gauge__track" cx="60" cy="60" r="50"/>
+                <circle class="gauge__fill" id="moodGaugeFill" cx="60" cy="60" r="50" stroke-dasharray="314" stroke-dashoffset="94" data-gauge-target="94" style="stroke:var(--terracotta)"/>
+              </svg>
+              <div class="gauge__value">
+                <span class="mood__value" id="moodValue">70</span>
+                <span class="gauge__unit">%</span>
+              </div>
+            </div>
+            <input type="range" min="0" max="100" value="70" class="mood__slider" id="moodSlider" oninput="updateMood(this.value)">
+            <div class="mood__labels">
+              <span>没电</span>
+              <span>一般</span>
+              <span>满电</span>
+            </div>
+            <div class="mood__status" id="moodStatus">状态不错 · 可以上硬骨头</div>
+          </div>
+          <div class="mood__recs" style="margin-top:12px">
+            <div class="mood__recs-label" id="recsLabel">推荐 3 件中等难度任务</div>
+            <div id="recsList" class="stagger" style="display:flex;flex-direction:column;gap:12px">
+              <!-- 由 JS 渲染 -->
+            </div>
+          </div>
+        </div>
+
+        <!-- 今日统计 -->
+        <div class="card fade-up" style="animation-delay:0.1s">
+          <div class="card__label">今日统计</div>
+          <div class="stats" style="grid-template-columns:1fr 1fr 1fr">
+            <div class="stat">
+              <div class="stat__label">今日完成</div>
+              <div class="stat__value" data-count="2">0</div>
+            </div>
+            <div class="stat">
+              <div class="stat__label">待处理</div>
+              <div class="stat__value" data-count="6">0</div>
+            </div>
+            <div class="stat">
+              <div class="stat__label">连续天数</div>
+              <div class="stat__value" data-count="3">0</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 下一个动作 -->
+        <div class="focus-now fade-up" style="animation-delay:0.15s">
+          <div class="card__label">下一个动作</div>
+          <h2 class="focus-now__title">完成产品方案初稿</h2>
+          <div class="focus-now__meta">
+            <span class="focus-now__meta-item">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>
+              今天 18:00
+            </span>
+            <span class="chip chip--high">高优先级</span>
+            <span class="focus-now__meta-item">2/5 子任务</span>
+          </div>
+          <div class="progress"><div class="progress__fill" style="width:40%"></div></div>
+          <button class="btn btn--primary" onclick="switchView('today');setTimeout(function(){document.getElementById('today-focus-section').scrollIntoView({behavior:'smooth'})},300)">
+            开始聚焦
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- 区域 2：时间块 + 番茄钟 -->
+      <div class="dash" style="margin-bottom:24px">
+        <div class="dash__left">
+          <div class="timeblock fade-up">
+            <div class="timeblock__head">
+              <div>
+                <h2 class="timeblock__title">今日时间块</h2>
+                <p class="timeblock__sub">让时间可见 · 任务按预估时长放进 8h 工作日</p>
+              </div>
+              <div class="timeblock__summary">
+                <div class="timeblock__summary-item" id="tbCapacity">容量 8h</div>
+                <div class="timeblock__summary-item" id="tbPlanned">计划 5.5h</div>
+                <div class="timeblock__summary-item" id="tbRemaining">剩余 2.5h</div>
+              </div>
+            </div>
+            <div class="timeblock__grid" id="timeblockGrid"></div>
+          </div>
+        </div>
+        <div class="dash__right">
+          <div class="fade-up" style="animation-delay:0.1s">
+            <div class="pomodoro" style="flex-direction:column;align-items:center;gap:16px;padding:24px;height:100%;justify-content:center">
+              <div class="pomodoro__ring" style="width:160px;height:160px">
+                <div class="pomodoro__time" id="pomoTime">25:00</div>
+                <div class="pomodoro__breathe"></div>
+              </div>
+              <div class="pomodoro__controls" style="flex-direction:row;margin-left:0">
+                <button class="pomodoro__btn" id="pomoToggle" onclick="togglePomo()" title="开始/暂停">
+                  <svg id="pomoPlay" viewBox="0 0 24 24"><polygon points="6,4 20,12 6,20"/></svg>
+                  <svg id="pomoPause" viewBox="0 0 24 24" style="display:none"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+                </button>
+                <button class="pomodoro__btn" onclick="resetPomo()" title="重置">
+                  <svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5"/></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 区域 3：任务聚焦 -->
+      <div id="today-focus-section" class="fade-up" style="margin-bottom:24px">
+        <div class="focus-mode">
+          <div class="focus-mode__topbar">
+            <div class="focus-mode__counter">第 <strong id="taskIdx">1</strong> 件 · 共 <strong id="taskTotal">3</strong> 件待办</div>
+            <div class="focus-mode__topbar-actions">
+              <button class="btn btn--ghost" id="pomoFsBtn" onclick="togglePomoFullscreen()" title="沉浸模式">⛶</button>
+              <button class="btn btn--ghost" onclick="skipTask()">跳过</button>
+            </div>
+          </div>
+
+          <div class="task-focus-card" id="focusCard">
+            <h2 class="task-focus-card__title" id="focusTitle">完成产品方案初稿</h2>
+            <div class="task-focus-card__meta">
+              <span class="chip chip--high" id="focusPriority">高优先级</span>
+              <span class="focus-now__meta-item" id="focusDue">今天 18:00</span>
+              <span class="focus-now__meta-item" id="focusEst">预估 2h</span>
+            </div>
+            <div class="task-focus-card__divider"></div>
+            <div class="subtasks" id="subtaskList">
+              <!-- 由 JS 渲染 -->
+            </div>
+            <div class="task-focus-card__progress">
+              <div class="task-focus-card__progress-label">
+                <span>进度</span>
+                <span id="focusProgressText">0 / 5</span>
+              </div>
+              <div class="progress"><div class="progress__fill" id="focusProgress" style="width:0%"></div></div>
+            </div>
+
+            <!-- S12: 创意状态机 -->
+            <div class="creative-state" id="creativeState">
+              <span class="creative-state__label">阶段</span>
+              <span class="creative-state__chip" data-state="idea" onclick="setCreativeState('idea')">想法</span>
+              <span class="creative-state__chip active" data-state="drafting" onclick="setCreativeState('drafting')">起草</span>
+              <span class="creative-state__chip" data-state="reviewing" onclick="setCreativeState('reviewing')">审阅</span>
+              <span class="creative-state__chip" data-state="shipped" onclick="setCreativeState('shipped')">交付</span>
+              <div class="creative-state__progress"><div class="creative-state__progress-fill" id="creativeProgress" style="width:25%"></div></div>
+            </div>
+
+            <!-- S2+S3+S4: 工具栏 + S5: kind line -->
+            <div class="task-tools">
+              <button class="tool-btn" onclick="toggleSplitTree()">
+                <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="15" y2="12"/><line x1="3" y1="18" x2="9" y2="18"/></svg>
+                拆到可执行
+              </button>
+              <span class="tool-btn est-tooltip" style="cursor:help">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>
+                AI 估时 <span id="estTime">2h</span>
+                <span class="est-tooltip__body">基于类型「创作类」+ 历史 5 次 · 中位 1.8h · 区间 1.2-2.5h</span>
+              </span>
+              <button class="tool-btn" onclick="showSOS()">
+                <svg viewBox="0 0 24 24"><path d="M12 2L2 22h20L12 2z"/><line x1="12" y1="9" x2="12" y2="14"/><circle cx="12" cy="17" r="0.5" fill="currentColor"/></svg>
+                拖延 SOS
+              </button>
+            </div>
+
+            <div class="subtask-tree" id="splitTree">
+              <!-- 由 JS 渲染 -->
+            </div>
+
+            <div class="kind-line" id="kindLine">
+              <strong>慢一点没关系</strong> · P 型人格的节奏本来就不同于 J 型，今天能开始就已经赢了一半。
+            </div>
+
+            <div class="swipe-complete" id="swipeComplete" onclick="completeTask()">
+              <div class="swipe-complete__fill"></div>
+              <div class="swipe-complete__hint">滑动标记完成 →</div>
+              <div class="swipe-complete__knob">
+                <svg viewBox="0 0 24 24"><polyline points="5,12 10,17 19,8" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 区域 4：今日活动 -->
+      <div class="card fade-up" style="max-width:1200px">
+        <div class="card__label">今日活动</div>
+        <div class="feed">
+          <div class="feed__item"><span>张三 完成了「数据收集」</span><span class="feed__time">10:32</span></div>
+          <div class="feed__item"><span>你 创建了「回复客户邮件」</span><span class="feed__time">09:15</span></div>
+          <div class="feed__item"><span>AI 推荐了 3 个低耗任务</span><span class="feed__time">08:00</span></div>
+          <div class="feed__item"><span>小王 更新了依赖项状态</span><span class="feed__time">昨天</span></div>
+        </div>
+      </div>
+    </div>

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>场景识别：系统如何知道生成什么模块？</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Noto Sans SC', system-ui, sans-serif; background: #fdfbf7; color: #242422; line-height: 1.7; padding: 40px; }
+h1 { font-family: 'Noto Serif SC', serif; font-size: 1.8rem; font-weight: 900; margin-bottom: 8px; }
+.subtitle { color: #5a5a58; font-size: 0.95rem; margin-bottom: 32px; }
+.container { max-width: 1000px; margin: 0 auto; }
+
+/* 选项卡片 */
+.options-container { display: grid; grid-template-columns: 1fr; gap: 20px; }
+.card { background: #fff; border-radius: 12px; padding: 24px; border: 2px solid rgba(168,166,157,0.2); transition: border-color 0.25s; }
+.card:hover { border-color: rgba(217,119,87,0.3); }
+
+.card-header { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 16px; }
+.card-badge { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1rem; flex-shrink: 0; }
+.card-badge--a { background: rgba(122,140,94,0.1); color: #7a8c5e; }
+.card-badge--b { background: rgba(217,119,87,0.1); color: #d97757; }
+.card-badge--c { background: rgba(200,153,104,0.1); color: #c89968; }
+
+.card-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 4px; }
+.card-desc { font-size: 0.85rem; color: #5a5a58; line-height: 1.6; }
+
+/* 流程图示 */
+.flow-diagram { display: flex; align-items: center; gap: 12px; padding: 16px; background: #faf8f5; border-radius: 8px; margin-top: 12px; }
+.flow-box { padding: 8px 12px; background: #fff; border-radius: 6px; font-size: 0.78rem; border: 1px solid rgba(168,166,157,0.15); }
+.flow-arrow { font-size: 0.9rem; color: #c5c3ba; }
+.flow-box--input { background: rgba(122,140,94,0.06); }
+.flow-box--process { background: rgba(217,119,87,0.06); }
+.flow-box--output { background: rgba(200,153,104,0.06); }
+
+/* 示例 */
+.example-box { margin-top: 12px; padding: 14px; background: #faf8f5; border-radius: 8px; }
+.example-title { font-size: 0.75rem; font-weight: 600; color: #999; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.04em; }
+.example-content { font-size: 0.85rem; color: #3a3a38; }
+.example-content code { background: #fff; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; }
+
+/* 优缺点 */
+.pros-cons { display: flex; gap: 16px; margin-top: 12px; }
+.pros, .cons { flex: 1; padding: 12px; border-radius: 6px; font-size: 0.78rem; }
+.pros { background: rgba(122,140,94,0.06); }
+.cons { background: rgba(217,119,87,0.06); }
+.pros h4, .cons h4 { font-size: 0.75rem; font-weight: 600; margin-bottom: 6px; }
+.pros { color: #7a8c5e; }
+.cons { color: #d97757; }
+.pros ul, .cons ul { list-style: none; padding: 0; }
+.pros li, .cons li { padding: 3px 0; padding-left: 12px; position: relative; }
+.pros li::before { content: '+'; position: absolute; left: 0; font-size: 0.65rem; }
+.cons li::before { content: '-'; position: absolute; left: 0; font-size: 0.65rem; }
+
+/* 选择按钮 */
+.options-box { display: flex; gap: 16px; margin-top: 24px; }
+.option-btn { flex: 1; padding: 14px 18px; border-radius: 10px; border: 2px solid; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: all 0.25s; }
+.option-btn--a { border-color: rgba(122,140,94,0.3); color: #7a8c5e; background: #fff; }
+.option-btn--a:hover { border-color: #7a8c5e; }
+.option-btn--b { border-color: rgba(217,119,87,0.3); color: #d97757; background: #fff; }
+.option-btn--b:hover { border-color: #d97757; }
+.option-btn--c { border-color: rgba(200,153,104,0.3); color: #c89968; background: #fff; }
+.option-btn--c:hover { border-color: #c89968; }
+.option-btn.selected { box-shadow: 0 4px 16px rgba(217,119,87,0.2); }
+
+/* 决策提示 */
+.decision-box { background: rgba(217,119,87,0.06); border: 1px solid rgba(217,119,87,0.2); border-radius: 10px; padding: 20px; margin-top: 24px; }
+.decision-box h3 { font-size: 0.95rem; font-weight: 600; color: #d97757; margin-bottom: 8px; }
+.decision-box p { font-size: 0.85rem; color: #5a5a58; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>场景识别：系统如何知道生成什么模块？</h1>
+<p class="subtitle">当用户说「下周末去成都」或「我有三个面试」，系统怎么判断该生成哪些模块？</p>
+
+<div class="options-container">
+  <!-- Option A: 预设模板库 -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-badge card-badge--a">A</div>
+      <div>
+        <div class="card-title">预设模板库</div>
+        <div class="card-desc">系统内置一套预设的场景模板（面试、比赛、旅行、考试等），AI 识别关键词后匹配对应模板。</div>
+      </div>
+    </div>
+    
+    <div class="flow-diagram">
+      <div class="flow-box flow-box--input">用户输入</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box flow-box--process">关键词匹配 → 选择预设模板</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box flow-box--output">生成固定模块结构</div>
+    </div>
+
+    <div class="example-box">
+      <div class="example-title">示例</div>
+      <div class="example-content">
+        用户说「准备腾讯面试」→ AI 识别「面试」→ 匹配「面试模板」→ 生成：<br>
+        <code>技术复习 → 项目复盘 → 模拟面试 → 自我介绍 → 简历修改</code>
+      </div>
+    </div>
+
+    <div class="pros-cons">
+      <div class="pros"><h4>优点</h4><ul><li>模块结构稳定可靠</li><li>用户体验一致</li><li>开发简单</li></ul></div>
+      <div class="cons"><h4>缺点</h4><ul><li>无法覆盖所有场景</li><li>新场景需要手动添加模板</li><li>不够灵活，缺乏惊喜</li></ul></div>
+    </div>
+  </div>
+
+  <!-- Option B: AI 动态生成 -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-badge card-badge--b">B</div>
+      <div>
+        <div class="card-title">AI 动态生成</div>
+        <div class="card-desc">不预设模板，完全由 AI 根据用户输入动态推断应该包含哪些模块，生成结构化的项目结构。</div>
+      </div>
+    </div>
+    
+    <div class="flow-diagram">
+      <div class="flow-box flow-box--input">用户输入</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box flow-box--process">AI 理解意图 → 动态生成模块</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box flow-box--output">生成个性化模块结构</div>
+    </div>
+
+    <div class="example-box">
+      <div class="example-title">示例</div>
+      <div class="example-content">
+        用户说「下周三去成都玩 3 天，顺便见朋友」→ AI 理解 → 生成：<br>
+        <code>交通预订 → 酒店预订 → 景点规划 → 美食推荐 → 朋友见面安排 → 行李准备</code>
+      </div>
+    </div>
+
+    <div class="pros-cons">
+      <div class="pros"><h4>优点</h4><ul><li>覆盖任何场景</li><li>个性化程度高</li><li>用户说什么都能生成</li></ul></div>
+      <div class="cons"><h4>缺点</h4><ul><li>AI 生成质量不稳定</li><li>可能生成不合理的模块</li><li>开发复杂，需要 prompt 工程</li></ul></div>
+    </div>
+  </div>
+
+  <!-- Option C: 混合模式 -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-badge card-badge--c">C</div>
+      <div>
+        <div class="card-title">混合模式（推荐）</div>
+        <div class="card-desc">常用场景用预设模板保证质量，未知场景用 AI 动态生成。同时允许用户继续用自然语言让 AI 补充。</div>
+      </div>
+    </div>
+    
+    <div class="flow-diagram">
+      <div class="flow-box flow-box--input">用户输入</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box flow-box--process">关键词匹配？ → 是: 用模板 / 否: AI 生成</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box flow-box--output">生成模块结构 + 支持继续对话补充</div>
+    </div>
+
+    <div class="example-box">
+      <div class="example-title">示例</div>
+      <div class="example-content">
+        用户说「准备腾讯面试」→ 匹配「面试模板」→ 生成标准模块<br>
+        用户接着说「帮我加一个英语口语练习」→ AI 动态添加该模块<br>
+        用户说「下个月要搬家」→ AI 动态生成搬家相关模块
+      </div>
+    </div>
+
+    <div class="pros-cons">
+      <div class="pros"><h4>优点</h4><ul><li>兼顾稳定性和灵活性</li><li>常用场景体验好</li><li>新场景也能覆盖</li><li>支持继续对话补充</li></ul></div>
+      <div class="cons"><h4>缺点</h4><ul><li>开发复杂度中等</li><li>需要维护模板库</li></ul></div>
+    </div>
+  </div>
+</div>
+
+<div class="decision-box">
+  <h3>你的选择是？</h3>
+  <p>核心问题：系统如何生成模块结构？是靠预设模板、AI 动态生成、还是两者结合？</p>
+</div>
+
+<div class="options-box">
+  <button class="option-btn option-btn--a" onclick="selectOption('a')">A. 预设模板库</button>
+  <button class="option-btn option-btn--b" onclick="selectOption('b')">B. AI 动态生成</button>
+  <button class="option-btn option-btn--c" onclick="selectOption('c')">C. 混合模式（推荐）</button>
+</div>
+
+<script>
+function selectOption(opt) {
+  document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+  event.target.classList.add('selected');
+  fetch('/save-choice', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ choice: opt })
+  }).catch(() => {});
+}
+</script>
+
+</div>
+</body>
+</html>

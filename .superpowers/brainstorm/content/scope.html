@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>改版深度：做 demo 还是做产品？</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Noto Sans SC', system-ui, sans-serif; background: #fdfbf7; color: #242422; line-height: 1.7; padding: 40px; }
+h1 { font-family: 'Noto Serif SC', serif; font-size: 1.8rem; font-weight: 900; margin-bottom: 8px; }
+.subtitle { color: #5a5a58; font-size: 0.95rem; margin-bottom: 32px; }
+.container { max-width: 1000px; margin: 0 auto; }
+
+.card { background: #fff; border-radius: 12px; padding: 24px; border: 2px solid rgba(168,166,157,0.2); margin-bottom: 20px; transition: border-color 0.25s; }
+.card:hover { border-color: rgba(217,119,87,0.3); }
+
+.card-header { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 16px; }
+.card-badge { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1rem; flex-shrink: 0; background: rgba(217,119,87,0.1); color: #d97757; }
+.card-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 4px; }
+.card-desc { font-size: 0.85rem; color: #5a5a58; line-height: 1.6; }
+
+/* 细节对比 */
+.detail-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 16px; }
+.detail-item { padding: 12px; background: #faf8f5; border-radius: 8px; }
+.detail-label { font-size: 0.7rem; font-weight: 600; color: #999; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 4px; }
+.detail-text { font-size: 0.82rem; color: #3a3a38; }
+
+/* 功能清单 */
+.feature-list { margin-top: 12px; }
+.feature-item { display: flex; align-items: flex-start; gap: 10px; padding: 8px 0; font-size: 0.85rem; }
+.feature-check { width: 16px; height: 16px; border-radius: 4px; flex-shrink: 0; margin-top: 2px; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; }
+.check-yes { background: rgba(122,140,94,0.15); color: #7a8c5e; }
+.check-mock { background: rgba(200,153,104,0.15); color: #c89968; }
+.check-no { background: rgba(168,166,157,0.15); color: #999; }
+.feature-text { color: #3a3a38; }
+.feature-sub { font-size: 0.75rem; color: #999; margin-top: 2px; }
+
+/* 选择按钮 */
+.options-box { display: flex; gap: 16px; margin-top: 24px; }
+.option-btn { flex: 1; padding: 14px 18px; border-radius: 10px; border: 2px solid; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: all 0.25s; background: #fff; }
+.option-btn--a { border-color: rgba(168,166,157,0.3); color: #5a5a58; }
+.option-btn--a:hover { border-color: #999; }
+.option-btn--b { border-color: rgba(200,153,104,0.4); color: #c89968; }
+.option-btn--b:hover { border-color: #c89968; }
+.option-btn--c { border-color: rgba(217,119,87,0.4); color: #d97757; }
+.option-btn--c:hover { border-color: #d97757; }
+.option-btn.selected { box-shadow: 0 4px 16px rgba(217,119,87,0.2); }
+
+.decision-box { background: rgba(217,119,87,0.06); border: 1px solid rgba(217,119,87,0.2); border-radius: 10px; padding: 20px; margin-top: 24px; }
+.decision-box h3 { font-size: 0.95rem; font-weight: 600; color: #d97757; margin-bottom: 8px; }
+.decision-box p { font-size: 0.85rem; color: #5a5a58; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>改版深度：做到什么程度算「产品」？</h1>
+<p class="subtitle">你说「全部直接做最后的产品，不做demo」—— 具体到什么深度？</p>
+
+<div class="card">
+  <div class="card-header">
+    <div class="card-badge">A</div>
+    <div>
+      <div class="card-title">高保真原型（看起来像真的）</div>
+      <div class="card-desc">所有功能都有完整 UI 和交互流程，数据是精心设计的 mock 数据，用户点哪都有反馈，但后端和 AI 都是前端模拟的。</div>
+    </div>
+  </div>
+  <div class="detail-grid">
+    <div class="detail-item">
+      <div class="detail-label">AI 能力</div>
+      <div class="detail-text">关键词匹配 + 预设模板 + 少量动态生成</div>
+    </div>
+    <div class="detail-item">
+      <div class="detail-label">高德 API</div>
+      <div class="detail-text">mock 数据，看起来像真的</div>
+    </div>
+    <div class="detail-item">
+      <div class="detail-label">数据持久化</div>
+      <div class="detail-text">localStorage，刷新不丢</div>
+    </div>
+    <div class="detail-item">
+      <div class="detail-label">交互完整度</div>
+      <div class="detail-text">90% 页面可点击有反馈</div>
+    </div>
+  </div>
+  <div class="feature-list">
+    <div class="feature-item"><div class="feature-check check-yes">✓</div><div><div class="feature-text">面试/比赛：难度、准备时间、DDL、要求</div></div></div>
+    <div class="feature-item"><div class="feature-check check-yes">✓</div><div><div class="feature-text">旅行：景点、美食、酒店、交通全模块</div></div></div>
+    <div class="feature-item"><div class="feature-check check-yes">✓</div><div><div class="feature-text">提醒系统：出行前、DDL 前、通勤提醒</div></div></div>
+    <div class="feature-item"><div class="feature-check check-mock">≈</div><div><div class="feature-text">高德地图：模拟路线、模拟通勤推荐</div><div class="feature-sub">数据是假的，但体验是真的</div></div></div>
+    <div class="feature-item"><div class="feature-check check-yes">✓</div><div><div class="feature-text">整体自洽：项目编排驱动全部功能</div></div></div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <div class="card-badge">B</div>
+    <div>
+      <div class="card-title">半真半假（关键 API 真的）</div>
+      <div class="card-desc">核心 API 接入真实服务（比如高德地图），AI 和其他是模拟的。需要你提供 API key。</div>
+    </div>
+  </div>
+  <div class="detail-grid">
+    <div class="detail-item">
+      <div class="detail-label">AI 能力</div>
+      <div class="detail-text">关键词匹配 + 预设模板</div>
+    </div>
+    <div class="detail-item">
+      <div class="detail-label">高德 API</div>
+      <div class="detail-text">真的！真实路线、地点、通勤</div>
+    </div>
+    <div class="detail-item">
+      <div class="detail-label">数据持久化</div>
+      <div class="detail-text">localStorage</div>
+    </div>
+    <div class="detail-item">
+      <div class="detail-label">需要你提供</div>
+      <div class="detail-text">高德地图 API key</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <div class="card-badge">C</div>
+    <div>
+      <div class="card-title">全栈真产品（前后端+真AI）</div>
+      <div class="card-desc">真后端、真 AI 调用、真 API 集成。这是一个完整的可上线产品。</div>
+    </div>
+  </div>
+  <div class="detail-grid">
+    <div class="detail-item">
+      <div class="detail-label">AI 能力</div>
+      <div class="detail-text">真 LLM 调用（需要 API key）</div>
+    </div>
+    <div class="detail-item">
+      <div class="detail-label">高德 API</div>
+      <div class="detail-text">真的</div>
+    </div>
+    <div class="detail-item">
+      <div class="detail-label">后端</div>
+      <div class="detail-text">需要搭服务端（Node/Python）</div>
+    </div>
+    <div class="detail-item">
+      <div class="detail-label">复杂度</div>
+      <div class="detail-text">非常高，工作量大</div>
+    </div>
+  </div>
+</div>
+
+<div class="decision-box">
+  <h3>选哪个？</h3>
+  <p>核心问题：这次改版要做到什么深度？考虑到时间和工作量，以及「参加比赛」这个目标，哪个级别够用又现实？</p>
+</div>
+
+<div class="options-box">
+  <button class="option-btn option-btn--a" onclick="selectOption('a')">A. 高保真原型（看起来像真的）</button>
+  <button class="option-btn option-btn--b" onclick="selectOption('b')">B. 半真半假（高德真的，AI模拟）</button>
+  <button class="option-btn option-btn--c" onclick="selectOption('c')">C. 全栈真产品</button>
+</div>
+
+<script>
+function selectOption(opt) {
+  document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+  event.target.classList.add('selected');
+}
+</script>
+
+</div>
+</body>
+</html>

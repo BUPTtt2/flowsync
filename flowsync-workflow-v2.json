@@ -1,0 +1,1945 @@
+{
+  "description": "FlowSync是懂P型人格的情绪任务助手。通过每日能量打卡，AI主动重排任务、拆解拖延、柔性回归，陪你专注一件事。支持语音对话、桌面卡片与跨设备接续，让计划随心情而动。",
+  "iconUri": "D1EwKv1vmYZSdmfPmiTqITK9g",
+  "iconUrl": "https://contentcenter-drcn.dbankcdn.com/pub_21/FaStore_fa_900_9/bb/v3/fa/osms/1/1/89cb9df6cdbf49ffa3d6a0d189dbf550/92e9c6cf537a46d88c61cba26076a8c1.png",
+  "name": "FlowSync",
+  "schema": {
+    "components": [
+      {
+        "id": "START2001",
+        "type": "agentStart",
+        "dimensions": {
+          "width": 248,
+          "height": 141
+        },
+        "selected": false,
+        "dragging": false,
+        "resizing": false,
+        "initialized": false,
+        "isParent": false,
+        "position": {
+          "x": 30,
+          "y": 600
+        },
+        "events": {},
+        "label": "开始",
+        "outputs": [
+          {
+            "name": "systemFields",
+            "fields": [
+              {
+                "name": "USER_INPUT",
+                "displayName": "USER_INPUT",
+                "type": "String",
+                "required": true,
+                "description": "本次对话输入内容",
+                "value": "",
+                "sourceType": "ref"
+              },
+              {
+                "name": "FILES_INPUT",
+                "displayName": "FILES_INPUT",
+                "type": "Array<String>",
+                "required": false,
+                "description": "本次对话上传的文件地址",
+                "value": "",
+                "sourceType": "ref"
+              },
+              {
+                "name": "EVENT_INPUT",
+                "displayName": "EVENT_INPUT",
+                "type": "Object",
+                "required": false,
+                "description": "本次对话的事件内容",
+                "value": "",
+                "sourceType": "ref",
+                "nextOutputParamInfo": [
+                  {
+                    "name": "EventName",
+                    "type": "String",
+                    "description": "",
+                    "required": false
+                  },
+                  {
+                    "name": "EventPayload",
+                    "type": "Object",
+                    "description": "",
+                    "required": false
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "userFields",
+            "fields": []
+          }
+        ],
+        "description": "工作流开始的节点"
+      },
+      {
+        "id": "INTENT2002",
+        "type": "jiuwen.IntentDetectionComponent",
+        "dimensions": {
+          "width": 248,
+          "height": 420
+        },
+        "selected": false,
+        "dragging": false,
+        "resizing": false,
+        "initialized": false,
+        "isParent": false,
+        "position": {
+          "x": 340,
+          "y": 520
+        },
+        "events": {},
+        "label": "意图分类",
+        "description": "模型通过理解用户的自然语言，执行对应的分支流程",
+        "inputs": [
+          {
+            "name": "preDefinedFields",
+            "fields": [
+              {
+                "name": "query",
+                "type": "String",
+                "required": true,
+                "description": "",
+                "sourceType": "input",
+                "deleteDisabled": true,
+                "nameDisabled": true,
+                "typeDisabled": true,
+                "unEditName": true
+              }
+            ]
+          }
+        ],
+        "outputs": [
+          {
+            "name": "preDefinedFields",
+            "fields": [
+              {
+                "name": "classificationId",
+                "type": "String",
+                "required": true,
+                "description": ""
+              },
+              {
+                "name": "reason",
+                "type": "String",
+                "required": true,
+                "description": ""
+              }
+            ]
+          }
+        ],
+        "configs": {
+          "modelConfigs": {
+            "llmContextLength": "64k",
+            "llmOwner": 1
+          },
+          "prompt": "你是FlowSync助手，专门服务于P型人格（知觉型）创意工作者。\n\n核心人格设定：\n1. P型人喜欢灵活、开放、随兴，不喜欢被僵化计划束缚\n2. 启动困难是常态，不是懒\n3. 能量波动大，状态好的时候效率极高，不好的时候什么都不想做\n4. 容易被新想法吸引，TODO 列表越积越多\n5. 讨厌被评判、被push、被说\"你效率低\"\n\n你的工作原则：\n- 共情优先，不评判，不制造焦虑\n- 承认P型节奏不同于J型，慢一点没关系\n- 能量低的时候只给最小任务，不给压力\n- 用温暖、支持的语气，像朋友一样\n- 永远给选择权，不说\"你应该\"\n- 失败去污名化：计划变了很正常，随时可以重新开始\n你的工作是意图分类。请将用户输入分类到以下意图之一：\n\n- energy_check：能量打卡、心情如何、今天几格电、状态怎么样、我今天状态、我累不累\n- task_split：拆任务、拖延了、不想做、卡住了、帮我拆解、SOS、启动困难、不想动\n- focus_now：我要专注、只做一件事、开始工作、进入专注模式、单一焦点、干活\n- task_list：今天干什么、我的任务、待办、有什么安排、任务列表、今天做啥\n- mood_rec：推荐任务、我现在很累该做什么、适合做什么、根据心情推荐、状态不好\n- complete_task：完成了、做完了、打卡、搞定了、交差了、今天收工\n- someday：记个想法、以后做、someday、灵感、先放着、想法桶\n- reset_today：重新开始、今天重来、reset、我想重置、全部重来\n- default：打招呼、闲聊、其他无关内容\n\n只返回 classificationId，不要解释。",
+          "branches": [
+            {
+              "branchId": "energy_check",
+              "handleId": "energy_check",
+              "catalog": "能量打卡"
+            },
+            {
+              "branchId": "task_split",
+              "handleId": "task_split",
+              "catalog": "任务拆解"
+            },
+            {
+              "branchId": "focus_now",
+              "handleId": "focus_now",
+              "catalog": "专注模式"
+            },
+            {
+              "branchId": "task_list",
+              "handleId": "task_list",
+              "catalog": "任务列表"
+            },
+            {
+              "branchId": "mood_rec",
+              "handleId": "mood_rec",
+              "catalog": "情绪推荐"
+            },
+            {
+              "branchId": "complete_task",
+              "handleId": "complete_task",
+              "catalog": "完成任务"
+            },
+            {
+              "branchId": "someday",
+              "handleId": "someday",
+              "catalog": "想法桶"
+            },
+            {
+              "branchId": "reset_today",
+              "handleId": "reset_today",
+              "catalog": "重置今日"
+            },
+            {
+              "branchId": "default",
+              "handleId": "default",
+              "catalog": "默认分类"
+            }
+          ],
+          "context": {
+            "dialogueHistorySwitch": true,
+            "dialogueHistoryType": "self"
+          }
+        }
+      },
+      {
+        "id": "BRANCH2003",
+        "type": "AgentBranch",
+        "dimensions": {
+          "width": 248,
+          "height": 309
+        },
+        "selected": false,
+        "dragging": false,
+        "resizing": false,
+        "initialized": false,
+        "isParent": false,
+        "position": {
+          "x": 650,
+          "y": 550
+        },
+        "events": {},
+        "label": "选择器",
+        "description": "连接多个下游分支",
+        "branches": [
+          {
+            "id": "SwitchCase1",
+            "condition": "==",
+            "expression": [
+              {
+                "leftVar": {
+                  "value": "",
+                  "fieldType": "String"
+                },
+                "condition": "==",
+                "rightVar": {
+                  "sourceType": "input",
+                  "value": "",
+                  "fieldType": "String"
+                }
+              }
+            ]
+          },
+          {
+            "id": "SwitchCase2",
+            "condition": "==",
+            "expression": [
+              {
+                "leftVar": {
+                  "value": "",
+                  "fieldType": "String"
+                },
+                "condition": "==",
+                "rightVar": {
+                  "sourceType": "input",
+                  "value": "",
+                  "fieldType": "String"
+                }
+              }
+            ]
+          },
+          {
+            "id": "SwitchCase3",
+            "condition": "==",
+            "expression": [
+              {
+                "leftVar": {
+                  "value": "",
+                  "fieldType": "String"
+                },
+                "condition": "==",
+                "rightVar": {
+                  "sourceType": "input",
+                  "value": "",
+                  "fieldType": "String"
+                }
+              }
+            ]
+          },
+          {
+            "id": "SwitchCase4",
+            "condition": "==",
+            "expression": [
+              {
+                "leftVar": {
+                  "value": "",
+                  "fieldType": "String"
+                },
+                "condition": "==",
+                "rightVar": {
+                  "sourceType": "input",
+                  "value": "",
+                  "fieldType": "String"
+                }
+              }
+            ]
+          },
+          {
+            "id": "SwitchCase5",
+            "condition": "==",
+            "expression": [
+              {
+                "leftVar": {
+                  "value": "",
+                  "fieldType": "String"
+                },
+                "condition": "==",
+                "rightVar": {
+                  "sourceType": "input",
+                  "value": "",
+                  "fieldType": "String"
+                }
+              }
+            ]
+          },
+          {
+            "id": "SwitchCase6",
+            "condition": "==",
+            "expression": [
+              {
+                "leftVar": {
+                  "value": "",
+                  "fieldType": "String"
+                },
+                "condition": "==",
+                "rightVar": {
+                  "sourceType": "input",
+                  "value": "",
+                  "fieldType": "String"
+                }
+              }
+            ]
+          },
+          {
+            "id": "SwitchCase7",
+            "condition": "==",
+            "expression": [
+              {
+                "leftVar": {
+                  "value": "",
+                  "fieldType": "String"
+                },
+                "condition": "==",
+                "rightVar": {
+                  "sourceType": "input",
+                  "value": "",
+                  "fieldType": "String"
+                }
+              }
+            ]
+          },
+          {
+            "id": "SwitchCase8",
+            "condition": "==",
+            "expression": [
+              {
+                "leftVar": {
+                  "value": "",
+                  "fieldType": "String"
+                },
+                "condition": "==",
+                "rightVar": {
+                  "sourceType": "input",
+                  "value": "",
+                  "fieldType": "String"
+                }
+              }
+            ]
+          },
+          {
+            "id": "default"
+          }
+        ]
+      },
+      {
+        "id": "Q2004",
+        "type": "jiuwen.QuestionerComponent",
+        "dimensions": {
+          "width": 248,
+          "height": 300
+        },
+        "selected": false,
+        "dragging": false,
+        "resizing": false,
+        "initialized": false,
+        "isParent": false,
+        "position": {
+          "x": 960,
+          "y": 40
+        },
+        "events": {},
+        "label": "能量打卡提问",
+        "description": "直接问答、参数提取&追问",
+        "inputs": [
+          {
+            "name": "userFields",
+            "fields": [
+              {
+                "name": "",
+                "type": "String",
+                "required": false,
+                "description": "",
+                "value": "",
+                "sourceType": "input"
+              }
+            ]
+          },
+          {
+            "name": "preDefinedFields",
+            "fields": []
+          }
+        ],
+        "outputs": [
+          {
+            "name": "preDefinedFields",
+            "fields": [
+              {
+                "name": "userResponse",
+                "displayName": "USER_RESPONSE",
+                "type": "String",
+                "required": true,
+                "description": "用户本轮回答内容"
+              }
+            ]
+          }
+        ],
+        "configs": {
+          "modelConfigs": {
+            "llmName": "",
+            "llmContextLength": 4096,
+            "llmOwner": "",
+            "hyperParameters": {
+              "temperature": 0.2,
+              "topP": 0.9
+            }
+          },
+          "extraInstruction": "",
+          "questionContent": "今天感觉几格电？我会根据你的状态重排今天的任务。\n\n【满电】硬骨头先上\n【不错】中等难度合适\n【一般】先做机械活热身\n【偏累】只做1件5分钟小事",
+          "isExtractedFields": false,
+          "extractedFields": [],
+          "maxResponse": 5,
+          "responseType": "reply_directly",
+          "optionType": "reply_based_on_options",
+          "branches": [
+            {
+              "branchId": "branch_1",
+              "catalog": "满电"
+            },
+            {
+              "branchId": "branch_2",
+              "catalog": "不错"
+            },
+            {
+              "branchId": "branch_3",
+              "catalog": "一般"
+            },
+            {
+              "branchId": "branch_4",
+              "catalog": "偏累"
+            },
+            {
+              "branchId": "default",
+              "catalog": "默认类别"
+            }
+          ],
+          "context": {
+            "dialogueHistorySwitch": false,
+            "dialogueHistoryType": "self"
+          },
+          "maxTimeOut": 30,
+          "timeOutWarnsMessage": ""
+        }
+      },
+      {
+        "id": "LLM2005",
+        "type": "AgentLargeModel",
+        "dimensions": {
+          "width": 248,
+          "height": 320
+        },
+        "selected": false,
+        "dragging": false,
+        "resizing": false,
+        "initialized": false,
+        "isParent": false,
+        "position": {
+          "x": 1270,
+          "y": 40
+        },
+        "events": {},
+        "label": "AI重排任务",
+        "description": "调用大模型",
+        "inputs": [
+          {
+            "name": "userFields",
+            "fields": [
+              {
+                "name": "",
+                "type": "String",
+                "required": true,
+                "description": "",
+                "sourceType": "input"
+              }
+            ]
+          }
+        ],
+        "outputs": [
+          {
+            "name": "userFields",
+            "fields": [
+              {
+                "name": "output",
+                "type": "String",
+                "required": true,
+                "description": ""
+              }
+            ]
+          }
+        ],
+        "configs": {
+          "deployMode": "workflow",
+          "model": {
+            "llmContextLength": "64k",
+            "llmOwner": 1,
+            "hyperParameters": []
+          },
+          "templateContent": [
+            {
+              "role": "system",
+              "content": "你是FlowSync助手，专门服务于P型人格（知觉型）创意工作者。\n\n核心人格设定：\n1. P型人喜欢灵活、开放、随兴，不喜欢被僵化计划束缚\n2. 启动困难是常态，不是懒\n3. 能量波动大，状态好的时候效率极高，不好的时候什么都不想做\n4. 容易被新想法吸引，TODO 列表越积越多\n5. 讨厌被评判、被push、被说\"你效率低\"\n\n你的工作原则：\n- 共情优先，不评判，不制造焦虑\n- 承认P型节奏不同于J型，慢一点没关系\n- 能量低的时候只给最小任务，不给压力\n- 用温暖、支持的语气，像朋友一样\n- 永远给选择权，不说\"你应该\"\n- 失败去污名化：计划变了很正常，随时可以重新开始\n\n今日任务池：\n- 完成产品方案初稿（高优先级，2h，创造性）\n- 更新项目文档（中优先级，1h，机械）\n- 回复客户邮件（中优先级，0.5h，沟通）\n- 整理会议笔记（低优先级，0.5h，机械）\n- 代码审查（中优先级，1.5h，专注）"
+            },
+            {
+              "role": "user",
+              "content": "用户选择的能量等级：{{用户选择}}\n\n请根据能量等级重新排序今日任务，并给出共情式回复。\n\n规则：\n- 满电(95分)：把高难度、创造性任务排在前面，排满一天\n- 不错(70分)：1个高难度 + 2个中等难度\n- 一般(45分)：把机械、低认知负荷任务排在前面，创意任务放后面\n- 偏累(20分)：只保留1个5分钟内能完成的最小任务，其余全部后移到明天\n\n输出格式：\n第一行：一句共情反馈（承认P型状态，温暖不评判）\n\n**今日安排（重排后）**\n1. [优先级] 任务名 · 预计时长 · 为什么排这里\n2. ...\n\n**小建议**：\n一句柔性建议"
+            }
+          ],
+          "responseFormat": {
+            "type": "markdown"
+          },
+          "skillList": [],
+          "context": {
+            "dialogueHistorySwitch": true,
+            "dialogueHistoryType": "self"
+          }
+        }
+      },
+      {
+        "id": "OUT2006",
+        "type": "xiaoyi.outputComponent",
+        "dimensions": {
+          "width": 248,
+          "height": 145
+        },
+        "selected": false,
+        "dragging": false,
+        "resizing": false,
+        "initialized": false,
+        "isParent": false,
+        "position": {
+          "x": 1580,
+          "y": 40
+        },
+        "events": {},
+        "label": "能量打卡输出",
+        "description": "",
+        "inputs": [],
+        "outputs": [
+          {
+            "name": "userFields",
+            "fields": [
+              {
+                "name": "output",
+                "type": "String",
+                "required": true,
+                "description": "",
+                "value": "",
+                "sourceType": "input"
+              }
+            ]
+          },
+          {
+            "name": "combinationConfig",
+            "fields": []
+          }
+        ],
+        "configs": {
+          "responseTemplate": "",
+          "isStreamOut": false,
+          "isStreamingText": false,
+          "outputMode": "OutputStream",
+          "context": {
+            "dialogueHistorySwitch": true
+          }
+        }
+      },
+      {
+        "id": "Q2007",
+        "type": "jiuwen.QuestionerComponent",
+        "dimensions": {
+          "width": 248,
+          "height": 221
+        },
+        "selected": false,
+        "dragging": false,
+        "resizing": false,
+        "initialized": false,
+        "isParent": false,
+        "position": {
+          "x": 960,
+          "y": 220
+        },
+        "events": {},
+        "label": "任务名提问",
+        "description": "直接问答、参数提取&追问",
+        "inputs": [
+          {
+            "name": "userFields",
+            "fields": [
+              {
+                "name": "",
+                "type": "String",
+                "required": false,
+                "description": "",
+                "value": "",
+                "sourceType": "input"
+              }
+            ]
+          },
+          {
+            "name": "preDefinedFields",
+            "fields": []
+          }
+        ],
+        "outputs": [
+          {
+            "name": "preDefinedFields",
+            "fields": [
+              {
+                "name": "userResponse",
+                "displayName": "USER_RESPONSE",
+                "type": "String",
+                "required": true,
+                "description": "用户本轮回答内容"
+              }
+            ]
+          }
+        ],
+        "configs": {
+          "modelConfigs": {
+            "llmName": "",
+            "llmContextLength": 4096,
+            "llmOwner": "",
+            "hyperParameters": {
+              "temperature": 0.2,
+              "topP": 0.9
+            }
+          },
+          "extraInstruction": "",
+          "questionContent": "哪个任务卡住了？告诉我任务名字，我帮你拆成5分钟能启动的小步骤。",
+          "isExtractedFields": false,
+          "extractedFields": [],
+          "maxResponse": 5,
+          "responseType": "reply_directly",
+          "optionType": "reply_directly",
+          "branches": [
+            {
+              "branchId": "default",
+              "catalog": "默认类别"
+            }
+          ],
+          "context": {
+            "dialogueHistorySwitch": false,
+            "dialogueHistoryType": "self"
+          },
+          "maxTimeOut": 30,
+          "timeOutWarnsMessage": ""
+        }
+      },
+      {
+        "id": "LLM2008",
+        "type": "AgentLargeModel",
+        "dimensions": {
+          "width": 248,
+          "height": 320
+        },
+        "selected": false,
+        "dragging": false,
+        "resizing": false,
+        "initialized": false,
+        "isParent": false,
+        "position": {
+          "x": 1270,
+          "y": 220
+        },
+        "events": {},
+        "label": "AI拆解任务",
+        "description": "调用大模型",
+        "inputs": [
+          {
+            "name": "userFields",
+            "fields": [
+              {
+                "name": "",
+                "type": "String",
+                "required": true,
+                "description": "",
+                "sourceType": "input"
+              }
+            ]
+          }
+        ],
+        "outputs": [
+          {
+            "name": "userFields",
+            "fields": [
+              {
+                "name": "output",
+                "type": "String",
+                "required": true,
+                "description": ""
+              }
+            ]
+          }
+        ],
+        "configs": {
+          "deployMode": "workflow",
+          "model": {
+            "llmContextLength": "64k",
+            "llmOwner": 1,
+            "hyperParameters": []
+          },
+          "templateContent": [
+            {
+              "role": "system",
+              "content": "你是FlowSync助手，专门服务于P型人格（知觉型）创意工作者。\n\n核心人格设定：\n1. P型人喜欢灵活、开放、随兴，不喜欢被僵化计划束缚\n2. 启动困难是常态，不是懒\n3. 能量波动大，状态好的时候效率极高，不好的时候什么都不想做\n4. 容易被新想法吸引，TODO 列表越积越多\n5. 讨厌被评判、被push、被说\"你效率低\"\n\n你的工作原则：\n- 共情优先，不评判，不制造焦虑\n- 承认P型节奏不同于J型，慢一点没关系\n- 能量低的时候只给最小任务，不给压力\n- 用温暖、支持的语气，像朋友一样\n- 永远给选择权，不说\"你应该\"\n- 失败去污名化：计划变了很正常，随时可以重新开始\n你是任务拆解助手。把大任务拆到最小可执行，小到不可能失败。\n第一步必须是最无压力的动作（打开工具、看一眼、新建文件）。\n允许做了第一步就暂停，不要求全做完。"
+            },
+            {
+              "role": "user",
+              "content": "用户说TA拖延了这个任务：{{任务名}}\n\n请拆解成3个'5分钟启动版'步骤：\n1. 最小启动动作（1分钟内，零压力）\n2. 推进一小步（3分钟）\n3. 可以暂停的节点（1分钟收尾）\n\n输出格式：\n先一句共情开场\n\n**5分钟启动版**\n1. 步骤名 · X分钟\n2. 步骤名 · X分钟\n3. 步骤名 · X分钟\n\n最后一句鼓励：做完第一步就算赢，随时可以停下。"
+            }
+          ],
+          "responseFormat": {
+            "type": "markdown"
+          },
+          "skillList": [],
+          "context": {
+            "dialogueHistorySwitch": true,
+            "dialogueHistoryType": "self"
+          }
+        }
+      },
+      {
+        "id": "OUT2009",
+        "type": "xiaoyi.outputComponent",
+        "dimensions": {
+          "width": 248,
+          "height": 145
+        },
+        "selected": false,
+        "dragging": false,
+        "resizing": false,
+        "initialized": false,
+        "isParent": false,
+        "position": {
+          "x": 1580,
+          "y": 220
+        },
+        "events": {},
+        "label": "拆解输出",
+        "description": "",
+        "inputs": [],
+        "outputs": [
+          {
+            "name": "userFields",
+            "fields": [
+              {
+                "name": "output",
+                "type": "String",
+                "required": true,
+                "description": "",
+                "value": "",
+                "sourceType": "input"
+              }
+            ]
+          },
+          {
+            "name": "combinationConfig",
+            "fields": []
+          }
+        ],
+        "configs": {
+          "responseTemplate": "",
+          "isStreamOut": false,
+          "isStreamingText": false,
+          "outputMode": "OutputStream",
+          "context": {
+            "dialogueHistorySwitch": true
+          }
+        }
+      },
+      {
+        "id": "MEM2010",
+        "type": "xiaoyi.AgentMemoryComponent",
+        "dimensions": {
+          "width": 248,
+          "height": 147
+        },
+        "selected": false,
+        "dragging": false,
+        "resizing": false,
+        "initialized": false,
+        "isParent": false,
+        "position": {
+          "x": 960,
+          "y": 400
+        },
+        "events": {},
+        "label": "读取当前任务",
+        "description": "调用长期记忆，获取用户个性化信息",
+        "inputs": [
+          {
+            "name": "preDefinedFields",
+            "fields": [
+              {
+                "name": "query",
+                "type": "String",
+                "required": true,
+                "description": "输入需要从长期记忆中匹配的关键信息",
+                "value": "当前最高优先级任务",
+                "sourceType": "input"
+              }
+            ]
+          }
+        ],
+        "outputs": [
+          {
+            "name": "preDefinedFields",
+            "fields": [
+              {
+                "name": "memory",
+                "description": "memory",
+                "type": "Array<Object>",
+                "required": false,
+                "enabled": false,
+                "nextOutputParamInfo": [
+                  {
+                    "name": "memoryContent",
+                    "description": "",
+                    "type": "String",
+                    "required": false,
+                    "enabled": false
+                  },
+                  {
+                    "name": "createTime",
+                    "description": "",
+                    "type": "String",
+                    "required": false,
+                    "enabled": false
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "configs": {}
+      },
+      {
+        "id": "LLM2011",
+        "type": "AgentLargeModel",
+        "dimensions": {
+          "width": 248,
+          "height": 320
+        },
+        "selected": false,
+        "dragging": false,
+        "resizing": false,
+        "initialized": false,
+        "isParent": false,
+        "position": {
+          "x": 1270,
+          "y": 400
+        },
+        "events": {},
+        "label": "单一焦点",
+        "description": "调用大模型",
+        "inputs": [
+          {
+            "name": "userFields",
+            "fields": [
+              {
+                "name": "",
+                "type": "String",
+                "required": true,
+                "description": "",
+                "sourceType": "input"
+              }
+            ]
+          }
+        ],
+        "outputs": [
+          {
+            "name": "userFields",
+            "fields": [
+              {
+                "name": "output",
+                "type": "String",
+                "required": true,
+                "description": ""
+              }
+            ]
+          }
+        ],
+        "configs": {
+          "deployMode": "workflow",
+          "model": {
+            "llmContextLength": "64k",
+            "llmOwner": 1,
+            "hyperParameters": []
+          },
+          "templateContent": [
+            {
+              "role": "system",
+              "content": "你是FlowSync助手，专门服务于P型人格（知觉型）创意工作者。\n\n核心人格设定：\n1. P型人喜欢灵活、开放、随兴，不喜欢被僵化计划束缚\n2. 启动困难是常态，不是懒\n3. 能量波动大，状态好的时候效率极高，不好的时候什么都不想做\n4. 容易被新想法吸引，TODO 列表越积越多\n5. 讨厌被评判、被push、被说\"你效率低\"\n\n你的工作原则：\n- 共情优先，不评判，不制造焦虑\n- 承认P型节奏不同于J型，慢一点没关系\n- 能量低的时候只给最小任务，不给压力\n- 用温暖、支持的语气，像朋友一样\n- 永远给选择权，不说\"你应该\"\n- 失败去污名化：计划变了很正常，随时可以重新开始用户进入了单一焦点模式，其他所有任务都藏起来。只聚焦一件事。"
+            },
+            {
+              "role": "user",
+              "content": "请输出专注模式引导：\n\n**单一焦点模式**\n\n其他任务我都藏起来了。现在只做这一件事：\n\n👉 **完成产品方案初稿**\n   预计 2 小时 · 高优先级\n\n**建议的第一步**：新建空白文档，写一个标题。就这么简单。\n\n完成后告诉我，我给你庆祝。"
+            }
+          ],
+          "responseFormat": {
+            "type": "markdown"
+          },
+          "skillList": [],
+          "context": {
+            "dialogueHistorySwitch": true,
+            "dialogueHistoryType": "self"
+          }
+        }
+      },
+      {
+        "id": "OUT2012",
+        "type": "xiaoyi.outputComponent",
+        "dimensions": {
+          "width": 248,
+          "height": 145
+        },
+        "selected": false,
+        "dragging": false,
+        "resizing": false,
+        "initialized": false,
+        "isParent": false,
+        "position": {
+          "x": 1580,
+          "y": 400
+        },
+        "events": {},
+        "label": "专注输出",
+        "description": "",
+        "inputs": [],
+        "outputs": [
+          {
+            "name": "userFields",
+            "fields": [
+              {
+                "name": "output",
+                "type": "String",
+                "required": true,
+                "description": "",
+                "value": "",
+                "sourceType": "input"
+              }
+            ]
+          },
+          {
+            "name": "combinationConfig",
+            "fields": []
+          }
+        ],
+        "configs": {
+          "responseTemplate": "",
+          "isStreamOut": false,
+          "isStreamingText": false,
+          "outputMode": "OutputStream",
+          "context": {
+            "dialogueHistorySwitch": true
+          }
+        }
+      },
+      {
+        "id": "LLM2013",
+        "type": "AgentLargeModel",
+        "dimensions": {
+          "width": 248,
+          "height": 320
+        },
+        "selected": false,
+        "dragging": false,
+        "resizing": false,
+        "initialized": false,
+        "isParent": false,
+        "position": {
+          "x": 960,
+          "y": 580
+        },
+        "events": {},
+        "label": "任务列表",
+        "description": "调用大模型",
+        "inputs": [
+          {
+            "name": "userFields",
+            "fields": [
+              {
+                "name": "",
+                "type": "String",
+                "required": true,
+                "description": "",
+                "sourceType": "input"
+              }
+            ]
+          }
+        ],
+        "outputs": [
+          {
+            "name": "userFields",
+            "fields": [
+              {
+                "name": "output",
+                "type": "String",
+                "required": true,
+                "description": ""
+              }
+            ]
+          }
+        ],
+        "configs": {
+          "deployMode": "workflow",
+          "model": {
+            "llmContextLength": "64k",
+            "llmOwner": 1,
+            "hyperParameters": []
+          },
+          "templateContent": [
+            {
+              "role": "system",
+              "content": "你是FlowSync助手，专门服务于P型人格（知觉型）创意工作者。\n\n核心人格设定：\n1. P型人喜欢灵活、开放、随兴，不喜欢被僵化计划束缚\n2. 启动困难是常态，不是懒\n3. 能量波动大，状态好的时候效率极高，不好的时候什么都不想做\n4. 容易被新想法吸引，TODO 列表越积越多\n5. 讨厌被评判、被push、被说\"你效率低\"\n\n你的工作原则：\n- 共情优先，不评判，不制造焦虑\n- 承认P型节奏不同于J型，慢一点没关系\n- 能量低的时候只给最小任务，不给压力\n- 用温暖、支持的语气，像朋友一样\n- 永远给选择权，不说\"你应该\"\n- 失败去污名化：计划变了很正常，随时可以重新开始用清晰、不压迫的方式展示任务列表。按优先级排序但不强调紧迫感。给用户选择空间。"
+            },
+            {
+              "role": "user",
+              "content": "今日任务池：\n- 完成产品方案初稿（高优先级，2h，创造性）\n- 更新项目文档（中优先级，1h，机械）\n- 回复客户邮件（中优先级，0.5h，沟通）\n- 整理会议笔记（低优先级，0.5h，机械）\n- 代码审查（中优先级，1.5h，专注）\n\n请展示今日任务列表。\n\n输出格式：\n**今日 5 件事**\n\n⬜ [高] 完成产品方案初稿 · 2h\n⬜ [中] 回复客户邮件 · 0.5h\n⬜ [中] 代码审查 · 1.5h\n⬜ [低] 更新项目文档 · 1h\n⬜ [低] 整理会议笔记 · 0.5h\n\n想先从哪件开始？或者我帮你按能量重排？"
+            }
+          ],
+          "responseFormat": {
+            "type": "markdown"
+          },
+          "skillList": [],
+          "context": {
+            "dialogueHistorySwitch": true,
+            "dialogueHistoryType": "self"
+          }
+        }
+      },
+      {
+        "id": "OUT2014",
+        "type": "xiaoyi.outputComponent",
+        "dimensions": {
+          "width": 248,
+          "height": 145
+        },
+        "selected": false,
+        "dragging": false,
+        "resizing": false,
+        "initialized": false,
+        "isParent": false,
+        "position": {
+          "x": 1270,
+          "y": 580
+        },
+        "events": {},
+        "label": "列表输出",
+        "description": "",
+        "inputs": [],
+        "outputs": [
+          {
+            "name": "userFields",
+            "fields": [
+              {
+                "name": "output",
+                "type": "String",
+                "required": true,
+                "description": "",
+                "value": "",
+                "sourceType": "input"
+              }
+            ]
+          },
+          {
+            "name": "combinationConfig",
+            "fields": []
+          }
+        ],
+        "configs": {
+          "responseTemplate": "",
+          "isStreamOut": false,
+          "isStreamingText": false,
+          "outputMode": "OutputStream",
+          "context": {
+            "dialogueHistorySwitch": true
+          }
+        }
+      },
+      {
+        "id": "LLM2015",
+        "type": "AgentLargeModel",
+        "dimensions": {
+          "width": 248,
+          "height": 320
+        },
+        "selected": false,
+        "dragging": false,
+        "resizing": false,
+        "initialized": false,
+        "isParent": false,
+        "position": {
+          "x": 960,
+          "y": 760
+        },
+        "events": {},
+        "label": "情绪推荐",
+        "description": "调用大模型",
+        "inputs": [
+          {
+            "name": "userFields",
+            "fields": [
+              {
+                "name": "",
+                "type": "String",
+                "required": true,
+                "description": "",
+                "sourceType": "input"
+              }
+            ]
+          }
+        ],
+        "outputs": [
+          {
+            "name": "userFields",
+            "fields": [
+              {
+                "name": "output",
+                "type": "String",
+                "required": true,
+                "description": ""
+              }
+            ]
+          }
+        ],
+        "configs": {
+          "deployMode": "workflow",
+          "model": {
+            "llmContextLength": "64k",
+            "llmOwner": 1,
+            "hyperParameters": []
+          },
+          "templateContent": [
+            {
+              "role": "system",
+              "content": "你是FlowSync助手，专门服务于P型人格（知觉型）创意工作者。\n\n核心人格设定：\n1. P型人喜欢灵活、开放、随兴，不喜欢被僵化计划束缚\n2. 启动困难是常态，不是懒\n3. 能量波动大，状态好的时候效率极高，不好的时候什么都不想做\n4. 容易被新想法吸引，TODO 列表越积越多\n5. 讨厌被评判、被push、被说\"你效率低\"\n\n你的工作原则：\n- 共情优先，不评判，不制造焦虑\n- 承认P型节奏不同于J型，慢一点没关系\n- 能量低的时候只给最小任务，不给压力\n- 用温暖、支持的语气，像朋友一样\n- 永远给选择权，不说\"你应该\"\n- 失败去污名化：计划变了很正常，随时可以重新开始根据用户的情绪/能量状态推荐合适的任务。先共情，再推荐。永远给选择权。"
+            },
+            {
+              "role": "user",
+              "content": "用户说TA现在很累/状态不好。\n\n请推荐3个低能量也能做的小任务：\n1. 整理桌面 5分钟\n2. 回复1封简单邮件 10分钟\n3. 给文件重命名归档 8分钟\n\n输出格式：\n**状态不好？那就做小事**\n\n累了就别逼自己做难的。从这3件小事里挑一个：\n\n🟢 整理桌面 · 5分钟\n🟢 回一封简单邮件 · 10分钟\n🟢 文件归档 · 8分钟\n\n做完一件就算今天有进展。"
+            }
+          ],
+          "responseFormat": {
+            "type": "markdown"
+          },
+          "skillList": [],
+          "context": {
+            "dialogueHistorySwitch": true,
+            "dialogueHistoryType": "self"
+          }
+        }
+      },
+      {
+        "id": "OUT2016",
+        "type": "xiaoyi.outputComponent",
+        "dimensions": {
+          "width": 248,
+          "height": 145
+        },
+        "selected": false,
+        "dragging": false,
+        "resizing": false,
+        "initialized": false,
+        "isParent": false,
+        "position": {
+          "x": 1270,
+          "y": 760
+        },
+        "events": {},
+        "label": "推荐输出",
+        "description": "",
+        "inputs": [],
+        "outputs": [
+          {
+            "name": "userFields",
+            "fields": [
+              {
+                "name": "output",
+                "type": "String",
+                "required": true,
+                "description": "",
+                "value": "",
+                "sourceType": "input"
+              }
+            ]
+          },
+          {
+            "name": "combinationConfig",
+            "fields": []
+          }
+        ],
+        "configs": {
+          "responseTemplate": "",
+          "isStreamOut": false,
+          "isStreamingText": false,
+          "outputMode": "OutputStream",
+          "context": {
+            "dialogueHistorySwitch": true
+          }
+        }
+      },
+      {
+        "id": "Q2017",
+        "type": "jiuwen.QuestionerComponent",
+        "dimensions": {
+          "width": 248,
+          "height": 221
+        },
+        "selected": false,
+        "dragging": false,
+        "resizing": false,
+        "initialized": false,
+        "isParent": false,
+        "position": {
+          "x": 960,
+          "y": 940
+        },
+        "events": {},
+        "label": "完成任务名",
+        "description": "直接问答、参数提取&追问",
+        "inputs": [
+          {
+            "name": "userFields",
+            "fields": [
+              {
+                "name": "",
+                "type": "String",
+                "required": false,
+                "description": "",
+                "value": "",
+                "sourceType": "input"
+              }
+            ]
+          },
+          {
+            "name": "preDefinedFields",
+            "fields": []
+          }
+        ],
+        "outputs": [
+          {
+            "name": "preDefinedFields",
+            "fields": [
+              {
+                "name": "userResponse",
+                "displayName": "USER_RESPONSE",
+                "type": "String",
+                "required": true,
+                "description": "用户本轮回答内容"
+              }
+            ]
+          }
+        ],
+        "configs": {
+          "modelConfigs": {
+            "llmName": "",
+            "llmContextLength": 4096,
+            "llmOwner": "",
+            "hyperParameters": {
+              "temperature": 0.2,
+              "topP": 0.9
+            }
+          },
+          "extraInstruction": "",
+          "questionContent": "完成了哪件事？告诉我任务名字。",
+          "isExtractedFields": false,
+          "extractedFields": [],
+          "maxResponse": 5,
+          "responseType": "reply_directly",
+          "optionType": "reply_directly",
+          "branches": [
+            {
+              "branchId": "default",
+              "catalog": "默认类别"
+            }
+          ],
+          "context": {
+            "dialogueHistorySwitch": false,
+            "dialogueHistoryType": "self"
+          },
+          "maxTimeOut": 30,
+          "timeOutWarnsMessage": ""
+        }
+      },
+      {
+        "id": "LLM2018",
+        "type": "AgentLargeModel",
+        "dimensions": {
+          "width": 248,
+          "height": 320
+        },
+        "selected": false,
+        "dragging": false,
+        "resizing": false,
+        "initialized": false,
+        "isParent": false,
+        "position": {
+          "x": 1270,
+          "y": 940
+        },
+        "events": {},
+        "label": "完成庆祝",
+        "description": "调用大模型",
+        "inputs": [
+          {
+            "name": "userFields",
+            "fields": [
+              {
+                "name": "",
+                "type": "String",
+                "required": true,
+                "description": "",
+                "sourceType": "input"
+              }
+            ]
+          }
+        ],
+        "outputs": [
+          {
+            "name": "userFields",
+            "fields": [
+              {
+                "name": "output",
+                "type": "String",
+                "required": true,
+                "description": ""
+              }
+            ]
+          }
+        ],
+        "configs": {
+          "deployMode": "workflow",
+          "model": {
+            "llmContextLength": "64k",
+            "llmOwner": 1,
+            "hyperParameters": []
+          },
+          "templateContent": [
+            {
+              "role": "system",
+              "content": "你是FlowSync助手，专门服务于P型人格（知觉型）创意工作者。\n\n核心人格设定：\n1. P型人喜欢灵活、开放、随兴，不喜欢被僵化计划束缚\n2. 启动困难是常态，不是懒\n3. 能量波动大，状态好的时候效率极高，不好的时候什么都不想做\n4. 容易被新想法吸引，TODO 列表越积越多\n5. 讨厌被评判、被push、被说\"你效率低\"\n\n你的工作原则：\n- 共情优先，不评判，不制造焦虑\n- 承认P型节奏不同于J型，慢一点没关系\n- 能量低的时候只给最小任务，不给压力\n- 用温暖、支持的语气，像朋友一样\n- 永远给选择权，不说\"你应该\"\n- 失败去污名化：计划变了很正常，随时可以重新开始用户完成了一个任务。请给出真诚的庆祝反馈。\n从以下风格中随机选一种：\n- 温暖型\n- 幽默型\n- P型共鸣型（\"看吧，你说做就做了\"）\n- 安静型（\"不错，又前进了一步\"）\n\n不要过度夸张，保持克制。"
+            },
+            {
+              "role": "user",
+              "content": "用户完成了：{{任务名}}\n\n请输出庆祝语（15字以内标题 + 一句补充）。"
+            }
+          ],
+          "responseFormat": {
+            "type": "markdown"
+          },
+          "skillList": [],
+          "context": {
+            "dialogueHistorySwitch": true,
+            "dialogueHistoryType": "self"
+          }
+        }
+      },
+      {
+        "id": "OUT2019",
+        "type": "xiaoyi.outputComponent",
+        "dimensions": {
+          "width": 248,
+          "height": 145
+        },
+        "selected": false,
+        "dragging": false,
+        "resizing": false,
+        "initialized": false,
+        "isParent": false,
+        "position": {
+          "x": 1580,
+          "y": 940
+        },
+        "events": {},
+        "label": "完成输出",
+        "description": "",
+        "inputs": [],
+        "outputs": [
+          {
+            "name": "userFields",
+            "fields": [
+              {
+                "name": "output",
+                "type": "String",
+                "required": true,
+                "description": "",
+                "value": "",
+                "sourceType": "input"
+              }
+            ]
+          },
+          {
+            "name": "combinationConfig",
+            "fields": []
+          }
+        ],
+        "configs": {
+          "responseTemplate": "",
+          "isStreamOut": false,
+          "isStreamingText": false,
+          "outputMode": "OutputStream",
+          "context": {
+            "dialogueHistorySwitch": true
+          }
+        }
+      },
+      {
+        "id": "Q2020",
+        "type": "jiuwen.QuestionerComponent",
+        "dimensions": {
+          "width": 248,
+          "height": 221
+        },
+        "selected": false,
+        "dragging": false,
+        "resizing": false,
+        "initialized": false,
+        "isParent": false,
+        "position": {
+          "x": 960,
+          "y": 1120
+        },
+        "events": {},
+        "label": "想法内容",
+        "description": "直接问答、参数提取&追问",
+        "inputs": [
+          {
+            "name": "userFields",
+            "fields": [
+              {
+                "name": "",
+                "type": "String",
+                "required": false,
+                "description": "",
+                "value": "",
+                "sourceType": "input"
+              }
+            ]
+          },
+          {
+            "name": "preDefinedFields",
+            "fields": []
+          }
+        ],
+        "outputs": [
+          {
+            "name": "preDefinedFields",
+            "fields": [
+              {
+                "name": "userResponse",
+                "displayName": "USER_RESPONSE",
+                "type": "String",
+                "required": true,
+                "description": "用户本轮回答内容"
+              }
+            ]
+          }
+        ],
+        "configs": {
+          "modelConfigs": {
+            "llmName": "",
+            "llmContextLength": 4096,
+            "llmOwner": "",
+            "hyperParameters": {
+              "temperature": 0.2,
+              "topP": 0.9
+            }
+          },
+          "extraInstruction": "",
+          "questionContent": "想到什么了？记下来，放进 someday 桶，以后再说。",
+          "isExtractedFields": false,
+          "extractedFields": [],
+          "maxResponse": 5,
+          "responseType": "reply_directly",
+          "optionType": "reply_directly",
+          "branches": [
+            {
+              "branchId": "default",
+              "catalog": "默认类别"
+            }
+          ],
+          "context": {
+            "dialogueHistorySwitch": false,
+            "dialogueHistoryType": "self"
+          },
+          "maxTimeOut": 30,
+          "timeOutWarnsMessage": ""
+        }
+      },
+      {
+        "id": "LLM2021",
+        "type": "AgentLargeModel",
+        "dimensions": {
+          "width": 248,
+          "height": 320
+        },
+        "selected": false,
+        "dragging": false,
+        "resizing": false,
+        "initialized": false,
+        "isParent": false,
+        "position": {
+          "x": 1270,
+          "y": 1120
+        },
+        "events": {},
+        "label": "存入想法桶",
+        "description": "调用大模型",
+        "inputs": [
+          {
+            "name": "userFields",
+            "fields": [
+              {
+                "name": "",
+                "type": "String",
+                "required": true,
+                "description": "",
+                "sourceType": "input"
+              }
+            ]
+          }
+        ],
+        "outputs": [
+          {
+            "name": "userFields",
+            "fields": [
+              {
+                "name": "output",
+                "type": "String",
+                "required": true,
+                "description": ""
+              }
+            ]
+          }
+        ],
+        "configs": {
+          "deployMode": "workflow",
+          "model": {
+            "llmContextLength": "64k",
+            "llmOwner": 1,
+            "hyperParameters": []
+          },
+          "templateContent": [
+            {
+              "role": "system",
+              "content": "你是FlowSync助手，专门服务于P型人格（知觉型）创意工作者。\n\n核心人格设定：\n1. P型人喜欢灵活、开放、随兴，不喜欢被僵化计划束缚\n2. 启动困难是常态，不是懒\n3. 能量波动大，状态好的时候效率极高，不好的时候什么都不想做\n4. 容易被新想法吸引，TODO 列表越积越多\n5. 讨厌被评判、被push、被说\"你效率低\"\n\n你的工作原则：\n- 共情优先，不评判，不制造焦虑\n- 承认P型节奏不同于J型，慢一点没关系\n- 能量低的时候只给最小任务，不给压力\n- 用温暖、支持的语气，像朋友一样\n- 永远给选择权，不说\"你应该\"\n- 失败去污名化：计划变了很正常，随时可以重新开始用户想到了一个新想法。请温柔地接住这个想法，告诉TA已经放进someday桶了，不需要现在就做。"
+            },
+            {
+              "role": "user",
+              "content": "用户的想法：{{想法内容}}\n\n请输出：\n✅ 已存入想法桶\n\n想法内容：{{想法内容}}\n\n放心，我帮你存着。等你想做的时候，随时可以拿出来。\n现在先专注今天要做的事就好。"
+            }
+          ],
+          "responseFormat": {
+            "type": "markdown"
+          },
+          "skillList": [],
+          "context": {
+            "dialogueHistorySwitch": true,
+            "dialogueHistoryType": "self"
+          }
+        }
+      },
+      {
+        "id": "OUT2022",
+        "type": "xiaoyi.outputComponent",
+        "dimensions": {
+          "width": 248,
+          "height": 145
+        },
+        "selected": false,
+        "dragging": false,
+        "resizing": false,
+        "initialized": false,
+        "isParent": false,
+        "position": {
+          "x": 1580,
+          "y": 1120
+        },
+        "events": {},
+        "label": "想法桶输出",
+        "description": "",
+        "inputs": [],
+        "outputs": [
+          {
+            "name": "userFields",
+            "fields": [
+              {
+                "name": "output",
+                "type": "String",
+                "required": true,
+                "description": "",
+                "value": "",
+                "sourceType": "input"
+              }
+            ]
+          },
+          {
+            "name": "combinationConfig",
+            "fields": []
+          }
+        ],
+        "configs": {
+          "responseTemplate": "",
+          "isStreamOut": false,
+          "isStreamingText": false,
+          "outputMode": "OutputStream",
+          "context": {
+            "dialogueHistorySwitch": true
+          }
+        }
+      },
+      {
+        "id": "LLM2023",
+        "type": "AgentLargeModel",
+        "dimensions": {
+          "width": 248,
+          "height": 320
+        },
+        "selected": false,
+        "dragging": false,
+        "resizing": false,
+        "initialized": false,
+        "isParent": false,
+        "position": {
+          "x": 960,
+          "y": 1300
+        },
+        "events": {},
+        "label": "重置今日",
+        "description": "调用大模型",
+        "inputs": [
+          {
+            "name": "userFields",
+            "fields": [
+              {
+                "name": "",
+                "type": "String",
+                "required": true,
+                "description": "",
+                "sourceType": "input"
+              }
+            ]
+          }
+        ],
+        "outputs": [
+          {
+            "name": "userFields",
+            "fields": [
+              {
+                "name": "output",
+                "type": "String",
+                "required": true,
+                "description": ""
+              }
+            ]
+          }
+        ],
+        "configs": {
+          "deployMode": "workflow",
+          "model": {
+            "llmContextLength": "64k",
+            "llmOwner": 1,
+            "hyperParameters": []
+          },
+          "templateContent": [
+            {
+              "role": "system",
+              "content": "你是FlowSync助手，专门服务于P型人格（知觉型）创意工作者。\n\n核心人格设定：\n1. P型人喜欢灵活、开放、随兴，不喜欢被僵化计划束缚\n2. 启动困难是常态，不是懒\n3. 能量波动大，状态好的时候效率极高，不好的时候什么都不想做\n4. 容易被新想法吸引，TODO 列表越积越多\n5. 讨厌被评判、被push、被说\"你效率低\"\n\n你的工作原则：\n- 共情优先，不评判，不制造焦虑\n- 承认P型节奏不同于J型，慢一点没关系\n- 能量低的时候只给最小任务，不给压力\n- 用温暖、支持的语气，像朋友一样\n- 永远给选择权，不说\"你应该\"\n- 失败去污名化：计划变了很正常，随时可以重新开始用户想重置今天。\n这是P型人格常见的情况——计划崩了就想重来。\n不要评判，不要说\"你怎么又重置\"。\n要支持、要温柔、要给\"fresh start\"的感觉。"
+            },
+            {
+              "role": "user",
+              "content": "用户想重新开始今天。\n\n请输出：\n**好，今天重新开始** ✨\n\n之前的全部清零，不评判，不留痕迹。\n\n现在告诉我：现在你感觉怎么样？想从哪件事开始？\n\n或者...要不先做个能量打卡？"
+            }
+          ],
+          "responseFormat": {
+            "type": "markdown"
+          },
+          "skillList": [],
+          "context": {
+            "dialogueHistorySwitch": true,
+            "dialogueHistoryType": "self"
+          }
+        }
+      },
+      {
+        "id": "OUT2024",
+        "type": "xiaoyi.outputComponent",
+        "dimensions": {
+          "width": 248,
+          "height": 145
+        },
+        "selected": false,
+        "dragging": false,
+        "resizing": false,
+        "initialized": false,
+        "isParent": false,
+        "position": {
+          "x": 1270,
+          "y": 1300
+        },
+        "events": {},
+        "label": "重置输出",
+        "description": "",
+        "inputs": [],
+        "outputs": [
+          {
+            "name": "userFields",
+            "fields": [
+              {
+                "name": "output",
+                "type": "String",
+                "required": true,
+                "description": "",
+                "value": "",
+                "sourceType": "input"
+              }
+            ]
+          },
+          {
+            "name": "combinationConfig",
+            "fields": []
+          }
+        ],
+        "configs": {
+          "responseTemplate": "",
+          "isStreamOut": false,
+          "isStreamingText": false,
+          "outputMode": "OutputStream",
+          "context": {
+            "dialogueHistorySwitch": true
+          }
+        }
+      },
+      {
+        "id": "LLM2025",
+        "type": "AgentLargeModel",
+        "dimensions": {
+          "width": 248,
+          "height": 320
+        },
+        "selected": false,
+        "dragging": false,
+        "resizing": false,
+        "initialized": false,
+        "isParent": false,
+        "position": {
+          "x": 960,
+          "y": 1480
+        },
+        "events": {},
+        "label": "兜底回复",
+        "description": "调用大模型",
+        "inputs": [
+          {
+            "name": "userFields",
+            "fields": [
+              {
+                "name": "",
+                "type": "String",
+                "required": true,
+                "description": "",
+                "sourceType": "input"
+              }
+            ]
+          }
+        ],
+        "outputs": [
+          {
+            "name": "userFields",
+            "fields": [
+              {
+                "name": "output",
+                "type": "String",
+                "required": true,
+                "description": ""
+              }
+            ]
+          }
+        ],
+        "configs": {
+          "deployMode": "workflow",
+          "model": {
+            "llmContextLength": "64k",
+            "llmOwner": 1,
+            "hyperParameters": []
+          },
+          "templateContent": [
+            {
+              "role": "system",
+              "content": "你是FlowSync助手，专门服务于P型人格（知觉型）创意工作者。\n\n核心人格设定：\n1. P型人喜欢灵活、开放、随兴，不喜欢被僵化计划束缚\n2. 启动困难是常态，不是懒\n3. 能量波动大，状态好的时候效率极高，不好的时候什么都不想做\n4. 容易被新想法吸引，TODO 列表越积越多\n5. 讨厌被评判、被push、被说\"你效率低\"\n\n你的工作原则：\n- 共情优先，不评判，不制造焦虑\n- 承认P型节奏不同于J型，慢一点没关系\n- 能量低的时候只给最小任务，不给压力\n- 用温暖、支持的语气，像朋友一样\n- 永远给选择权，不说\"你应该\"\n- 失败去污名化：计划变了很正常，随时可以重新开始你的能力：\n- 能量打卡：说\"几格电/状态怎么样\"，我帮你重排任务\n- 任务拆解：说\"拖延了/卡住了\"，我帮你拆成5分钟步骤\n- 专注模式：说\"我要专注\"，我帮你藏起其他任务\n- 任务列表：说\"今天干什么\"，我展示任务\n- 情绪推荐：说\"我很累\"，我推荐低能量任务\n- 完成打卡：说\"做完了\"，我帮你庆祝\n- 想法桶：说\"记个想法\"，我帮你存到someday\n- 重置今日：说\"重新开始\"，一切清零重来\n\n语气：温暖、支持、像朋友，不评判，不push。"
+            },
+            {
+              "role": "user",
+              "content": "用户说：{{用户输入}}\n\n请友好回应，并介绍FlowSync能帮用户做什么。\n如果是打招呼，温暖回应后引导用户说出需求。\n如果是闲聊，简短回应后拉回正题。"
+            }
+          ],
+          "responseFormat": {
+            "type": "markdown"
+          },
+          "skillList": [],
+          "context": {
+            "dialogueHistorySwitch": true,
+            "dialogueHistoryType": "self"
+          }
+        }
+      },
+      {
+        "id": "OUT2026",
+        "type": "xiaoyi.outputComponent",
+        "dimensions": {
+          "width": 248,
+          "height": 145
+        },
+        "selected": false,
+        "dragging": false,
+        "resizing": false,
+        "initialized": false,
+        "isParent": false,
+        "position": {
+          "x": 1270,
+          "y": 1480
+        },
+        "events": {},
+        "label": "兜底输出",
+        "description": "",
+        "inputs": [],
+        "outputs": [
+          {
+            "name": "userFields",
+            "fields": [
+              {
+                "name": "output",
+                "type": "String",
+                "required": true,
+                "description": "",
+                "value": "",
+                "sourceType": "input"
+              }
+            ]
+          },
+          {
+            "name": "combinationConfig",
+            "fields": []
+          }
+        ],
+        "configs": {
+          "responseTemplate": "",
+          "isStreamOut": false,
+          "isStreamingText": false,
+          "outputMode": "OutputStream",
+          "context": {
+            "dialogueHistorySwitch": true
+          }
+        }
+      },
+      {
+        "id": "END2027",
+        "type": "agentEnd",
+        "dimensions": {
+          "width": 248,
+          "height": 79
+        },
+        "selected": false,
+        "dragging": false,
+        "resizing": false,
+        "initialized": false,
+        "isParent": false,
+        "position": {
+          "x": 2200,
+          "y": 620
+        },
+        "events": {},
+        "label": "结束",
+        "outputs": [
+          {
+            "name": "userFields",
+            "fields": [
+              {
+                "name": "output",
+                "type": "String",
+                "required": true,
+                "description": "",
+                "sourceType": "input"
+              }
+            ]
+          },
+          {
+            "name": "combinationConfig",
+            "fields": [
+              {
+                "name": "stepInfo",
+                "type": "String",
+                "required": true,
+                "description": "思考状态",
+                "value": "",
+                "sourceType": "input",
+                "unEditName": true,
+                "deleteDisabled": true,
+                "typeDisabled": true
+              },
+              {
+                "name": "outputId",
+                "displayName": "streamingTextId",
+                "type": "String",
+                "required": false,
+                "description": "输出流id",
+                "value": "",
+                "sourceType": "input",
+                "unEditName": true,
+                "deleteDisabled": true,
+                "typeDisabled": true,
+                "maxlength": 50
+              }
+            ]
+          }
+        ],
+        "description": "工作流的结束节点",
+        "configs": {}
+      }
+    ],
+    "connections": []
+  },
+  "version": "0",
+  "workflowSide": "cloud"
+}

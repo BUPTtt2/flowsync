@@ -1,0 +1,1171 @@
+{
+    "description": "FlowSync是懂P型人格的情绪任务助手。通过每日能量打卡，AI主动重排任务、拆解拖延、柔性回归，陪你专注一件事。支持语音对话、桌面卡片与跨设备接续，让计划随心情而动",
+    "iconUri": "D1EwKv1vmYZSdmfPmiTqITK9g",
+    "iconUrl": "https://contentcenter-drcn.dbankcdn.com/pub_21/FaStore_fa_900_9/bb/v3/fa/osms/1/1/89cb9df6cdbf49ffa3d6a0d189dbf550/92e9c6cf537a46d88c61cba26076a8c1.png",
+    "name": "nengliang",
+    "schema": {
+        "components": [
+            {
+                "id": "START1753d5ccd0334e52aa933d477b09c36b",
+                "type": "agentStart",
+                "dimensions": {
+                    "width": 248,
+                    "height": 141
+                },
+                "selected": false,
+                "dragging": false,
+                "resizing": false,
+                "initialized": false,
+                "isParent": false,
+                "position": {
+                    "x": 53,
+                    "y": 219
+                },
+                "events": {},
+                "label": "开始",
+                "outputs": [
+                    {
+                        "name": "systemFields",
+                        "fields": [
+                            {
+                                "name": "USER_INPUT",
+                                "displayName": "USER_INPUT",
+                                "type": "String",
+                                "required": true,
+                                "description": "本次对话输入内容",
+                                "value": "",
+                                "sourceType": "ref"
+                            },
+                            {
+                                "name": "FILES_INPUT",
+                                "displayName": "FILES_INPUT",
+                                "type": "Array<String>",
+                                "required": false,
+                                "description": "本次对话上传的文件地址",
+                                "value": "",
+                                "sourceType": "ref"
+                            },
+                            {
+                                "name": "EVENT_INPUT",
+                                "displayName": "EVENT_INPUT",
+                                "type": "Object",
+                                "required": false,
+                                "description": "本次对话的事件内容",
+                                "value": "",
+                                "sourceType": "ref",
+                                "nextOutputParamInfo": [
+                                    {
+                                        "name": "EventName",
+                                        "type": "String",
+                                        "description": "",
+                                        "required": false
+                                    },
+                                    {
+                                        "name": "EventPayload",
+                                        "type": "Object",
+                                        "description": "",
+                                        "required": false
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "name": "userFields",
+                        "fields": []
+                    }
+                ],
+                "description": "工作流开始的节点，用于设定启动工作流需要的信息"
+            },
+            {
+                "id": "END5259c0f415114b77914b923c6039b6d4",
+                "type": "agentEnd",
+                "dimensions": {
+                    "width": 248,
+                    "height": 79
+                },
+                "selected": false,
+                "dragging": false,
+                "resizing": false,
+                "initialized": false,
+                "isParent": false,
+                "position": {
+                    "x": 1640,
+                    "y": 334
+                },
+                "events": {},
+                "label": "结束",
+                "outputs": [
+                    {
+                        "name": "userFields",
+                        "fields": [
+                            {
+                                "name": "output",
+                                "type": "String",
+                                "required": true,
+                                "description": "",
+                                "sourceType": "input"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "combinationConfig",
+                        "fields": [
+                            {
+                                "name": "stepInfo",
+                                "type": "String",
+                                "required": true,
+                                "description": "思考状态，请勿引用流式变量",
+                                "value": "",
+                                "sourceType": "input",
+                                "unEditName": true,
+                                "deleteDisabled": true,
+                                "typeDisabled": true
+                            },
+                            {
+                                "name": "outputId",
+                                "displayName": "streamingTextId",
+                                "type": "String",
+                                "required": false,
+                                "description": "输出流id，请勿引用流式变量，最大长度为50个字符",
+                                "value": "",
+                                "sourceType": "input",
+                                "unEditName": true,
+                                "deleteDisabled": true,
+                                "typeDisabled": true,
+                                "maxlength": 50
+                            }
+                        ]
+                    }
+                ],
+                "description": "工作流的结束节点，工作流的运行结果将返回给智能体",
+                "configs": {}
+            },
+            {
+                "id": "LLM743c7283c9824711a0d6f78253e69402",
+                "type": "AgentLargeModel",
+                "dimensions": {
+                    "width": 248,
+                    "height": 277
+                },
+                "selected": false,
+                "dragging": false,
+                "resizing": false,
+                "initialized": false,
+                "isParent": false,
+                "position": {
+                    "x": 626.2791300873126,
+                    "y": 308.8674271512084
+                },
+                "events": {},
+                "label": "大模型",
+                "description": "调用大模型，根据入参和Prompt，生成回复",
+                "inputs": [
+                    {
+                        "name": "userFields",
+                        "fields": [
+                            {
+                                "name": "",
+                                "type": "String",
+                                "required": true,
+                                "description": "",
+                                "sourceType": "input"
+                            }
+                        ]
+                    }
+                ],
+                "outputs": [
+                    {
+                        "name": "userFields",
+                        "fields": [
+                            {
+                                "name": "output",
+                                "type": "String",
+                                "required": true,
+                                "description": ""
+                            }
+                        ]
+                    }
+                ],
+                "configs": {
+                    "deployMode": "workflow",
+                    "model": {
+                        "llmContextLength": "64k",
+                        "llmOwner": 1,
+                        "hyperParameters": []
+                    },
+                    "templateContent": [
+                        {
+                            "role": "system",
+                            "content": ""
+                        },
+                        {
+                            "role": "user",
+                            "content": ""
+                        }
+                    ],
+                    "responseFormat": {
+                        "type": "markdown"
+                    },
+                    "skillList": [],
+                    "context": {
+                        "dialogueHistorySwitch": true,
+                        "dialogueHistoryType": "self"
+                    }
+                }
+            },
+            {
+                "id": "IntentClassify48577d790f8849dd868a445c4b5d99e2",
+                "type": "jiuwen.IntentDetectionComponent",
+                "dimensions": {
+                    "width": 248,
+                    "height": 245
+                },
+                "selected": false,
+                "dragging": false,
+                "resizing": false,
+                "initialized": false,
+                "isParent": false,
+                "position": {
+                    "x": 1254.5746835165064,
+                    "y": 55.37423782668725
+                },
+                "events": {},
+                "label": "意图分类",
+                "description": "模型通过理解用户的自然语言，执行对应的分支流程",
+                "inputs": [
+                    {
+                        "name": "preDefinedFields",
+                        "fields": [
+                            {
+                                "name": "query",
+                                "type": "String",
+                                "required": true,
+                                "description": "",
+                                "sourceType": "input",
+                                "deleteDisabled": true,
+                                "nameDisabled": true,
+                                "typeDisabled": true,
+                                "unEditName": true
+                            }
+                        ]
+                    }
+                ],
+                "outputs": [
+                    {
+                        "name": "preDefinedFields",
+                        "fields": [
+                            {
+                                "name": "classificationId",
+                                "type": "String",
+                                "required": true,
+                                "description": ""
+                            },
+                            {
+                                "name": "reason",
+                                "type": "String",
+                                "required": true,
+                                "description": ""
+                            }
+                        ]
+                    }
+                ],
+                "configs": {
+                    "modelConfigs": {
+                        "llmContextLength": "64k",
+                        "llmOwner": 1
+                    },
+                    "prompt": "",
+                    "branches": [
+                        {
+                            "branchId": "branch_1",
+                            "handleId": "branch_1",
+                            "catalog": ""
+                        },
+                        {
+                            "branchId": "default",
+                            "handleId": "default",
+                            "catalog": "默认分类"
+                        }
+                    ],
+                    "context": {
+                        "dialogueHistorySwitch": true,
+                        "dialogueHistoryType": "self"
+                    }
+                }
+            },
+            {
+                "id": "Branche0ec7dc708ab479dab3f504ef6e1ca01",
+                "type": "AgentBranch",
+                "dimensions": {
+                    "width": 248,
+                    "height": 149
+                },
+                "selected": false,
+                "dragging": false,
+                "resizing": false,
+                "initialized": false,
+                "isParent": false,
+                "position": {
+                    "x": 690.05751969246,
+                    "y": 609.3770682106032
+                },
+                "events": {},
+                "label": "选择器_1",
+                "description": "连接多个下游分支，若设定的条件成立则仅运行对应的分支，若均不成立则只运行“否则”分支",
+                "branches": [
+                    {
+                        "id": "SwitchCase1",
+                        "condition": "&&",
+                        "expression": [
+                            {
+                                "leftVar": {
+                                    "value": "",
+                                    "fieldType": "String"
+                                },
+                                "condition": "==",
+                                "rightVar": {
+                                    "sourceType": "input",
+                                    "value": "",
+                                    "fieldType": "String"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "id": "default"
+                    }
+                ]
+            },
+            {
+                "id": "outputComponent81923859930141d5a4e710f4e96002dc6bf5afbf9642462ba81998c1fb5b5654",
+                "type": "xiaoyi.outputComponent",
+                "dimensions": {
+                    "width": 248,
+                    "height": 145
+                },
+                "selected": false,
+                "dragging": false,
+                "resizing": false,
+                "initialized": false,
+                "isParent": false,
+                "position": {
+                    "x": 378.8773137728625,
+                    "y": 610.994215147941
+                },
+                "events": {},
+                "label": "输出",
+                "description": "",
+                "inputs": [],
+                "outputs": [
+                    {
+                        "name": "userFields",
+                        "fields": [
+                            {
+                                "name": "output",
+                                "type": "String",
+                                "required": true,
+                                "description": "",
+                                "value": "",
+                                "sourceType": "input"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "combinationConfig",
+                        "fields": []
+                    }
+                ],
+                "configs": {
+                    "responseTemplate": "",
+                    "isStreamOut": false,
+                    "isStreamingText": false,
+                    "outputMode": "OutputStream",
+                    "context": {
+                        "dialogueHistorySwitch": true
+                    }
+                }
+            },
+            {
+                "id": "loopComponentId2e11aa0e12474bfcac4c46ff3bdf311a",
+                "type": "jiuwen.loop",
+                "dimensions": {
+                    "width": 382,
+                    "height": 324
+                },
+                "selected": true,
+                "dragging": false,
+                "resizing": false,
+                "initialized": false,
+                "isParent": true,
+                "position": {
+                    "x": 1266.7753775880635,
+                    "y": 529.1137738970076
+                },
+                "events": {},
+                "label": "循环",
+                "description": "用于通过设定循环次数和逻辑，重复执行一系列任务",
+                "inputs": [
+                    {
+                        "name": "preDefinedFields",
+                        "fields": [
+                            {
+                                "name": "loopArray",
+                                "type": "Object",
+                                "description": "当前循环的数组",
+                                "value": [
+                                    {
+                                        "name": "input",
+                                        "type": "Array<String>",
+                                        "required": true,
+                                        "description": "",
+                                        "value": "",
+                                        "sourceType": "input"
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "intermediateVar",
+                                "type": "Object",
+                                "description": "中间变量",
+                                "value": []
+                            }
+                        ]
+                    }
+                ],
+                "outputs": [
+                    {
+                        "name": "userFields",
+                        "fields": []
+                    }
+                ],
+                "configs": {
+                    "loopType": "arrayLoop",
+                    "loopBody": [
+                        "startLoopComponentId5a829f22d47f42509f9c62639547af83",
+                        "continueLoopComponentIdfc829cf734d343b9822a73f2665ea97c",
+                        "endLoopComponentIdd935597a397946c7a6398bfe008b6584",
+                        "setVariableComponentId6ef72b489e4c47e8813a54cfae746a12",
+                        "continueLoopComponentIdcae5cdbde3b44533b318ee1dd8f93bd3"
+                    ]
+                }
+            },
+            {
+                "id": "startLoopComponentId5a829f22d47f42509f9c62639547af83",
+                "type": "virtual.startLoop",
+                "dimensions": {
+                    "width": 1,
+                    "height": 1
+                },
+                "draggable": false,
+                "selected": false,
+                "dragging": false,
+                "resizing": false,
+                "initialized": false,
+                "isParent": false,
+                "position": {
+                    "x": 14,
+                    "y": 176
+                },
+                "events": {},
+                "label": "开始循环",
+                "parentNode": "loopComponentId2e11aa0e12474bfcac4c46ff3bdf311a"
+            },
+            {
+                "id": "continueLoopComponentIdfc829cf734d343b9822a73f2665ea97c",
+                "type": "virtual.endLoop",
+                "dimensions": {
+                    "width": 1,
+                    "height": 1
+                },
+                "draggable": false,
+                "selected": false,
+                "dragging": false,
+                "resizing": false,
+                "initialized": false,
+                "isParent": false,
+                "position": {
+                    "x": 366,
+                    "y": 176
+                },
+                "events": {},
+                "label": "继续循环（虚拟）",
+                "parentNode": "loopComponentId2e11aa0e12474bfcac4c46ff3bdf311a"
+            },
+            {
+                "id": "node_batch2ac4fef5a64e418c94470c2c77027125",
+                "type": "jiuwen.batch",
+                "dimensions": {
+                    "width": 282,
+                    "height": 160
+                },
+                "selected": false,
+                "dragging": false,
+                "resizing": false,
+                "initialized": false,
+                "isParent": true,
+                "position": {
+                    "x": 312.32650861442505,
+                    "y": 42.15409679770471
+                },
+                "events": {},
+                "label": "批处理",
+                "description": "通过设定批量运行次数和逻辑，运行处理体内的任务",
+                "inputs": [
+                    {
+                        "name": "preDefinedFields",
+                        "fields": [
+                            {
+                                "name": "batchArray",
+                                "type": "Object",
+                                "description": "批处理的数组",
+                                "value": [
+                                    {
+                                        "name": "input",
+                                        "type": "Array<String>",
+                                        "required": true,
+                                        "description": "",
+                                        "value": "",
+                                        "sourceType": "input"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ],
+                "outputs": [
+                    {
+                        "name": "userFields",
+                        "fields": [
+                            {
+                                "name": "",
+                                "type": "暂无数据",
+                                "description": "批处理的数组",
+                                "typeDisabled": true,
+                                "value": [
+                                    {
+                                        "name": "",
+                                        "type": "暂无数据",
+                                        "required": true,
+                                        "description": "",
+                                        "value": "",
+                                        "sourceType": "ref"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ],
+                "configs": {
+                    "batchBody": [
+                        "startBatchComponentId7872dc0231fc4dda97b79039b8a10840",
+                        "endBatchComponentIded037b622b814be6b4023a7e1e65c255"
+                    ],
+                    "batchConcurrentNum": 10,
+                    "batchMaxNum": 100
+                }
+            },
+            {
+                "id": "startBatchComponentId7872dc0231fc4dda97b79039b8a10840",
+                "type": "virtual.startBatch",
+                "dimensions": {
+                    "width": 1,
+                    "height": 1
+                },
+                "draggable": false,
+                "selected": false,
+                "dragging": false,
+                "resizing": false,
+                "initialized": false,
+                "isParent": false,
+                "position": {
+                    "x": 14,
+                    "y": 94
+                },
+                "events": {},
+                "label": "开始批处理",
+                "parentNode": "node_batch2ac4fef5a64e418c94470c2c77027125"
+            },
+            {
+                "id": "endBatchComponentIded037b622b814be6b4023a7e1e65c255",
+                "type": "virtual.endBatch",
+                "dimensions": {
+                    "width": 1,
+                    "height": 1
+                },
+                "draggable": false,
+                "selected": false,
+                "dragging": false,
+                "resizing": false,
+                "initialized": false,
+                "isParent": false,
+                "position": {
+                    "x": 266,
+                    "y": 94
+                },
+                "events": {},
+                "label": "结束批处理",
+                "parentNode": "node_batch2ac4fef5a64e418c94470c2c77027125"
+            },
+            {
+                "id": "knowledgeca3e3e98d1c14787a39248b9ddcb479b",
+                "type": "agentKnowledge",
+                "dimensions": {
+                    "width": 248,
+                    "height": 156
+                },
+                "selected": false,
+                "dragging": false,
+                "resizing": false,
+                "initialized": false,
+                "isParent": false,
+                "position": {
+                    "x": 973.8087605550584,
+                    "y": 349.2555987562929
+                },
+                "events": {},
+                "label": "知识库",
+                "description": "在选定的知识中，根据输入变量召回最匹配的信息，并以列表的形式返回",
+                "inputs": [
+                    {
+                        "name": "preDefinedFields",
+                        "fields": [
+                            {
+                                "name": "query",
+                                "type": "String",
+                                "required": true,
+                                "sourceType": "ref",
+                                "description": "",
+                                "value": "",
+                                "deleteDisabled": true,
+                                "nameDisabled": true,
+                                "typeDisabled": true,
+                                "unEditName": true
+                            }
+                        ]
+                    }
+                ],
+                "outputs": [
+                    {
+                        "name": "preDefinedFields",
+                        "fields": [
+                            {
+                                "name": "knowledgeSegments",
+                                "description": "在选定的知识中，根据输入变量找回最匹配的信息，并以列表形式返回",
+                                "type": "Array<String>",
+                                "required": false,
+                                "nextOutputParamInfo": [
+                                    {
+                                        "name": "knowledgeSegment",
+                                        "description": "",
+                                        "type": "String",
+                                        "required": false
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ],
+                "configs": {
+                    "knowledgeBases": [],
+                    "knowledgeList": [],
+                    "maxTokenCount": 10000,
+                    "maxResultCount": 3,
+                    "similarityThreshold": 0.7,
+                    "searchType": "mix",
+                    "enableQueryRewrite": true
+                }
+            },
+            {
+                "id": "endLoopComponentIdd935597a397946c7a6398bfe008b6584",
+                "type": "jiuwen.endLoop",
+                "dimensions": {
+                    "width": 248,
+                    "height": 45
+                },
+                "selected": false,
+                "dragging": false,
+                "resizing": false,
+                "initialized": false,
+                "isParent": false,
+                "position": {
+                    "x": 55,
+                    "y": 75
+                },
+                "events": {},
+                "label": "终止循环",
+                "description": "用于立即终止当前所在的循环，跳出循环体",
+                "parentNode": "loopComponentId2e11aa0e12474bfcac4c46ff3bdf311a"
+            },
+            {
+                "id": "setVariableComponentId6ef72b489e4c47e8813a54cfae746a12",
+                "type": "jiuwen.setVariable",
+                "dimensions": {
+                    "width": 248,
+                    "height": 67
+                },
+                "selected": false,
+                "dragging": false,
+                "resizing": false,
+                "initialized": false,
+                "isParent": false,
+                "position": {
+                    "x": 55,
+                    "y": 133
+                },
+                "events": {},
+                "label": "设置变量",
+                "description": "对用户自定义的中间变量的重新赋值，供循环体内的组件使用",
+                "inputs": [
+                    {
+                        "name": "userFields",
+                        "fields": [
+                            {
+                                "name": "user_var1",
+                                "description": "中间变量赋值",
+                                "type": "Object",
+                                "value": {
+                                    "left": {
+                                        "type": "String",
+                                        "required": true,
+                                        "value": "",
+                                        "sourceType": "ref",
+                                        "typeDisabled": true
+                                    },
+                                    "right": {
+                                        "type": "String",
+                                        "required": true,
+                                        "value": "",
+                                        "sourceType": "ref",
+                                        "typeDisabled": true
+                                    }
+                                },
+                                "deleteDisabled": true
+                            }
+                        ]
+                    }
+                ],
+                "parentNode": "loopComponentId2e11aa0e12474bfcac4c46ff3bdf311a"
+            },
+            {
+                "id": "continueLoopComponentIdcae5cdbde3b44533b318ee1dd8f93bd3",
+                "type": "jiuwen.continueLoop",
+                "dimensions": {
+                    "width": 248,
+                    "height": 45
+                },
+                "selected": false,
+                "dragging": false,
+                "resizing": false,
+                "initialized": false,
+                "isParent": false,
+                "position": {
+                    "x": 77.5,
+                    "y": 218.5
+                },
+                "events": {},
+                "label": "继续循环",
+                "description": "用于终止当前循环，执行下次循环",
+                "parentNode": "loopComponentId2e11aa0e12474bfcac4c46ff3bdf311a"
+            },
+            {
+                "id": "VariableComponent81923859930141d5a4e710f4e96002dc70e49649c03e4a4da4d51d7630066a5e",
+                "type": "xiaoyi.variableComponent",
+                "dimensions": {
+                    "width": 248,
+                    "height": 145
+                },
+                "selected": false,
+                "dragging": false,
+                "resizing": false,
+                "initialized": false,
+                "isParent": false,
+                "position": {
+                    "x": 807.2532802763666,
+                    "y": 94.52251612241366
+                },
+                "events": {},
+                "label": "变量组件 ",
+                "description": "变量组件",
+                "inputs": [
+                    {
+                        "name": "userFields",
+                        "fields": [
+                            {
+                                "name": "",
+                                "type": "String",
+                                "required": true,
+                                "description": "",
+                                "value": "",
+                                "sourceType": "input"
+                            }
+                        ]
+                    }
+                ],
+                "outputs": [
+                    {
+                        "name": "preDefinedFields",
+                        "fields": [
+                            {
+                                "name": "isSuccess",
+                                "type": "Boolean",
+                                "required": true,
+                                "description": ""
+                            }
+                        ]
+                    }
+                ],
+                "configs": {}
+            },
+            {
+                "id": "queryCounterComponentId118e16b9111540d6a2c15ea217034b2e",
+                "type": "xiaoyi.QueryCounterComponent",
+                "dimensions": {
+                    "width": 248,
+                    "height": 189
+                },
+                "selected": false,
+                "dragging": false,
+                "resizing": false,
+                "initialized": false,
+                "isParent": false,
+                "position": {
+                    "x": 66.31738138103844,
+                    "y": 463.00868056524666
+                },
+                "events": {},
+                "label": "查询计数变量",
+                "description": "用于查询用户、设备维度配置的原子化计数变量",
+                "outputs": [
+                    {
+                        "name": "preDefinedFields",
+                        "fields": [
+                            {
+                                "name": "isSuccess",
+                                "type": "Boolean",
+                                "required": true,
+                                "description": ""
+                            },
+                            {
+                                "name": "counterVariable",
+                                "type": "Integer",
+                                "required": true,
+                                "description": ""
+                            },
+                            {
+                                "name": "errorMessage",
+                                "type": "String",
+                                "required": true,
+                                "description": ""
+                            }
+                        ]
+                    }
+                ],
+                "configs": {
+                    "countVarName": "",
+                    "countVarId": ""
+                }
+            },
+            {
+                "id": "atomicCounterComponentId30d65312034e41a790a2ca3d293384ed",
+                "type": "xiaoyi.AtomicCounterComponent",
+                "dimensions": {
+                    "width": 248,
+                    "height": 287
+                },
+                "selected": false,
+                "dragging": false,
+                "resizing": false,
+                "initialized": false,
+                "isParent": false,
+                "position": {
+                    "x": 947.5688965005206,
+                    "y": 575.6640829817832
+                },
+                "events": {},
+                "label": "配额管理",
+                "description": "用于给原子化数据的计数变量赋值",
+                "inputs": [
+                    {
+                        "name": "userFields",
+                        "fields": [
+                            {
+                                "name": "",
+                                "type": "Integer",
+                                "required": true,
+                                "description": "",
+                                "value": "",
+                                "sourceType": "input"
+                            },
+                            {
+                                "name": "limit",
+                                "type": "Integer",
+                                "required": true,
+                                "description": "",
+                                "value": "1",
+                                "sourceType": "input"
+                            }
+                        ]
+                    }
+                ],
+                "outputs": [
+                    {
+                        "name": "preDefinedFields",
+                        "fields": [
+                            {
+                                "name": "counterVariable",
+                                "type": "Integer",
+                                "required": true,
+                                "description": ""
+                            },
+                            {
+                                "name": "errorMessage",
+                                "type": "String",
+                                "required": true,
+                                "description": ""
+                            },
+                            {
+                                "name": "resultStatus",
+                                "type": "String",
+                                "required": true,
+                                "description": ""
+                            }
+                        ]
+                    }
+                ],
+                "configs": {
+                    "pattern": "rateLimit",
+                    "deltaType": "Inc",
+                    "countVarId": ""
+                }
+            },
+            {
+                "id": "AgentMemoryComponent81923859930141d5a4e710f4e96002dc15bcbd73c4c14fd296151716c90d5426",
+                "type": "xiaoyi.AgentMemoryComponent",
+                "dimensions": {
+                    "width": 248,
+                    "height": 147
+                },
+                "selected": false,
+                "dragging": false,
+                "resizing": false,
+                "initialized": false,
+                "isParent": false,
+                "position": {
+                    "x": 122.92816993276062,
+                    "y": 723.8436832694333
+                },
+                "events": {},
+                "label": "长期记忆",
+                "description": "用于调用长期记忆，获取用户的个性化信息，智能体必须打开长期记忆",
+                "inputs": [
+                    {
+                        "name": "preDefinedFields",
+                        "fields": [
+                            {
+                                "name": "query",
+                                "type": "String",
+                                "required": true,
+                                "description": "输入需要从长期记忆中匹配的关键信息",
+                                "value": "",
+                                "sourceType": "input"
+                            }
+                        ]
+                    }
+                ],
+                "outputs": [
+                    {
+                        "name": "preDefinedFields",
+                        "fields": [
+                            {
+                                "name": "memory",
+                                "description": "memory",
+                                "type": "Array<Object>",
+                                "required": false,
+                                "enabled": false,
+                                "nextOutputParamInfo": [
+                                    {
+                                        "name": "memoryContent",
+                                        "description": "memoryContent",
+                                        "type": "String",
+                                        "required": false,
+                                        "enabled": false
+                                    },
+                                    {
+                                        "name": "createTime",
+                                        "description": "createTime",
+                                        "type": "String",
+                                        "required": false,
+                                        "enabled": false
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ],
+                "configs": {}
+            },
+            {
+                "id": "TextHandler81923859930141d5a4e710f4e96002dc61c8329e7fb44dab8bcfbda5fa739796",
+                "type": "jiuwen.TextProcessingComponent",
+                "dimensions": {
+                    "width": 248,
+                    "height": 147
+                },
+                "selected": false,
+                "dragging": false,
+                "resizing": false,
+                "initialized": false,
+                "isParent": false,
+                "position": {
+                    "x": 437.6861719653101,
+                    "y": 802.4039339923117
+                },
+                "events": {},
+                "label": "文本处理组件",
+                "description": "对前序节点输入的内容进行字符串拼接、字符串分隔",
+                "inputs": [
+                    {
+                        "name": "userFields",
+                        "fields": [
+                            {
+                                "name": "",
+                                "type": "String",
+                                "required": true,
+                                "description": "",
+                                "value": "",
+                                "sourceType": "input"
+                            }
+                        ]
+                    }
+                ],
+                "outputs": [
+                    {
+                        "name": "preDefinedFields",
+                        "fields": [
+                            {
+                                "name": "output",
+                                "type": "String",
+                                "required": true,
+                                "description": ""
+                            }
+                        ]
+                    }
+                ],
+                "configs": {
+                    "functionality": "concat",
+                    "listJoinString": "\\n",
+                    "concatTemplate": "",
+                    "splitStringList": [],
+                    "customSeparatorList": [],
+                    "customConnectionList": []
+                }
+            },
+            {
+                "id": "Questioner81923859930141d5a4e710f4e96002dc56379e284f6141c69d20d806da96753b",
+                "type": "jiuwen.QuestionerComponent",
+                "dimensions": {
+                    "width": 248,
+                    "height": 221
+                },
+                "selected": false,
+                "dragging": false,
+                "resizing": false,
+                "initialized": false,
+                "isParent": false,
+                "position": {
+                    "x": 717.2572137120961,
+                    "y": 812.5696272068861
+                },
+                "events": {},
+                "label": "提问器",
+                "description": "直接问答、参数提取&追问",
+                "inputs": [
+                    {
+                        "name": "userFields",
+                        "fields": [
+                            {
+                                "name": "",
+                                "type": "String",
+                                "required": false,
+                                "description": "",
+                                "value": "",
+                                "sourceType": "input"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "preDefinedFields",
+                        "fields": []
+                    }
+                ],
+                "outputs": [
+                    {
+                        "name": "preDefinedFields",
+                        "fields": [
+                            {
+                                "name": "userResponse",
+                                "displayName": "USER_RESPONSE",
+                                "type": "String",
+                                "required": true,
+                                "description": "用户本轮回答内容"
+                            }
+                        ]
+                    }
+                ],
+                "configs": {
+                    "modelConfigs": {
+                        "llmName": "",
+                        "llmContextLength": 4096,
+                        "llmOwner": "",
+                        "hyperParameters": {
+                            "temperature": 0.2,
+                            "topP": 0.9
+                        }
+                    },
+                    "extraInstruction": "",
+                    "questionContent": "",
+                    "isExtractedFields": false,
+                    "extractedFields": [
+                        {
+                            "fieldName": "",
+                            "description": "",
+                            "cnFieldName": "",
+                            "defaultValue": "",
+                            "required": true,
+                            "fieldType": "String",
+                            "refValue": "",
+                            "sourceType": "ref"
+                        }
+                    ],
+                    "maxResponse": 5,
+                    "responseType": "reply_directly",
+                    "optionType": "reply_based_on_options",
+                    "branches": [
+                        {
+                            "branchId": "branch_1",
+                            "catalog": ""
+                        },
+                        {
+                            "branchId": "branch_2",
+                            "catalog": ""
+                        },
+                        {
+                            "branchId": "default",
+                            "catalog": "默认类别"
+                        }
+                    ],
+                    "context": {
+                        "dialogueHistorySwitch": false,
+                        "dialogueHistoryType": "self"
+                    },
+                    "maxTimeOut": 30,
+                    "timeOutWarnsMessage": ""
+                }
+            }
+        ],
+        "connections": []
+    },
+    "version": "0",
+    "workflowSide": "cloud"
+}

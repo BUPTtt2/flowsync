@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>心情检查 - FlowSync</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.1/dist/index.global.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --brand: #d97757;
+      --brand-hover: #c46a4c;
+      --brand-light: #e08d6f;
+      --dark: #1b1b19;
+      --dark-mid: #262624;
+      --card: #2c2c2b;
+      --text: #faf9f5;
+      --muted: #b7b5a9;
+      --success: #8ca06f;
+      --border: #908e84;
+    }
+
+    * {
+      -webkit-tap-highlight-color: transparent;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Noto Sans SC', sans-serif;
+      background: var(--dark);
+      color: var(--text);
+      max-width: 430px;
+      margin: 0 auto;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+    /* Energy ring */
+    .energy-ring-outer {
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .energy-ring-track {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      border: 10px solid var(--card);
+    }
+
+    .energy-ring-fill {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      border: 10px solid transparent;
+      border-top-color: var(--brand);
+      border-right-color: var(--brand);
+      border-bottom-color: var(--brand);
+      transform: rotate(36deg);
+      transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .energy-ring-glow {
+      position: absolute;
+      inset: -6px;
+      border-radius: 50%;
+      background: conic-gradient(
+        from 36deg,
+        var(--brand) 0deg,
+        var(--brand) 252deg,
+        transparent 252deg
+      );
+      opacity: 0.15;
+      filter: blur(8px);
+      animation: ring-pulse 3s ease-in-out infinite;
+    }
+
+    @keyframes ring-pulse {
+      0%, 100% { opacity: 0.12; transform: scale(1); }
+      50% { opacity: 0.2; transform: scale(1.03); }
+    }
+
+    /* Mood pills */
+    .mood-pill {
+      flex-shrink: 0;
+      padding: 10px 20px;
+      border-radius: 9999px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.2s ease;
+      user-select: none;
+      border: 2px solid transparent;
+    }
+
+    .mood-pill:active {
+      transform: scale(0.95);
+    }
+
+    .mood-pill.selected {
+      outline: 2px solid var(--brand);
+      outline-offset: 3px;
+    }
+
+    /* AI Recommendation slide up */
+    .ai-card {
+      transform: translateY(20px);
+      opacity: 0;
+      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease;
+      pointer-events: none;
+    }
+
+    .ai-card.show {
+      transform: translateY(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* Weekly bars */
+    .week-bar {
+      border-radius: 6px 6px 2px 2px;
+      transition: height 0.6s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
+      min-height: 4px;
+    }
+
+    .week-bar.today {
+      outline: 2px solid var(--brand);
+      outline-offset: 2px;
+    }
+
+    /* Gesture bar */
+    .gesture-bar {
+      width: 134px;
+      height: 5px;
+      border-radius: 100px;
+      background: rgba(250, 249, 245, 0.25);
+      margin: 0 auto;
+    }
+
+    /* Percentage count up */
+    @keyframes fade-in-num {
+      0% { opacity: 0; transform: scale(0.8); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+
+    .num-enter {
+      animation: fade-in-num 0.6s ease-out forwards;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 1. Top Bar -->
+  <div class="px-5 pt-4 flex items-center justify-center relative" style="padding-top: max(16px, env(safe-area-inset-top));">
+    <a href="home.html" data-dom-id="back-home"
+       class="absolute left-5 w-8 h-8 flex items-center justify-center rounded-full active:bg-[#2c2c2b] transition-colors">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/>
+      </svg>
+    </a>
+    <span class="text-sm font-semibold text-[#faf9f5] tracking-wide">心情检查</span>
+  </div>
+
+  <!-- 2. Concept Image -->
+  <div class="px-5 mt-4">
+    <div class="rounded-2xl overflow-hidden" style="background: var(--card);">
+      <img
+        src="../assets/android-mood.jpg"
+        alt="心情检查功能展示"
+        class="w-full h-48 object-cover"
+        loading="eager"
+      />
+    </div>
+  </div>
+
+  <!-- 3. Energy Gauge Ring -->
+  <div class="flex flex-col items-center mt-8">
+    <div class="energy-ring-outer">
+      <div class="energy-ring-glow"></div>
+      <div class="energy-ring-track"></div>
+      <div class="energy-ring-fill"></div>
+      <div class="relative z-10 flex flex-col items-center justify-center">
+        <span id="energyNum" class="text-3xl font-bold text-white num-enter">70%</span>
+        <span class="text-xs mt-0.5" style="color: var(--muted);">能量值</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. Energy Selector -->
+  <div class="px-5 mt-8">
+    <h2 class="text-lg font-semibold text-[#faf9f5]">你现在感觉怎么样?</h2>
+    <p class="text-xs mt-1.5 leading-relaxed" style="color: var(--muted);">选择最接近你当前状态的心情</p>
+  </div>
+
+  <div class="px-5 mt-5">
+    <div id="moodRow" class="flex gap-3 overflow-x-auto no-scrollbar pb-2">
+      <button class="mood-pill" data-mood="满电" data-value="95" data-color="#8ca06f"
+              style="background: #8ca06f; color: #1b1b19;">
+        满电
+      </button>
+      <button class="mood-pill" data-mood="不错" data-value="70" data-color="#e08d6f"
+              style="background: rgba(224,141,111,0.2); color: #e08d6f;">
+        不错
+      </button>
+      <button class="mood-pill" data-mood="一般" data-value="50" data-color="#b7b5a9"
+              style="background: rgba(183,181,169,0.2); color: #b7b5a9;">
+        一般
+      </button>
+      <button class="mood-pill" data-mood="有点累" data-value="30" data-color="#908e84"
+              style="background: var(--dark-mid); color: #b7b5a9;">
+        有点累
+      </button>
+      <button class="mood-pill" data-mood="快没电了" data-value="10" data-color="#6e6d68"
+              style="background: var(--dark); color: rgba(183,181,169,0.5);">
+        快没电了
+      </button>
+    </div>
+  </div>
+
+  <!-- 5. AI Recommendation -->
+  <div class="px-5 mt-6">
+    <div id="aiCard" class="ai-card" style="background: var(--card); border-radius: 16px; padding: 20px;">
+      <p class="text-xs mb-2" style="color: var(--muted);">基于你的状态</p>
+      <p id="aiText" class="text-base font-medium text-white leading-relaxed">推荐 3 个中等难度任务</p>
+      <p id="aiSubtext" class="text-xs mt-1.5 leading-relaxed" style="color: var(--muted);">AI 已根据你的能量水平调整任务优先级</p>
+      <button class="mt-3 px-5 py-2.5 rounded-full text-sm font-medium transition-colors active:scale-95"
+              style="background: var(--brand); color: var(--text);"
+              onmousedown="this.style.background='var(--brand-hover)'"
+              onmouseup="this.style.background='var(--brand)'"
+              onmouseleave="this.style.background='var(--brand)'">
+        查看推荐
+      </button>
+    </div>
+  </div>
+
+  <!-- 6. Weekly Trend -->
+  <div class="px-5 mt-8 pb-8">
+    <h3 class="text-sm font-semibold" style="color: var(--muted);">本周趋势</h3>
+    <div class="flex items-end justify-between gap-2 mt-4" style="height: 130px; padding: 0 4px;">
+      <!-- Mon -->
+      <div class="flex flex-col items-center gap-2 flex-1">
+        <div class="week-bar w-full" style="height: 70%; background: linear-gradient(to top, #8ca06f, #a8bf85);"></div>
+        <span class="text-[10px]" style="color: var(--muted);">一</span>
+      </div>
+      <!-- Tue -->
+      <div class="flex flex-col items-center gap-2 flex-1">
+        <div class="week-bar w-full" style="height: 85%; background: linear-gradient(to top, #8ca06f, #b5cc8a);"></div>
+        <span class="text-[10px]" style="color: var(--muted);">二</span>
+      </div>
+      <!-- Wed -->
+      <div class="flex flex-col items-center gap-2 flex-1">
+        <div class="week-bar w-full" style="height: 50%; background: linear-gradient(to top, #d97757, #e08d6f);"></div>
+        <span class="text-[10px]" style="color: var(--muted);">三</span>
+      </div>
+      <!-- Thu -->
+      <div class="flex flex-col items-center gap-2 flex-1">
+        <div class="week-bar w-full" style="height: 35%; background: linear-gradient(to top, #b7b5a9, #908e84);"></div>
+        <span class="text-[10px]" style="color: var(--muted);">四</span>
+      </div>
+      <!-- Fri -->
+      <div class="flex flex-col items-center gap-2 flex-1">
+        <div class="week-bar w-full" style="height: 60%; background: linear-gradient(to top, #d97757, #e08d6f);"></div>
+        <span class="text-[10px]" style="color: var(--muted);">五</span>
+      </div>
+      <!-- Sat -->
+      <div class="flex flex-col items-center gap-2 flex-1">
+        <div class="week-bar w-full" style="height: 90%; background: linear-gradient(to top, #8ca06f, #b5cc8a);"></div>
+        <span class="text-[10px]" style="color: var(--muted);">六</span>
+      </div>
+      <!-- Sun (Today) -->
+      <div class="flex flex-col items-center gap-2 flex-1">
+        <div class="week-bar today w-full" style="height: 55%; background: linear-gradient(to top, #d97757, #e08d6f);"></div>
+        <span class="text-[10px] font-semibold" style="color: var(--brand);">日</span>
+      </div>
+    </div>
+
+    <!-- Legend -->
+    <div class="flex items-center justify-center gap-5 mt-5">
+      <div class="flex items-center gap-1.5">
+        <span class="w-2.5 h-2.5 rounded-full" style="background: var(--success);"></span>
+        <span class="text-[10px]" style="color: var(--muted);">高能量</span>
+      </div>
+      <div class="flex items-center gap-1.5">
+        <span class="w-2.5 h-2.5 rounded-full" style="background: var(--brand);"></span>
+        <span class="text-[10px]" style="color: var(--muted);">中等</span>
+      </div>
+      <div class="flex items-center gap-1.5">
+        <span class="w-2.5 h-2.5 rounded-full" style="background: var(--muted);"></span>
+        <span class="text-[10px]" style="color: var(--muted);">低能量</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Android Gesture Bar -->
+  <div class="pb-4 pt-2">
+    <div class="gesture-bar"></div>
+  </div>
+
+  <script>
+    const aiRecommendations = {
+      '满电': {
+        text: '推荐 3 个高难度核心任务',
+        sub: '状态极佳, 适合攻克最有挑战的工作'
+      },
+      '不错': {
+        text: '推荐 3 个中等难度任务',
+        sub: 'AI 已根据你的能量水平调整任务优先级'
+      },
+      '一般': {
+        text: '推荐 3 个常规任务',
+        sub: '保持节奏, 完成日常待办事项'
+      },
+      '有点累': {
+        text: '推荐 2 个轻度任务',
+        sub: '降低认知负荷, 先完成简单事项'
+      },
+      '快没电了': {
+        text: '建议休息或仅查看日程',
+        sub: '保护你的专注力, 充电后再出发'
+      }
+    };
+
+    let selectedPill = null;
+    const energyNum = document.getElementById('energyNum');
+    const aiCard = document.getElementById('aiCard');
+    const aiText = document.getElementById('aiText');
+    const aiSubtext = document.getElementById('aiSubtext');
+    const ringFill = document.querySelector('.energy-ring-fill');
+    const ringGlow = document.querySelector('.energy-ring-glow');
+
+    function updateRing(percent) {
+      const deg = (percent / 100) * 360;
+      ringFill.style.transform = `rotate(${deg}deg)`;
+      ringGlow.style.background = `conic-gradient(from ${deg}deg, var(--brand) 0deg, var(--brand) ${deg}deg, transparent ${deg}deg)`;
+    }
+
+    function animateNumber(target) {
+      const start = parseInt(energyNum.textContent) || 0;
+      const diff = target - start;
+      const duration = 600;
+      const startTime = performance.now();
+
+      function step(now) {
+        const elapsed = now - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const ease = 1 - Math.pow(1 - progress, 3);
+        const current = Math.round(start + diff * ease);
+        energyNum.textContent = current + '%';
+        if (progress < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    }
+
+    document.querySelectorAll('.mood-pill').forEach(pill => {
+      pill.addEventListener('click', function () {
+        if (selectedPill) selectedPill.classList.remove('selected');
+        this.classList.add('selected');
+        selectedPill = this;
+
+        const mood = this.dataset.mood;
+        const value = parseInt(this.dataset.value);
+        const data = aiRecommendations[mood];
+
+        animateNumber(value);
+        updateRing(value);
+
+        aiText.textContent = data.text;
+        aiSubtext.textContent = data.sub;
+        aiCard.classList.add('show');
+      });
+    });
+  </script>
+
+</body>
+</html>

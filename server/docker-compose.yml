@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: flowsync-db
+    environment:
+      POSTGRES_USER: flowsync
+      POSTGRES_PASSWORD: flowsync
+      POSTGRES_DB: flowsync
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./db/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql
+    restart: unless-stopped
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: flowsync-app
+    environment:
+      - PORT=3000
+      - DATABASE_URL=postgresql://flowsync:flowsync@postgres:5432/flowsync
+      - JWT_SECRET=your-secret-key-change-in-production
+      - AMAP_API_KEY=${AMAP_API_KEY:-}
+      - LLM_API_KEY=${LLM_API_KEY:-}
+    ports:
+      - "3000:3000"
+    depends_on:
+      - postgres
+    restart: unless-stopped
+
+volumes:
+  postgres_data:

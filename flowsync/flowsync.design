@@ -1,0 +1,242 @@
+{
+  "data": [
+    {
+      "id": "page-onboarding",
+      "title": "引导页",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1751966400000,
+      "canvasData": {
+        "x": 0,
+        "y": 1770,
+        "group": 0
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/onboarding.html",
+        "interactions": []
+      }
+    },
+    {
+      "id": "page-home",
+      "title": "首页",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1751966400000,
+      "canvasData": {
+        "x": 0,
+        "y": 0,
+        "group": 0
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/home.html",
+        "interactions": [
+          {
+            "domId": "cta-focus",
+            "targetPageId": "page-focus"
+          },
+          {
+            "domId": "cta-voice-input",
+            "targetPageId": "page-voice-input"
+          },
+          {
+            "domId": "cta-tasks",
+            "targetPageId": "page-tasks"
+          },
+          {
+            "domId": "cta-mood",
+            "targetPageId": "page-mood"
+          }
+        ]
+      }
+    },
+    {
+      "id": "page-focus",
+      "title": "今日聚焦",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1751966400000,
+      "canvasData": {
+        "x": 420,
+        "y": 0,
+        "group": 0
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/focus.html",
+        "interactions": [
+          {
+            "domId": "back-home",
+            "targetPageId": "page-home",
+            "hideEdge": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "page-voice-input",
+      "title": "语音添加任务",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1751966400000,
+      "canvasData": {
+        "x": 840,
+        "y": 0,
+        "group": 0
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/voice-input.html",
+        "interactions": [
+          {
+            "domId": "back-home",
+            "targetPageId": "page-home",
+            "hideEdge": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "page-mood",
+      "title": "心情检查",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1751966400000,
+      "canvasData": {
+        "x": 420,
+        "y": 1180,
+        "group": 0
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/mood.html",
+        "interactions": [
+          {
+            "domId": "back-home",
+            "targetPageId": "page-home",
+            "hideEdge": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "page-tasks",
+      "title": "任务列表",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1751966400000,
+      "canvasData": {
+        "x": 420,
+        "y": 590,
+        "group": 0
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/tasks.html",
+        "interactions": [
+          {
+            "domId": "back-home",
+            "targetPageId": "page-home",
+            "hideEdge": true
+          },
+          {
+            "domId": "cta-voice-input",
+            "targetPageId": "page-voice-input"
+          }
+        ]
+      }
+    },
+    {
+      "id": "img-onboarding",
+      "title": "引导页概念图",
+      "type": "image",
+      "version": 1,
+      "createdAt": 1751966400000,
+      "canvasData": {
+        "x": 0,
+        "y": 2360
+      },
+      "devMetadata": {
+        "imageSrc": "assets/android-onboarding.jpg"
+      }
+    },
+    {
+      "id": "img-home",
+      "title": "首页概念图",
+      "type": "image",
+      "version": 1,
+      "createdAt": 1751966400000,
+      "canvasData": {
+        "x": 420,
+        "y": 2360
+      },
+      "devMetadata": {
+        "imageSrc": "assets/android-home.jpg"
+      }
+    },
+    {
+      "id": "img-focus",
+      "title": "聚焦模式概念图",
+      "type": "image",
+      "version": 1,
+      "createdAt": 1751966400000,
+      "canvasData": {
+        "x": 840,
+        "y": 2360
+      },
+      "devMetadata": {
+        "imageSrc": "assets/android-focus.jpg"
+      }
+    },
+    {
+      "id": "img-voice",
+      "title": "语音输入概念图",
+      "type": "image",
+      "version": 1,
+      "createdAt": 1751966400000,
+      "canvasData": {
+        "x": 1260,
+        "y": 2360
+      },
+      "devMetadata": {
+        "imageSrc": "assets/android-voice-input.jpg"
+      }
+    },
+    {
+      "id": "img-mood",
+      "title": "心情检查概念图",
+      "type": "image",
+      "version": 1,
+      "createdAt": 1751966400000,
+      "canvasData": {
+        "x": 1680,
+        "y": 2360
+      },
+      "devMetadata": {
+        "imageSrc": "assets/android-mood.jpg"
+      }
+    },
+    {
+      "id": "img-tasks",
+      "title": "任务列表概念图",
+      "type": "image",
+      "version": 1,
+      "createdAt": 1751966400000,
+      "canvasData": {
+        "x": 2100,
+        "y": 2360
+      },
+      "devMetadata": {
+        "imageSrc": "assets/android-tasks.jpg"
+      }
+    }
+  ],
+  "config": {
+    "autoLayout": true,
+    "deviceType": "mobile",
+    "projectName": "FlowSync - 流同步",
+    "designLibrary": {
+      "name": "Claude Copy",
+      "id": "2Y-09QUNUKQDD3",
+      "version": "1",
+      "scope": "custom-global",
+      "path": "c:\\Users\\16862\\.trae-cn\\design_libraries\\2Y-09QUNUKQDD3",
+      "versionSource": "metadata.json"
+    }
+  }
+}

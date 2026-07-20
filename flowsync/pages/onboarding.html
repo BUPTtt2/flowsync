@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>FlowSync - 欢迎</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.1/dist/index.global.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --brand: #d97757;
+      --brand-hover: #c46a4c;
+      --brand-light: #e08d6f;
+      --dark: #1b1b19;
+      --dark-mid: #262624;
+      --card: #2c2c2b;
+      --text: #faf9f5;
+      --muted: #b7b5a9;
+      --success: #8ca06f;
+      --border: #908e84;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: 'Noto Sans SC', system-ui, sans-serif;
+      background-color: var(--dark);
+      color: var(--text);
+      overflow: hidden;
+      height: 100dvh;
+      display: flex;
+      justify-content: center;
+    }
+
+    .app-shell {
+      width: 100%;
+      max-width: 430px;
+      height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .cta-btn:active {
+      transform: scale(0.97);
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+
+    <!-- Status Bar -->
+    <div class="flex items-center justify-between px-6 shrink-0" style="height: 24px;">
+      <span class="text-xs font-medium" style="color: var(--text);">12:00</span>
+      <div class="flex items-center gap-1.5">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--text);">
+          <path d="M2 20h.01M7 20v-4M12 20v-8M17 20V8M22 20V4"/>
+        </svg>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="color: var(--text);">
+          <path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/>
+        </svg>
+        <svg width="18" height="14" viewBox="0 0 28 14" fill="none" style="color: var(--text);">
+          <rect x="1" y="1" width="22" height="12" rx="2" stroke="currentColor" stroke-width="1.5"/>
+          <rect x="3" y="3" width="16" height="8" rx="1" fill="currentColor"/>
+          <rect x="24" y="4.5" width="2.5" height="5" rx="1" fill="currentColor" opacity="0.4"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="flex-1 flex flex-col justify-center">
+      <!-- Concept Image -->
+      <div class="px-6 mb-8">
+        <img
+          src="../assets/android-onboarding.jpg"
+          alt="FlowSync"
+          class="w-full rounded-3xl object-cover"
+          style="max-height: 55vh; background-color: var(--card);"
+        >
+      </div>
+
+      <!-- Text Block -->
+      <div class="px-6 text-center">
+        <h1 class="text-3xl font-bold tracking-tight" style="color: var(--text);">FlowSync</h1>
+        <p class="text-base mt-2" style="color: var(--muted);">给 P 型人格的 AI 任务伙伴</p>
+        <p class="text-sm mt-1" style="color: var(--muted); opacity: 0.7;">不再拖延，从启动第一个任务开始</p>
+      </div>
+
+      <!-- CTA Button -->
+      <div class="px-6 mt-8">
+        <button
+          class="cta-btn w-full max-w-[320px] mx-auto block py-4 rounded-full font-semibold text-white transition-transform duration-100 cursor-pointer"
+          style="background-color: var(--brand); color: #ffffff;"
+        >
+          开始使用
+        </button>
+      </div>
+
+      <!-- Login Link -->
+      <div class="px-6 mt-5 text-center">
+        <a href="#" class="text-sm" style="color: var(--muted);">已有账号？登录</a>
+      </div>
+    </div>
+
+    <!-- Android Gesture Indicator -->
+    <div class="shrink-0 flex justify-center pb-3 pt-2">
+      <div class="rounded-full" style="width: 134px; height: 5px; background-color: var(--muted); opacity: 0.5;"></div>
+    </div>
+
+  </div>
+</body>
+</html>
