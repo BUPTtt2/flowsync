@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FlowSync 隐私政策</title>
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  font-size: 16px;
+  line-height: 1.75;
+  color: #242422;
+  background: #fdfbf7;
+  -webkit-font-smoothing: antialiased;
+}
+.wrap {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 3rem 1.5rem 5rem;
+}
+h1 {
+  font-size: 1.85rem;
+  font-weight: 700;
+  color: #242422;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.02em;
+}
+.updated {
+  font-size: 0.85rem;
+  color: #a8a69d;
+  margin-bottom: 2.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid rgba(168,166,157,0.2);
+}
+h2 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #b85c3e;
+  margin-top: 2.25rem;
+  margin-bottom: 0.85rem;
+}
+p { margin-bottom: 0.85rem; color: #3a3a38; }
+ul { margin: 0 0 1rem 1.25rem; }
+li { margin-bottom: 0.4rem; color: #3a3a38; }
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0 1.5rem;
+  font-size: 0.9rem;
+}
+th, td {
+  padding: 0.6rem 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid rgba(168,166,157,0.2);
+}
+th {
+  background: rgba(217,119,87,0.06);
+  color: #b85c3e;
+  font-weight: 600;
+}
+code {
+  background: rgba(168,166,157,0.12);
+  padding: 0.1rem 0.35rem;
+  border-radius: 3px;
+  font-size: 0.88em;
+  font-family: 'SF Mono', Consolas, monospace;
+}
+.contact {
+  margin-top: 2.5rem;
+  padding: 1.25rem 1.5rem;
+  background: rgba(217,119,87,0.06);
+  border-left: 3px solid #d97757;
+  border-radius: 6px;
+}
+.contact p { margin: 0; color: #3a3a38; }
+@media (max-width: 600px) {
+  .wrap { padding: 2rem 1.25rem 3rem; }
+  h1 { font-size: 1.5rem; }
+  table { font-size: 0.82rem; }
+  th, td { padding: 0.5rem 0.4rem; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>FlowSync 隐私政策</h1>
+  <div class="updated">最近更新：2026 年 7 月 14 日</div>
+
+  <p>FlowSync（以下简称"我们"）非常重视您的隐私。本政策说明我们在您使用 FlowSync 应用（以下简称"本应用"）时收集、使用和保护您信息的方式。</p>
+
+  <h2>一、我们收集的信息</h2>
+  <ul>
+    <li><strong>账号信息</strong>：您注册时提交的用户名和密码。密码使用 bcrypt 算法加密后存储，我们无法还原明文。</li>
+    <li><strong>项目数据</strong>：您创建的项目、模块、任务内容。这些数据存储在我们的服务器数据库中。</li>
+    <li><strong>API Key</strong>：您在设置页填写的第三方服务 API Key（高德地图、智谱 AI、和风天气等）仅保存在您设备的浏览器 localStorage 中，<strong>不会上传到我们的服务器</strong>。</li>
+    <li><strong>使用日志</strong>：我们可能记录访问日志（IP、时间、请求路径）用于安全防护和故障排查。</li>
+  </ul>
+
+  <h2>二、我们如何使用信息</h2>
+  <ul>
+    <li>提供 AI 任务拆解、项目管理等核心功能。</li>
+    <li>在您授权调用第三方服务时（如查询地图、天气、航班），将必要参数转发给对应服务。</li>
+    <li>改进产品体验，修复缺陷。</li>
+    <li>防范滥用、保障服务安全。</li>
+  </ul>
+  <p>我们不会将您的个人信息出售或用于商业广告推送。</p>
+
+  <h2>三、信息存储位置</h2>
+  <table>
+    <thead>
+      <tr><th>数据类型</th><th>存储位置</th><th>是否上传服务器</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>用户名 / 密码</td><td>服务器数据库</td><td>是（密码已加密）</td></tr>
+      <tr><td>项目 / 模块 / 任务</td><td>服务器数据库</td><td>是</td></tr>
+      <tr><td>第三方 API Key</td><td>设备浏览器 localStorage</td><td>否</td></tr>
+      <tr><td>登录凭证（Token）</td><td>设备浏览器 localStorage</td><td>否</td></tr>
+    </tbody>
+  </table>
+
+  <h2>四、第三方 SDK / 服务</h2>
+  <p>本应用在您主动使用相关功能时，会调用以下第三方服务。这些服务可能依据其自身隐私政策处理必要数据：</p>
+  <table>
+    <thead>
+      <tr><th>服务</th><th>用途</th><th>传输数据</th><th>隐私政策</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>高德地图</td>
+        <td>地点搜索、路线规划</td>
+        <td>您输入的地点关键字</td>
+        <td><a href="https://lbs.amap.com/pages/privacy/" target="_blank">查看</a></td>
+      </tr>
+      <tr>
+        <td>智谱 AI</td>
+        <td>AI 任务拆解生成</td>
+        <td>您输入的项目描述文本</td>
+        <td><a href="https://www.zhipuai.cn/privacy" target="_blank">查看</a></td>
+      </tr>
+      <tr>
+        <td>和风天气</td>
+        <td>天气查询</td>
+        <td>您输入的城市名称</td>
+        <td><a href="https://www.qweather.com/terms/privacy" target="_blank">查看</a></td>
+      </tr>
+    </tbody>
+  </table>
+  <p>上述第三方调用使用的 API Key 由您自行配置并保存在本地，我们不会代为保管或转发您的 Key。</p>
+
+  <h2>五、信息安全</h2>
+  <ul>
+    <li>密码使用 bcrypt 加盐哈希存储。</li>
+    <li>登录态使用 JWT，密钥仅存于服务器环境变量。</li>
+    <li>API 接口启用速率限制，防范暴力破解。</li>
+    <li>生产环境强制 HTTPS 传输。</li>
+  </ul>
+  <p>尽管我们采取合理措施保护您的信息，但互联网传输无法保证 100% 安全。</p>
+
+  <h2>六、您的权利</h2>
+  <ul>
+    <li><strong>访问与导出</strong>：您可随时查看自己的项目数据。</li>
+    <li><strong>删除</strong>：您可以删除项目、清空任务；如需注销账号，请联系我们。</li>
+    <li><strong>清除本地数据</strong>：在应用设置中清除浏览器数据即可删除本地 API Key 和登录凭证。</li>
+  </ul>
+
+  <h2>七、未成年人保护</h2>
+  <p>本应用面向一般用户，不面向 14 岁以下儿童。若您是未成年人，请在监护人指导下使用并提交信息。</p>
+
+  <h2>八、政策变更</h2>
+  <p>我们可能更新本政策。重大变更时会在应用内提示。继续使用即视为接受更新后的政策。</p>
+
+  <div class="contact">
+    <p><strong>联系我们</strong></p>
+    <p>如有隐私相关问题，请联系：<a href="mailto:flowsync.privacy@example.com">flowsync.privacy@example.com</a>（请替换为你的真实邮箱）</p>
+  </div>
+</div>
+</body>
+</html>
