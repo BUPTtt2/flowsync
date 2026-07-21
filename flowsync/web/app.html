@@ -737,33 +737,60 @@ a{color:inherit;text-decoration:none}
 
 .mob-nav{display:none}
 @media(max-width:768px){
-  .mob-nav{display:flex;position:fixed;bottom:0;left:0;right:0;background:var(--ink-2);border-top:1px solid var(--line);padding:8px 16px 24px;z-index:90;gap:4px;justify-content:space-around;box-shadow:0 -4px 20px rgba(0,0,0,0.3)}
-  .mob-nav__item{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 18px;border-radius:12px;transition:background 0.2s var(--ease);color:var(--paper-dim);cursor:pointer;min-width:64px;min-height:56px;justify-content:center}
+  .mob-nav{display:flex;position:fixed;bottom:0;left:0;right:0;background:var(--ink-2);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid var(--line);padding:6px 8px calc(6px + env(safe-area-inset-bottom, 0px));z-index:100;gap:2px;justify-content:space-around;box-shadow:0 -4px 24px rgba(0,0,0,0.4)}
+  .mob-nav__item{display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 10px;border-radius:12px;transition:all 0.2s var(--ease);color:var(--paper-dim);cursor:pointer;min-width:48px;min-height:48px;justify-content:center;flex:1;max-width:80px;-webkit-tap-highlight-color:transparent}
+  .mob-nav__item:active{transform:scale(0.95);background:var(--ink-3)}
   .mob-nav__item.active{background:var(--terracotta-soft);color:var(--terracotta-bright)}
-  .mob-nav__item svg{width:24px;height:24px;stroke:currentColor;stroke-width:1.5;fill:none}
-  .mob-nav__item span{font-size:11px;font-family:var(--mono)}
-}
-
-@media(max-width:768px){
-  .main{padding-bottom:80px}
+  .mob-nav__item svg{width:22px;height:22px;stroke:currentColor;stroke-width:1.5;fill:none;flex-shrink:0}
+  .mob-nav__item span{font-size:10px;font-family:var(--mono);white-space:nowrap;line-height:1}
+  .main{padding-bottom:calc(70px + env(safe-area-inset-bottom, 0px))}
+  .projects__module-item{padding:12px 0;min-height:44px}
+  .projects__item-check{width:24px;height:24px;min-width:24px;min-height:24px}
+  .projects__item-check svg{width:14px;height:14px}
+  .projects__item-label{font-size:14px;line-height:1.4}
+  .projects__module-header{padding:14px 16px;min-height:48px}
+  .projects__card{padding:16px;border-radius:16px}
+  .projects__card-header{padding-bottom:12px}
+  .projects__card-title{font-size:18px}
+  .projects__card-icon{width:40px;height:40px;font-size:20px}
   .team__tabs{gap:4px}
-  .team__tab{padding:6px 12px;font-size:13px}
-  .team__list{grid-template-columns:1fr}
-  .team__card{padding:16px}
+  .team__tab{padding:8px 14px;font-size:13px}
+  .team__list{grid-template-columns:1fr;gap:12px}
+  .team__card{padding:16px;border-radius:14px}
   .team__card-name{font-size:15px}
-  .team__card-desc{font-size:12px}
-  .team__toolbar{flex-direction:column;align-items:flex-start;gap:12px}
-  .modal__content{max-width:360px;padding:20px}
-  .btn{padding:12px 18px;font-size:14px;min-height:44px}
+  .team__card-desc{font-size:12px;margin-bottom:10px}
+  .team__card-meta{font-size:11px}
+  .team__toolbar{flex-direction:column;align-items:stretch;gap:12px}
+  .team__toolbar .btn{width:100%}
+  .modal__content{max-width:calc(100vw - 32px);padding:20px;border-radius:16px;margin:16px;max-height:calc(100vh - 100px);overflow-y:auto}
+  .modal__title{font-size:16px;margin-bottom:16px}
+  .modal__input{padding:12px 14px;font-size:14px;border-radius:10px}
+  .btn{padding:12px 18px;font-size:14px;min-height:44px;border-radius:10px}
+  .modal__actions{gap:10px;margin-top:20px}
+  .modal__actions .btn{flex:1}
 }
 
 @media(max-width:480px){
+  .mob-nav__item{padding:6px 4px;min-height:44px}
+  .mob-nav__item svg{width:20px;height:20px}
+  .mob-nav__item span{font-size:9px}
+  .main{padding-bottom:calc(64px + env(safe-area-inset-bottom, 0px))}
   .team__card{padding:14px}
   .team__card-name{font-size:14px}
   .team__card-meta{flex-direction:column;gap:4px}
-  .modal__content{max-width:320px;padding:16px}
-  .modal__input{padding:10px 12px;font-size:13px}
-  .btn{padding:10px 14px;font-size:13px;min-height:40px}
+  .modal__content{padding:16px;border-radius:14px}
+  .modal__title{font-size:15px;margin-bottom:14px}
+  .modal__input{padding:10px 12px;font-size:13px;border-radius:8px}
+  .btn{padding:10px 14px;font-size:13px;min-height:42px;border-radius:8px}
+  h1{font-size:20px}
+  h2{font-size:17px}
+  h3{font-size:15px}
+}
+
+@media(max-width:360px){
+  .mob-nav__item span{display:none}
+  .mob-nav__item{min-height:40px;padding:8px}
+  .mob-nav__item svg{width:24px;height:24px}
 }
 
 /* ============ S10: PROACTIVE PULL BANNER ============ */
@@ -2099,7 +2126,7 @@ function generateFocusTasks(){
       mod.items.forEach(function(item){
         var est = item.priority === 'high' ? '2h' : (item.priority === 'normal' ? '1h' : '30min');
         TASKS_FOCUS.push({
-          title: item.title,
+          title: item.label || item.title || '未命名任务',
           priority: item.priority || 'normal',
           due: '今天 18:00',
           est: est,
@@ -2142,7 +2169,7 @@ var TEAM_TASKS = [];
 
 function generateTeamTasks(){
   TEAM_TASKS = [];
-  var members = ['张三','李','小王','王','赵'];
+  var members = ['张三','李四','小王','王芳','赵磊'];
   var colors = ['#d97757','#7a8c5e','#c89968','#b85c3e','#8c8a80'];
   var id = 1;
   PROJECTS.forEach(function(proj, pi){
@@ -2154,7 +2181,7 @@ function generateTeamTasks(){
         var dur = item.done ? 0.5 : (item.priority === 'high' ? 2 : (item.priority === 'normal' ? 1.5 : 1));
         TEAM_TASKS.push({
           id: id++,
-          name: item.title,
+          name: item.label || item.title || '未命名任务',
           owner: owner,
           avatarBg: avatarBg,
           start: start,
@@ -2402,6 +2429,8 @@ var pomoRunning = false;
 
 function renderFocusTask(idx){
   generateFocusTasks();
+  if(idx < 0 || idx >= TASKS_FOCUS.length) idx = 0;
+  currentTaskIdx = idx;
   var task = TASKS_FOCUS[idx];
   if(!task) return;
   document.getElementById('focusTitle').textContent = task.title;
@@ -2423,9 +2452,8 @@ function renderFocusTask(idx){
     list.appendChild(div);
   });
   updateFocusProgress();
-  // 重置 swipe
   var sc = document.getElementById('swipeComplete');
-  sc.classList.remove('done');
+  if(sc) sc.classList.remove('done');
 }
 
 function toggleSubtask(el, idx){
@@ -2439,11 +2467,14 @@ function toggleSubtask(el, idx){
 
 function updateFocusProgress(){
   var task = TASKS_FOCUS[currentTaskIdx];
+  if(!task || !task.subtasks) return;
   var total = task.subtasks.length;
   var done = task.subtasks.filter(function(s){return s.done}).length;
-  var pct = Math.round((done / total) * 100);
-  document.getElementById('focusProgress').style.width = pct + '%';
-  document.getElementById('focusProgressText').textContent = done + ' / ' + total;
+  var pct = total > 0 ? Math.round((done / total) * 100) : 0;
+  var el = document.getElementById('focusProgress');
+  var textEl = document.getElementById('focusProgressText');
+  if(el) el.style.width = pct + '%';
+  if(textEl) textEl.textContent = done + ' / ' + total;
 }
 
 function completeTask(){
@@ -2604,6 +2635,20 @@ function drawDependencyLines(){
 }
 
 var _currentTeamTab = 'my-teams';
+var TEAMS = [];
+
+function loadTeamsLocal(){
+  try{
+    var stored = localStorage.getItem('flowsync_teams');
+    if(stored) TEAMS = JSON.parse(stored);
+  }catch(e){ TEAMS = []; }
+}
+
+function saveTeamsLocal(){
+  try{
+    localStorage.setItem('flowsync_teams', JSON.stringify(TEAMS));
+  }catch(e){}
+}
 
 function switchTeamTab(tab){
   _currentTeamTab = tab;
@@ -2625,27 +2670,39 @@ function switchTeamTab(tab){
 
 async function loadTeams(){
   var list = document.getElementById('teamList');
+  loadTeamsLocal();
+  if(TEAMS.length > 0){
+    renderTeamsList();
+  }
   try{
     var result = await API.getTeams();
-    var teams = result.data || [];
-    if(teams.length === 0){
-      list.innerHTML = '<div class="team__empty"><div class="team__empty-icon">◈</div><div>还没有团队 · 点击上方创建团队，邀请成员协作</div></div>';
-      return;
-    }
-    var html = teams.map(function(t){
-      return '<div class="team__card" onclick="showTeamDetail('+t.id+')">' +
-        '<div class="team__card-name">'+escapeHtml(t.name)+'</div>' +
-        '<div class="team__card-desc">'+(t.description || '暂无描述')+'</div>' +
-        '<div class="team__card-meta">' +
-          '<span>创建者: '+escapeHtml(t.owner_name)+'</span>' +
-          '<span>'+new Date(t.created_at).toLocaleDateString()+'</span>' +
-        '</div>' +
-      '</div>';
-    }).join('');
-    list.innerHTML = html;
+    TEAMS = result.data || [];
+    saveTeamsLocal();
+    renderTeamsList();
   }catch(e){
-    list.innerHTML = '<div class="team__empty"><div class="team__empty-icon">◈</div><div>加载团队失败 · 请刷新重试</div></div>';
+    if(TEAMS.length === 0){
+      list.innerHTML = '<div class="team__empty"><div class="team__empty-icon">◈</div><div>还没有团队 · 点击上方创建团队，邀请成员协作</div></div>';
+    }
   }
+}
+
+function renderTeamsList(){
+  var list = document.getElementById('teamList');
+  if(TEAMS.length === 0){
+    list.innerHTML = '<div class="team__empty"><div class="team__empty-icon">◈</div><div>还没有团队 · 点击上方创建团队，邀请成员协作</div></div>';
+    return;
+  }
+  var html = TEAMS.map(function(t){
+    return '<div class="team__card" onclick="showTeamDetail('+t.id+')">' +
+      '<div class="team__card-name">'+escapeHtml(t.name)+'</div>' +
+      '<div class="team__card-desc">'+(t.description || '暂无描述')+'</div>' +
+      '<div class="team__card-meta">' +
+        '<span>成员: '+(t.members ? t.members.length : 0)+'人</span>' +
+        '<span>项目: '+(t.projects ? t.projects.length : 0)+'个</span>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+  list.innerHTML = html;
 }
 
 function showCreateTeamModal(){
@@ -2665,14 +2722,24 @@ async function submitCreateTeam(){
     showToast('请输入团队名称', '', 'info');
     return;
   }
+  var newTeam = {
+    id: 'team_' + Date.now(),
+    name: name,
+    description: desc,
+    owner_id: _currentUser.id,
+    owner_name: _currentUser.username,
+    created_at: new Date().toISOString(),
+    members: [{ id: _currentUser.id, username: _currentUser.username, role: 'owner' }],
+    projects: []
+  };
   try{
     await API.createTeam({name:name, description:desc});
-    showToast('团队创建成功', '', 'success');
-    hideCreateTeamModal();
-    loadTeams();
-  }catch(e){
-    showToast('创建失败', e.message, 'error');
-  }
+  }catch(e){}
+  TEAMS.unshift(newTeam);
+  saveTeamsLocal();
+  hideCreateTeamModal();
+  renderTeamsList();
+  showToast('团队创建成功', '', 'success');
 }
 
 var _currentTeamId = null;
@@ -2690,40 +2757,61 @@ function hideTeamDetailModal(){
 
 async function loadTeamDetail(id){
   var body = document.getElementById('teamDetailBody');
+  loadTeamsLocal();
+  var team = TEAMS.find(function(t){ return String(t.id) === String(id); });
+  if(team){
+    renderTeamDetail(team);
+  }
   try{
     var result = await API.getTeam(id);
-    var team = result.data;
-    var membersHtml = team.members.map(function(m){
-      return '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)">' +
-        '<span>'+escapeHtml(m.username)+'</span>' +
-        '<span style="font-size:12px;color:var(--paper-mute)">'+m.role+'</span>' +
-      '</div>';
-    }).join('');
-    var projectsHtml = team.projects.map(function(p){
-      return '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)">' +
-        '<span>'+escapeHtml(p.name)+'</span>' +
-        '<span style="font-size:12px;color:var(--paper-mute)">'+p.status+'</span>' +
-      '</div>';
-    }).join('');
-    body.innerHTML = '<div style="margin-bottom:16px">' +
-      '<div style="font-size:13px;color:var(--paper-mute);margin-bottom:4px">描述</div>' +
-      '<div>'+(team.description || '暂无描述')+'</div>' +
-    '</div>' +
-    '<div style="margin-bottom:16px">' +
-      '<div style="font-size:13px;color:var(--paper-mute);margin-bottom:8px">成员 ('+team.members.length+')</div>' +
-      membersHtml +
-    '</div>' +
-    '<div style="margin-bottom:16px">' +
-      '<div style="font-size:13px;color:var(--paper-mute);margin-bottom:8px">项目 ('+team.projects.length+')</div>' +
-      projectsHtml +
-    '</div>' +
-    '<div style="display:flex;gap:12px">' +
-      '<button class="btn btn--secondary" onclick="showInviteMemberModal()">邀请成员</button>' +
-      '<button class="btn btn--secondary" onclick="showAddProjectModal()">添加项目</button>' +
-    '</div>';
+    team = result.data;
+    var idx = TEAMS.findIndex(function(t){ return String(t.id) === String(id); });
+    if(idx >= 0) TEAMS[idx] = team;
+    saveTeamsLocal();
+    renderTeamDetail(team);
   }catch(e){
-    body.innerHTML = '<div style="text-align:center;color:var(--paper-mute)">加载失败</div>';
+    if(!team){
+      body.innerHTML = '<div style="text-align:center;color:var(--paper-mute)">加载失败</div>';
+    }
   }
+}
+
+function renderTeamDetail(team){
+  var body = document.getElementById('teamDetailBody');
+  var membersHtml = (team.members || []).map(function(m){
+    return '<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)">' +
+      '<div style="display:flex;align-items:center;gap:10px">' +
+        '<div style="width:32px;height:32px;border-radius:50%;background:var(--terracotta);color:white;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600">'+(m.username || m.email || '?').charAt(0).toUpperCase()+'</div>' +
+        '<span>'+escapeHtml(m.username || m.email || '成员')+'</span>' +
+      '</div>' +
+      '<span style="font-size:12px;color:var(--paper-mute)">'+(m.role === 'owner' ? '创建者' : (m.role || '成员'))+'</span>' +
+    '</div>';
+  }).join('');
+  var projectsHtml = (team.projects || []).map(function(p){
+    return '<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)">' +
+      '<div style="display:flex;align-items:center;gap:8px">' +
+        '<span style="font-size:18px">'+(p.icon || '📋')+'</span>' +
+        '<span>'+escapeHtml(p.name || '未命名项目')+'</span>' +
+      '</div>' +
+      '<span style="font-size:12px;color:var(--paper-mute)">'+(p.status || '进行中')+'</span>' +
+    '</div>';
+  }).join('');
+  body.innerHTML = '<div style="margin-bottom:20px">' +
+      '<div style="font-size:13px;color:var(--paper-mute);margin-bottom:6px">团队描述</div>' +
+      '<div style="font-size:14px">'+(team.description || '暂无描述')+'</div>' +
+    '</div>' +
+    '<div style="margin-bottom:20px">' +
+      '<div style="font-size:13px;color:var(--paper-mute);margin-bottom:10px">成员 ('+(team.members ? team.members.length : 0)+')</div>' +
+      (membersHtml || '<div style="text-align:center;color:var(--paper-mute);padding:20px">暂无成员</div>') +
+    '</div>' +
+    '<div style="margin-bottom:20px">' +
+      '<div style="font-size:13px;color:var(--paper-mute);margin-bottom:10px">共享项目 ('+(team.projects ? team.projects.length : 0)+')</div>' +
+      (projectsHtml || '<div style="text-align:center;color:var(--paper-mute);padding:20px">暂无共享项目</div>') +
+    '</div>' +
+    '<div style="display:flex;gap:10px">' +
+      '<button class="btn btn--secondary" style="flex:1" onclick="showInviteMemberModal()">邀请成员</button>' +
+      '<button class="btn btn--secondary" style="flex:1" onclick="showAddProjectModal()">共享项目</button>' +
+    '</div>';
 }
 
 function showInviteMemberModal(){
@@ -2743,13 +2831,25 @@ async function submitInviteMember(){
     showToast('请输入邮箱', '', 'info');
     return;
   }
+  var teamIdx = TEAMS.findIndex(function(t){ return String(t.id) === String(_currentTeamId); });
+  if(teamIdx < 0){
+    showToast('团队不存在', '', 'error');
+    return;
+  }
+  var newMember = {
+    id: 'user_' + Date.now(),
+    email: email,
+    username: email.split('@')[0],
+    role: 'member'
+  };
+  TEAMS[teamIdx].members = TEAMS[teamIdx].members || [];
+  TEAMS[teamIdx].members.push(newMember);
+  saveTeamsLocal();
   try{
     await API.addTeamMember(_currentTeamId, email);
-    showToast('邀请成功', '', 'success');
-    loadTeamDetail(_currentTeamId);
-  }catch(e){
-    showToast('邀请失败', e.message, 'error');
-  }
+  }catch(e){}
+  renderTeamDetail(TEAMS[teamIdx]);
+  showToast('邀请成功', '', 'success');
 }
 
 function showAddProjectModal(){
@@ -2780,13 +2880,35 @@ function renderProjectSelectList(){
 }
 
 async function submitAddProject(projectId){
+  var teamIdx = TEAMS.findIndex(function(t){ return String(t.id) === String(_currentTeamId); });
+  if(teamIdx < 0){
+    showToast('团队不存在', '', 'error');
+    return;
+  }
+  var proj = PROJECTS.find(function(p){ return String(p.id) === String(projectId); });
+  if(!proj){
+    showToast('项目不存在', '', 'error');
+    return;
+  }
+  TEAMS[teamIdx].projects = TEAMS[teamIdx].projects || [];
+  var exists = TEAMS[teamIdx].projects.find(function(p){ return String(p.id) === String(projectId); });
+  if(exists){
+    showToast('项目已共享', '', 'info');
+    return;
+  }
+  TEAMS[teamIdx].projects.push({
+    id: proj.id,
+    name: proj.name,
+    icon: proj.icon,
+    color: proj.color,
+    status: '进行中'
+  });
+  saveTeamsLocal();
   try{
     await API.addTeamProject(_currentTeamId, projectId);
-    showToast('项目已共享', '', 'success');
-    loadTeamDetail(_currentTeamId);
-  }catch(e){
-    showToast('添加失败', e.message, 'error');
-  }
+  }catch(e){}
+  renderTeamDetail(TEAMS[teamIdx]);
+  showToast('项目已共享', '', 'success');
 }
 
 function showTaskDetail(id){
@@ -3300,7 +3422,7 @@ function generateTimeblockTasks(){
         if(item.done) return;
         var dur = item.priority === 'high' ? 2 : (item.priority === 'normal' ? 1 : 0.5);
         TIMEBLOCK_TASKS.push({
-          t: item.title,
+          t: item.label || item.title || '未命名任务',
           dur: dur,
           priority: item.priority || 'normal',
           start: start
@@ -3731,10 +3853,11 @@ function loadState(){
     var raw = localStorage.getItem('flowsync_state');
     if(!raw) return;
     var s = JSON.parse(raw);
-    if(s.tasks) TASKS_FOCUS = s.tasks;
-    if(s.someday) SOMEDAY_ITEMS = s.someday;
+    if(s.someday && Array.isArray(s.someday)) SOMEDAY_ITEMS = s.someday;
     if(s.energy) currentMood = s.energy;
-    if(s.taskIdx) currentTaskIdx = s.taskIdx;
+    if(s.taskIdx !== undefined && typeof s.taskIdx === 'number') {
+      currentTaskIdx = s.taskIdx;
+    }
   }catch(e){}
 }
 
@@ -4303,6 +4426,7 @@ async function generateProjects(){
       };
     });
     renderProjectsLocal();
+    saveProjectsLocal();
 
     loading.style.display = 'none';
     list.style.opacity = '';
@@ -4325,12 +4449,14 @@ function fillProjectExample(idx){
 // PROJECTS 作为后端数据的内存缓存（不再持久化到 localStorage）
 async function renderProjects(){
   var list = document.getElementById('projectsList');
-  var empty = document.getElementById('projectsEmpty');
-  var tlSection = document.getElementById('projectsTimelineSection');
   if(!list) return;
+  if(PROJECTS.length > 0){
+    renderProjectsLocal();
+  }
   try{
     var result = await API.getProjects();
     PROJECTS = (result.data || []).map(normalizeProject);
+    saveProjectsLocal();
     renderProjectsLocal();
     API.checkReminders().catch(function(){});
   }catch(e){
@@ -4339,13 +4465,18 @@ async function renderProjects(){
         var stored = localStorage.getItem('flowsync_projects');
         if(stored && stored !== 'null' && stored !== '[]'){
           PROJECTS = JSON.parse(stored).map(normalizeProject);
+          renderProjectsLocal();
         }
       }catch(e2){}
-      renderProjectsLocal();
-    }else{
-      list.innerHTML = '<div style="text-align:center;padding:40px;color:var(--paper-mute)">加载失败，请刷新重试</div>';
     }
   }
+}
+
+// 保存项目到本地缓存
+function saveProjectsLocal(){
+  try {
+    localStorage.setItem('flowsync_projects', JSON.stringify(PROJECTS));
+  } catch(e) {}
 }
 
 // 仅从本地缓存重新渲染（不发起 API 请求）
@@ -4374,7 +4505,7 @@ function renderProjectsLocal(){
 //   任务 {id, title, is_completed, sort_order}
 function normalizeProject(p){
   return {
-    id: p.id,
+    id: p.id || ('proj_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9)),
     name: p.name || '',
     type: p.type || '',
     icon: p.icon || '📋',
@@ -4391,24 +4522,23 @@ function normalizeProject(p){
 }
 
 function normalizeModule(m){
+  var taskList = m.tasks || m.items || [];
   return {
-    id: m.id,
+    id: m.id || ('mod_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9)),
     name: m.name || '',
-    estTime: m.estimated_time || '1h',
+    estTime: m.estimated_time || m.estTime || '1h',
     sort_order: m.sort_order || 0,
     is_collapsed: !!m.is_collapsed,
-    items: (m.tasks || []).map(normalizeTask).sort(function(a,b){
+    items: taskList.map(normalizeTask).sort(function(a,b){
       return (a.sort_order||0) - (b.sort_order||0);
     })
   };
 }
 
 function normalizeTask(t){
-  // 后端 boolean 为 0/1（SQLite），需转换为布尔
-  var done = t.is_completed;
+  var done = t.is_completed !== undefined ? t.is_completed : t.done;
   var tool = t.tool || '';
   var toolLabel = t.toolLabel || '';
-  // 从 metadata 解析 tool 信息
   if(t.metadata && !tool){
     try{
       var meta = JSON.parse(t.metadata);
@@ -4417,12 +4547,13 @@ function normalizeTask(t){
     }catch(e){}
   }
   return {
-    id: t.id,
-    label: t.title || '',
+    id: t.id || ('task_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9)),
+    label: t.title || t.label || '',
     done: done === true || done === 1 || done === '1' || done === 'true',
     sort_order: t.sort_order || 0,
     tool: tool,
-    toolLabel: toolLabel
+    toolLabel: toolLabel,
+    priority: t.priority || 'normal'
   };
 }
 
@@ -4645,16 +4776,19 @@ function toggleProjectItem(pi, mi, ii){
   var proj = PROJECTS[pi];
   if(!proj.modules[mi]) return;
   var item = proj.modules[mi].items[ii];
-  if(!item || item.id === undefined || item.id === null) return;
-  // 乐观更新
+  if(!item) return;
   var oldVal = item.done;
   item.done = !item.done;
   renderProjectsLocal();
-  API.toggleTask(item.id).catch(function(e){
-    item.done = oldVal;
-    renderProjectsLocal();
-    showToast('操作失败', e.message, 'error');
-  });
+  saveProjectsLocal();
+  if(item.id && String(item.id).indexOf('task_') !== 0){
+    API.toggleTask(item.id).catch(function(e){
+      item.done = oldVal;
+      renderProjectsLocal();
+      saveProjectsLocal();
+      showToast('操作失败', e.message, 'error');
+    });
+  }
 }
 
 function editModuleName(pi, mi, val){
@@ -4984,27 +5118,28 @@ function enableModuleDrag(){
 // INIT (放在所有定义之后，避免 var 提升导致的 undefined 错误)
 // =====================================================================
 function initApp(){
-  loadState();
-  renderFocusTask(0);
-  updatePomoDisplay();
-  checkWelcomeBack();
-  renderSomeday();
-  renderProjects();
-  wrapSaveFunctions();
-  makeCardsClickable();
+  try { loadState(); } catch(e) { console.error('loadState failed:', e); }
+  try { renderFocusTask(0); } catch(e) { console.error('renderFocusTask failed:', e); }
+  try { updatePomoDisplay(); } catch(e) { console.error('updatePomoDisplay failed:', e); }
+  try { checkWelcomeBack(); } catch(e) { console.error('checkWelcomeBack failed:', e); }
+  try { renderSomeday(); } catch(e) { console.error('renderSomeday failed:', e); }
+  try { renderProjects(); } catch(e) { console.error('renderProjects failed:', e); }
+  try { wrapSaveFunctions(); } catch(e) { console.error('wrapSaveFunctions failed:', e); }
+  try { makeCardsClickable(); } catch(e) { console.error('makeCardsClickable failed:', e); }
 
-  // Dashboard gauge 从空到目标值的填充动画
   setTimeout(function(){
-    var g = document.querySelector('#view-dashboard .gauge__fill[data-gauge-target]');
-    if(g){
-      var target = parseFloat(g.dataset.gaugeTarget) || 94;
-      g.style.strokeDashoffset = 314;
-      requestAnimationFrame(function(){
+    try {
+      var g = document.querySelector('#view-dashboard .gauge__fill[data-gauge-target]');
+      if(g){
+        var target = parseFloat(g.dataset.gaugeTarget) || 94;
+        g.style.strokeDashoffset = 314;
         requestAnimationFrame(function(){
-          g.style.strokeDashoffset = target;
+          requestAnimationFrame(function(){
+            g.style.strokeDashoffset = target;
+          });
         });
-      });
-    }
+      }
+    } catch(e) { console.error('gauge animation failed:', e); }
   }, 300);
 }
 
@@ -5014,10 +5149,13 @@ function initApp(){
   updateTopbarUser();
   hideAuthOverlay();
 
-  // 首次访问时加载示例项目
+  // 立即从 localStorage 加载项目数据（同步加载，确保页面一打开就有内容
   try {
     var stored = localStorage.getItem('flowsync_projects');
-    if (!stored || stored === 'null' || stored === '[]') {
+    if (stored && stored !== 'null' && stored !== '[]') {
+      var data = JSON.parse(stored);
+      PROJECTS = data.map(normalizeProject);
+    } else {
       var demoProjects = [
         {
           id: Date.now() - 2,
@@ -5034,8 +5172,8 @@ function initApp(){
               sort_order: 0,
               is_collapsed: false,
               items: [
-                { id: Date.now() - 2001, title: '查询成都天气情况', sort_order: 0, done: false, tool: 'weather', toolLabel: '天气' },
-                { id: Date.now() - 2002, title: '规划必去景点路线', sort_order: 1, done: false, tool: 'map', toolLabel: '路线' }
+                { id: Date.now() - 2001, title: '查询成都天气情况', sort_order: 0, done: false, tool: 'weather', toolLabel: '天气', priority: 'high' },
+                { id: Date.now() - 2002, title: '规划必去景点路线', sort_order: 1, done: false, tool: 'map', toolLabel: '路线', priority: 'high' }
               ]
             },
             {
@@ -5044,8 +5182,8 @@ function initApp(){
               sort_order: 1,
               is_collapsed: false,
               items: [
-                { id: Date.now() - 2003, title: '预订往返高铁票', sort_order: 0, done: true, tool: 'train', toolLabel: '12306' },
-                { id: Date.now() - 2004, title: '预订酒店住宿', sort_order: 1, done: false, tool: 'browser', toolLabel: '携程' }
+                { id: Date.now() - 2003, title: '预订往返高铁票', sort_order: 0, done: true, tool: 'train', toolLabel: '12306', priority: 'high' },
+                { id: Date.now() - 2004, title: '预订酒店住宿', sort_order: 1, done: false, tool: 'browser', toolLabel: '携程', priority: 'normal' }
               ]
             },
             {
@@ -5054,8 +5192,8 @@ function initApp(){
               sort_order: 2,
               is_collapsed: true,
               items: [
-                { id: Date.now() - 2005, title: '搜索成都特色美食', sort_order: 0, done: false, tool: 'browser', toolLabel: '推荐' },
-                { id: Date.now() - 2006, title: '预订热门餐厅', sort_order: 1, done: false, tool: 'browser', toolLabel: '订座' }
+                { id: Date.now() - 2005, title: '搜索成都特色美食', sort_order: 0, done: false, tool: 'browser', toolLabel: '推荐', priority: 'normal' },
+                { id: Date.now() - 2006, title: '预订热门餐厅', sort_order: 1, done: false, tool: 'browser', toolLabel: '订座', priority: 'low' }
               ]
             }
           ]
@@ -5075,8 +5213,8 @@ function initApp(){
               sort_order: 0,
               is_collapsed: false,
               items: [
-                { id: Date.now() - 1001, title: '整理数据结构与算法笔记', sort_order: 0, done: true, tool: 'browser', toolLabel: '笔记' },
-                { id: Date.now() - 1002, title: '复习 JavaScript 核心知识点', sort_order: 1, done: false, tool: 'browser', toolLabel: '资料' }
+                { id: Date.now() - 1001, title: '整理数据结构与算法笔记', sort_order: 0, done: true, tool: 'browser', toolLabel: '笔记', priority: 'high' },
+                { id: Date.now() - 1002, title: '复习 JavaScript 核心知识点', sort_order: 1, done: false, tool: 'browser', toolLabel: '资料', priority: 'high' }
               ]
             },
             {
@@ -5085,16 +5223,19 @@ function initApp(){
               sort_order: 1,
               is_collapsed: true,
               items: [
-                { id: Date.now() - 1003, title: '整理项目经历亮点', sort_order: 0, done: false, tool: 'browser', toolLabel: '简历' },
-                { id: Date.now() - 1004, title: '准备项目演示 Demo', sort_order: 1, done: false, tool: 'browser', toolLabel: '演示' }
+                { id: Date.now() - 1003, title: '整理项目经历亮点', sort_order: 0, done: false, tool: 'browser', toolLabel: '简历', priority: 'normal' },
+                { id: Date.now() - 1004, title: '准备项目演示 Demo', sort_order: 1, done: false, tool: 'browser', toolLabel: '演示', priority: 'normal' }
               ]
             }
           ]
         }
       ];
+      PROJECTS = demoProjects.map(normalizeProject);
       localStorage.setItem('flowsync_projects', JSON.stringify(demoProjects));
     }
-  } catch(e) {}
+  } catch(e) {
+    console.error('加载本地项目失败:', e);
+  }
 
   initApp();
 })();
