@@ -4369,6 +4369,89 @@ function initApp(){
   _currentUser = { id: 'demo_user', username: 'FlowSync', email: 'demo@flowsync.app' };
   updateTopbarUser();
   hideAuthOverlay();
+
+  // 首次访问时加载示例项目
+  try {
+    var stored = localStorage.getItem('flowsync_projects');
+    if (!stored || stored === 'null' || stored === '[]') {
+      var demoProjects = [
+        {
+          id: Date.now() - 2,
+          name: '成都三日游',
+          type: 'travel',
+          icon: '✈️',
+          color: 'blue',
+          priority: 'high',
+          status: 'active',
+          modules: [
+            {
+              id: Date.now() - 202,
+              name: '行程规划',
+              sort_order: 0,
+              is_collapsed: false,
+              items: [
+                { id: Date.now() - 2001, title: '查询成都天气情况', sort_order: 0, done: false, tool: 'weather', toolLabel: '天气' },
+                { id: Date.now() - 2002, title: '规划必去景点路线', sort_order: 1, done: false, tool: 'map', toolLabel: '路线' }
+              ]
+            },
+            {
+              id: Date.now() - 203,
+              name: '交通预订',
+              sort_order: 1,
+              is_collapsed: false,
+              items: [
+                { id: Date.now() - 2003, title: '预订往返高铁票', sort_order: 0, done: true, tool: 'train', toolLabel: '12306' },
+                { id: Date.now() - 2004, title: '预订酒店住宿', sort_order: 1, done: false, tool: 'browser', toolLabel: '携程' }
+              ]
+            },
+            {
+              id: Date.now() - 204,
+              name: '美食攻略',
+              sort_order: 2,
+              is_collapsed: true,
+              items: [
+                { id: Date.now() - 2005, title: '搜索成都特色美食', sort_order: 0, done: false, tool: 'browser', toolLabel: '推荐' },
+                { id: Date.now() - 2006, title: '预订热门餐厅', sort_order: 1, done: false, tool: 'browser', toolLabel: '订座' }
+              ]
+            }
+          ]
+        },
+        {
+          id: Date.now() - 1,
+          name: '腾讯面试准备',
+          type: 'work',
+          icon: '💼',
+          color: 'terracotta',
+          priority: 'high',
+          status: 'active',
+          modules: [
+            {
+              id: Date.now() - 101,
+              name: '技术复习',
+              sort_order: 0,
+              is_collapsed: false,
+              items: [
+                { id: Date.now() - 1001, title: '整理数据结构与算法笔记', sort_order: 0, done: true, tool: 'browser', toolLabel: '笔记' },
+                { id: Date.now() - 1002, title: '复习 JavaScript 核心知识点', sort_order: 1, done: false, tool: 'browser', toolLabel: '资料' }
+              ]
+            },
+            {
+              id: Date.now() - 102,
+              name: '项目梳理',
+              sort_order: 1,
+              is_collapsed: true,
+              items: [
+                { id: Date.now() - 1003, title: '整理项目经历亮点', sort_order: 0, done: false, tool: 'browser', toolLabel: '简历' },
+                { id: Date.now() - 1004, title: '准备项目演示 Demo', sort_order: 1, done: false, tool: 'browser', toolLabel: '演示' }
+              ]
+            }
+          ]
+        }
+      ];
+      localStorage.setItem('flowsync_projects', JSON.stringify(demoProjects));
+    }
+  } catch(e) {}
+
   initApp();
 })();
 </script>
