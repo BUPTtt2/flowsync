@@ -1099,7 +1099,6 @@ a{color:inherit;text-decoration:none}
         <svg viewBox="0 0 24 24"><path d="M12 2l2.5 6.5L21 9l-5 4.5L17.5 21 12 17l-5.5 4L8 13.5 3 9l6.5-.5L12 2z"/></svg>
         <span class="nav-item__label">想法桶</span>
       </button>
-      <!-- 5. 团队 -->
       <button class="nav-item" data-view="team">
         <svg viewBox="0 0 24 24"><path d="M3 12h4M9 8v8M15 6v12M17 12h4"/></svg>
         <span class="nav-item__label">团队</span>
@@ -1110,7 +1109,7 @@ a{color:inherit;text-decoration:none}
         <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
         <span class="nav-item__label">设置</span>
       </button>
-      <button class="nav-item" onclick="location.href='index.html'">
+      <button class="nav-item" onclick="location.href='./'">
         <svg viewBox="0 0 24 24"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>
         <span class="nav-item__label">返回首页</span>
       </button>
@@ -1436,16 +1435,16 @@ a{color:inherit;text-decoration:none}
       <div class="timeblock">
         <div class="timeblock__head">
           <div>
-            <h2 class="timeblock__title">今日时间块</h2>
+            <h2 class="timeblock__title">时间块管理</h2>
             <p class="timeblock__sub">让时间可见 · 任务按预估时长放进 8h 工作日</p>
           </div>
           <div class="timeblock__summary">
-            <div class="timeblock__summary-item" id="tbCapacity">容量 8h</div>
-            <div class="timeblock__summary-item" id="tbPlanned">计划 5.5h</div>
-            <div class="timeblock__summary-item" id="tbRemaining">剩余 2.5h</div>
+            <div class="timeblock__summary-item" id="tbCapacity2">容量 8h</div>
+            <div class="timeblock__summary-item" id="tbPlanned2">计划 5.5h</div>
+            <div class="timeblock__summary-item" id="tbRemaining2">剩余 2.5h</div>
           </div>
         </div>
-        <div class="timeblock__grid" id="timeblockGrid">
+        <div class="timeblock__grid" id="timeblockGrid2">
         </div>
       </div>
     </div>
@@ -1693,6 +1692,10 @@ a{color:inherit;text-decoration:none}
     <button class="mob-nav__item" data-view="chat" onclick="switchView('chat')">
       <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
       <span>助手</span>
+    </button>
+    <button class="mob-nav__item" data-view="team" onclick="switchView('team')">
+      <svg viewBox="0 0 24 24"><path d="M3 12h4M9 8v8M15 6v12M17 12h4"/></svg>
+      <span>团队</span>
     </button>
     <button class="mob-nav__item" data-view="someday" onclick="switchView('someday')">
       <svg viewBox="0 0 24 24"><path d="M12 2l2.5 6.5L21 9l-5 4.5L17.5 21 12 17l-5.5 4L8 13.5 3 9l6.5-.5L12 2z"/></svg>
@@ -2976,23 +2979,32 @@ var TB_TOTAL_HOURS = 8;
 var TB_START_HOUR = 9;
 
 function renderTimeblock(){
-  var grid = document.getElementById('timeblockGrid');
+  var grids = [document.getElementById('timeblockGrid'), document.getElementById('timeblockGrid2')];
   var totalPlanned = TIMEBLOCK_TASKS.reduce(function(s, t){return s + t.dur}, 0);
   var overflow = totalPlanned > TB_TOTAL_HOURS;
   var remaining = Math.max(0, TB_TOTAL_HOURS - totalPlanned);
-  document.getElementById('tbCapacity').textContent = '容量 ' + TB_TOTAL_HOURS + 'h';
-  document.getElementById('tbPlanned').textContent = '计划 ' + totalPlanned.toFixed(1) + 'h';
-  document.getElementById('tbRemaining').textContent = '剩余 ' + remaining.toFixed(1) + 'h';
-  if(overflow){
-    var rm = document.getElementById('tbRemaining');
-    rm.classList.add('over');
-    rm.textContent = '超 ' + (totalPlanned - TB_TOTAL_HOURS).toFixed(1) + 'h';
-  } else {
-    document.getElementById('tbRemaining').classList.remove('over');
-  }
+
+  ['tbCapacity', 'tbCapacity2'].forEach(function(id){
+    var el = document.getElementById(id);
+    if(el) el.textContent = '容量 ' + TB_TOTAL_HOURS + 'h';
+  });
+  ['tbPlanned', 'tbPlanned2'].forEach(function(id){
+    var el = document.getElementById(id);
+    if(el) el.textContent = '计划 ' + totalPlanned.toFixed(1) + 'h';
+  });
+  ['tbRemaining', 'tbRemaining2'].forEach(function(id){
+    var el = document.getElementById(id);
+    if(!el) return;
+    if(overflow){
+      el.classList.add('over');
+      el.textContent = '超 ' + (totalPlanned - TB_TOTAL_HOURS).toFixed(1) + 'h';
+    } else {
+      el.classList.remove('over');
+      el.textContent = '剩余 ' + remaining.toFixed(1) + 'h';
+    }
+  });
 
   var html = '';
-  // 8 行（每小时 1 行）
   for(var h = 0; h < TB_TOTAL_HOURS; h++){
     var hour = TB_START_HOUR + h;
     html += '<div class="timeblock__ruler">' +
@@ -3000,54 +3012,55 @@ function renderTimeblock(){
       '<div class="timeblock__track" data-hour="' + h + '"></div>' +
     '</div>';
   }
-  grid.innerHTML = html;
-
-  // 把任务块画进对应的小时格里
-  TIMEBLOCK_TASKS.forEach(function(t){
-    var startHour = Math.floor(t.start);
-    var track = grid.querySelector('.timeblock__track[data-hour="' + startHour + '"]');
-    if(!track) return;
-    var leftPct = (t.start - startHour) * 100;
-    var widthPct = Math.min(t.dur * 100, 100 - leftPct);
-    var cls = 'timeblock__block timeblock__block--' + t.priority;
-    if(t.start + t.dur > TB_TOTAL_HOURS) cls += ' timeblock__block--overflow';
-    var block = document.createElement('div');
-    block.className = cls;
-    block.style.left = leftPct + '%';
-    block.style.width = widthPct + '%';
-    block.textContent = t.t + ' · ' + t.dur + 'h';
-    track.appendChild(block);
-    // 如果跨小时，复制到下一格
-    if(t.dur > 1 - leftPct / 100){
-      var nextHour = startHour + 1;
-      var nextTrack = grid.querySelector('.timeblock__track[data-hour="' + nextHour + '"]');
-      if(nextTrack){
-        var next = block.cloneNode(true);
-        next.style.left = '0';
-        next.style.width = Math.min((t.dur - (1 - leftPct / 100)) * 100, 100) + '%';
-        nextTrack.appendChild(next);
-      }
-    }
+  grids.forEach(function(grid){
+    if(grid) grid.innerHTML = html;
   });
 
-  // now line
-  var now = new Date();
-  var nowHour = now.getHours() + now.getMinutes() / 60;
-  if(nowHour >= TB_START_HOUR && nowHour < TB_START_HOUR + TB_TOTAL_HOURS){
-    var hourIdx = Math.floor(nowHour - TB_START_HOUR);
-    var track = grid.querySelector('.timeblock__track[data-hour="' + hourIdx + '"]');
-    if(track){
-      var nowLine = document.createElement('div');
-      nowLine.className = 'timeblock__now-line';
-      nowLine.style.left = ((nowHour - TB_START_HOUR - hourIdx) * 100) + '%';
-      track.appendChild(nowLine);
-      var nowLabel = document.createElement('div');
-      nowLabel.className = 'timeblock__now-label';
-      nowLabel.style.left = ((nowHour - TB_START_HOUR - hourIdx) * 100) + '%';
-      nowLabel.style.top = '0';
-      nowLabel.textContent = 'NOW';
-      track.appendChild(nowLabel);
-    }
+  grids.forEach(function(grid){
+    if(!grid) return;
+    TIMEBLOCK_TASKS.forEach(function(t){
+      var startHour = Math.floor(t.start);
+      var track = grid.querySelector('.timeblock__track[data-hour="' + startHour + '"]');
+      if(!track) return;
+      var leftPct = (t.start - startHour) * 100;
+      var widthPct = Math.min(t.dur * 100, 100 - leftPct);
+      var cls = 'timeblock__block timeblock__block--' + t.priority;
+      if(t.start + t.dur > TB_TOTAL_HOURS) cls += ' timeblock__block--overflow';
+      var block = document.createElement('div');
+      block.className = cls;
+      block.style.left = leftPct + '%';
+      block.style.width = widthPct + '%';
+      block.textContent = t.t + ' · ' + t.dur + 'h';
+      track.appendChild(block);
+      if(t.dur > 1 - leftPct / 100){
+        var nextHour = startHour + 1;
+        var nextTrack = grid.querySelector('.timeblock__track[data-hour="' + nextHour + '"]');
+        if(nextTrack){
+          var next = block.cloneNode(true);
+          next.style.left = '0';
+          next.style.width = Math.min((t.dur - (1 - leftPct / 100)) * 100, 100) + '%';
+          nextTrack.appendChild(next);
+        }
+      }
+    });
+
+    var now = new Date();
+    var nowHour = now.getHours() + now.getMinutes() / 60;
+    if(nowHour >= TB_START_HOUR && nowHour < TB_START_HOUR + TB_TOTAL_HOURS){
+      var hourIdx = Math.floor(nowHour - TB_START_HOUR);
+      var track = grid.querySelector('.timeblock__track[data-hour="' + hourIdx + '"]');
+      if(track){
+        var nowLine = document.createElement('div');
+        nowLine.className = 'timeblock__now-line';
+        nowLine.style.left = ((nowHour - TB_START_HOUR - hourIdx) * 100) + '%';
+        track.appendChild(nowLine);
+        var nowLabel = document.createElement('div');
+        nowLabel.className = 'timeblock__now-label';
+        nowLabel.style.left = ((nowHour - TB_START_HOUR - hourIdx) * 100) + '%';
+        nowLabel.style.top = '0';
+        nowLabel.textContent = 'NOW';
+        track.appendChild(nowLabel);
+      }
   }
 }
 
@@ -3508,20 +3521,21 @@ var tbDragging = null;
 var tbDragOffset = 0;
 
 function enableTimeblockDrag(){
-  var grid = document.getElementById('timeblockGrid');
-  if(!grid) return;
-
-  var blocks = grid.querySelectorAll('.timeblock__block');
-  blocks.forEach(function(block, idx){
-    block.style.cursor = 'grab';
-    block.addEventListener('mousedown', function(e){
-      if(e.button !== 0) return;
-      e.preventDefault();
-      startTbDrag(block, e.clientX, e.clientY);
+  ['timeblockGrid', 'timeblockGrid2'].forEach(function(gridId){
+    var grid = document.getElementById(gridId);
+    if(!grid) return;
+    var blocks = grid.querySelectorAll('.timeblock__block');
+    blocks.forEach(function(block, idx){
+      block.style.cursor = 'grab';
+      block.addEventListener('mousedown', function(e){
+        if(e.button !== 0) return;
+        e.preventDefault();
+        startTbDrag(block, e.clientX, e.clientY);
+      });
+      block.addEventListener('touchstart', function(e){
+        startTbDrag(block, e.touches[0].clientX, e.touches[0].clientY);
+      }, {passive:true});
     });
-    block.addEventListener('touchstart', function(e){
-      startTbDrag(block, e.touches[0].clientX, e.touches[0].clientY);
-    }, {passive:true});
   });
 }
 
