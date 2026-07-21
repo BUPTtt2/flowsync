@@ -1996,25 +1996,38 @@ function updateTopbarUser(){
 }
 
 // ============ DATA ============
-var TASKS_FOCUS = [
-  {title:'完成产品方案初稿',priority:'high',due:'今天 18:00',est:'2h',subtasks:[
-    {label:'需求分析与整理',done:true},
-    {label:'竞品调研报告',done:true},
-    {label:'产品架构设计',done:false},
-    {label:'功能模块规划',done:false},
-    {label:'初稿文档撰写',done:false}
-  ]},
-  {title:'回复客户邮件',priority:'normal',due:'今天 17:00',est:'30min',subtasks:[
-    {label:'查阅往来邮件',done:false},
-    {label:'起草回复',done:false},
-    {label:'检查附件',done:false}
-  ]},
-  {title:'更新项目文档',priority:'low',due:'明天 10:00',est:'1h',subtasks:[
-    {label:'收集变更点',done:false},
-    {label:'更新文档',done:false},
-    {label:'通知团队',done:false}
-  ]}
-];
+var TASKS_FOCUS = [];
+
+function generateFocusTasks(){
+  TASKS_FOCUS = [];
+  PROJECTS.forEach(function(proj){
+    proj.modules.forEach(function(mod){
+      mod.items.forEach(function(item){
+        var est = item.priority === 'high' ? '2h' : (item.priority === 'normal' ? '1h' : '30min');
+        TASKS_FOCUS.push({
+          title: item.title,
+          priority: item.priority || 'normal',
+          due: '今天 18:00',
+          est: est,
+          subtasks: [
+            {label:'开始任务',done:item.done},
+            {label:'执行中',done:false},
+            {label:'完成',done:item.done}
+          ]
+        });
+      });
+    });
+  });
+  if(TASKS_FOCUS.length === 0){
+    TASKS_FOCUS = [
+      {title:'点击上方生成项目',priority:'high',due:'今天 18:00',est:'1h',subtasks:[
+        {label:'输入你的目标',done:false},
+        {label:'AI 帮你拆解',done:false},
+        {label:'开始执行',done:false}
+      ]}
+    ];
+  }
+}
 
 var VOICE_EXAMPLES = [
   {
@@ -2031,15 +2044,41 @@ var VOICE_EXAMPLES = [
   }
 ];
 
-var TEAM_TASKS = [
-  {id:1,name:'数据收集',owner:'张三',avatarBg:'#d97757',start:0,end:2,priority:'high',status:'done',dep:[]},
-  {id:2,name:'数据分析',owner:'张三',avatarBg:'#d97757',start:2,end:4,priority:'high',status:'done',dep:[1]},
-  {id:3,name:'方案初稿',owner:'李',avatarBg:'#7a8c5e',start:3,end:5,priority:'high',status:'active',dep:[2]},
-  {id:4,name:'小王提供数据',owner:'小王',avatarBg:'#c89968',start:2.5,end:3.5,priority:'high',status:'active',dep:[1]},
-  {id:5,name:'设计评审',owner:'王',avatarBg:'#b85c3e',start:4,end:6,priority:'normal',status:'pending',dep:[3]},
-  {id:6,name:'部署测试环境',owner:'赵',avatarBg:'#8c8a80',start:5,end:7,priority:'low',status:'blocked',dep:[3,4]},
-  {id:7,name:'团队周会',owner:'李',avatarBg:'#7a8c5e',start:6,end:7,priority:'normal',status:'pending',dep:[]}
-];
+var TEAM_TASKS = [];
+
+function generateTeamTasks(){
+  TEAM_TASKS = [];
+  var members = ['张三','李','小王','王','赵'];
+  var colors = ['#d97757','#7a8c5e','#c89968','#b85c3e','#8c8a80'];
+  var id = 1;
+  PROJECTS.forEach(function(proj, pi){
+    proj.modules.forEach(function(mod){
+      mod.items.forEach(function(item, ii){
+        var owner = members[(pi + ii) % members.length];
+        var avatarBg = colors[(pi + ii) % colors.length];
+        var start = (pi * 1.5 + ii * 0.8) % 5;
+        var dur = item.done ? 0.5 : (item.priority === 'high' ? 2 : (item.priority === 'normal' ? 1.5 : 1));
+        TEAM_TASKS.push({
+          id: id++,
+          name: item.title,
+          owner: owner,
+          avatarBg: avatarBg,
+          start: start,
+          end: Math.min(start + dur, 7),
+          priority: item.priority || 'normal',
+          status: item.done ? 'done' : 'active',
+          dep: ii > 0 ? [id - 2] : []
+        });
+      });
+    });
+  });
+  if(TEAM_TASKS.length === 0){
+    TEAM_TASKS = [
+      {id:1,name:'点击上方生成项目',owner:'你',avatarBg:'#d97757',start:0,end:2,priority:'high',status:'active',dep:[]},
+      {id:2,name:'创建团队协作任务',owner:'团队',avatarBg:'#7a8c5e',start:2,end:4,priority:'normal',status:'pending',dep:[1]}
+    ];
+  }
+}
 
 var MOOD_RECS = {
   low:[
@@ -2268,6 +2307,7 @@ var pomoSeconds = 25 * 60;
 var pomoRunning = false;
 
 function renderFocusTask(idx){
+  generateFocusTasks();
   var task = TASKS_FOCUS[idx];
   if(!task) return;
   document.getElementById('focusTitle').textContent = task.title;
@@ -2409,6 +2449,7 @@ function togglePomoFullscreen(){
 
 // ============ TEAM GANTT ============
 function renderGantt(){
+  generateTeamTasks();
   var gantt = document.getElementById('gantt');
   var days = ['周一','周二','周三','周四','周五','周六','周日'];
   var todayIdx = 2; // 周三
@@ -2968,17 +3009,40 @@ function acceptProactive(){
 // =====================================================================
 // S11: 时间盲区可视化（块状日历）
 // =====================================================================
-var TIMEBLOCK_TASKS = [
-  {t:'回复客户邮件', dur:0.5, priority:'normal', start:0},
-  {t:'完成产品方案初稿', dur:2, priority:'high', start:0.5},
-  {t:'更新项目文档', dur:1, priority:'low', start:2.5},
-  {t:'整理会议笔记', dur:0.5, priority:'normal', start:3.5},
-  {t:'代码审查', dur:1.5, priority:'normal', start:4}
-];
+var TIMEBLOCK_TASKS = [];
+
+function generateTimeblockTasks(){
+  TIMEBLOCK_TASKS = [];
+  var start = 0;
+  PROJECTS.forEach(function(proj){
+    proj.modules.forEach(function(mod){
+      mod.items.forEach(function(item){
+        if(item.done) return;
+        var dur = item.priority === 'high' ? 2 : (item.priority === 'normal' ? 1 : 0.5);
+        TIMEBLOCK_TASKS.push({
+          t: item.title,
+          dur: dur,
+          priority: item.priority || 'normal',
+          start: start
+        });
+        start += dur;
+        if(start >= TB_TOTAL_HOURS) return;
+      });
+    });
+  });
+  if(TIMEBLOCK_TASKS.length === 0){
+    TIMEBLOCK_TASKS = [
+      {t:'点击上方生成项目', dur:1, priority:'high', start:1},
+      {t:'添加任务到时间块', dur:1, priority:'normal', start:2.5},
+      {t:'开始今日工作', dur:0.5, priority:'normal', start:4}
+    ];
+  }
+}
 var TB_TOTAL_HOURS = 8;
 var TB_START_HOUR = 9;
 
 function renderTimeblock(){
+  generateTimeblockTasks();
   var grids = [document.getElementById('timeblockGrid'), document.getElementById('timeblockGrid2')];
   var totalPlanned = TIMEBLOCK_TASKS.reduce(function(s, t){return s + t.dur}, 0);
   var overflow = totalPlanned > TB_TOTAL_HOURS;
@@ -3991,6 +4055,12 @@ async function renderProjects(){
     API.checkReminders().catch(function(){});
   }catch(e){
     if(PROJECTS.length === 0){
+      try {
+        var stored = localStorage.getItem('flowsync_projects');
+        if(stored && stored !== 'null' && stored !== '[]'){
+          PROJECTS = JSON.parse(stored).map(normalizeProject);
+        }
+      }catch(e2){}
       renderProjectsLocal();
     }else{
       list.innerHTML = '<div style="text-align:center;padding:40px;color:var(--paper-mute)">加载失败，请刷新重试</div>';
