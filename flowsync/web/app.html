@@ -521,18 +521,201 @@ a{color:inherit;text-decoration:none}
   .gantt__detail-grid{grid-template-columns:repeat(2,1fr)}
 }
 @media(max-width:768px){
-  :root{--sidebar-w:0}
+  :root{--sidebar-w:0;--topbar-h:56px}
   .app{grid-template-columns:1fr}
   .sidebar{display:none}
-  .topbar{grid-column:1;padding:0 16px}
-  .main{grid-column:1;padding:16px}
-  .task-focus-card__title{font-size:24px}
-  .gantt__header{grid-template-columns:120px 1fr;min-width:600px}
-  .gantt__row{grid-template-columns:120px 1fr;min-width:600px}
+  .topbar{grid-column:1;padding:0 14px}
+  .topbar__title{font-size:16px}
+  .topbar__title-sub{font-size:11px}
+  .topbar__right{gap:10px}
+  .topbar__energy{padding:4px 10px;font-size:11px}
+  .topbar .btn--ghost{padding:4px 10px;font-size:11px}
+  .main{grid-column:1;padding:12px;padding-bottom:80px}
+  html{scrollbar-width:none}
+  html::-webkit-scrollbar{display:none}
+  .today-cards{grid-template-columns:1fr!important;gap:16px!important}
+  .task-focus-card__title{font-size:22px}
+  .gantt__header{grid-template-columns:100px 1fr;min-width:500px}
+  .gantt__row{grid-template-columns:100px 1fr;min-width:500px}
   .gantt__member{font-size:11px}
   .gantt__avatar{width:24px;height:24px;font-size:10px}
   .mood__title{font-size:22px}
   .mood__slider-wrap{padding:20px}
+  .dash{grid-template-columns:1fr;gap:16px}
+  .card{padding:16px}
+  .focus-now{padding:20px}
+  .focus-now__title{font-size:20px}
+  .btn{padding:8px 16px;font-size:13px}
+  .btn--full{padding:12px}
+  .projects__generator{padding:20px}
+  .projects__card{padding:18px}
+  .projects__card-title{font-size:18px}
+  .projects__module-header{padding:12px 14px}
+  .projects__module-item{padding:6px 0}
+  .projects__item-check{width:20px;height:20px}
+  .chat{height:calc(100dvh - var(--topbar-h) - 112px)}
+  .chat__suggestions{gap:6px}
+  .chat__suggestion{padding:5px 10px;font-size:11px}
+  .chat__send{width:36px;height:36px}
+  .chat__input{padding:10px;font-size:13px}
+  .pomodoro{padding:12px 16px}
+  .pomodoro__ring{width:100px;height:100px}
+  .pomodoro__time{font-size:24px}
+  .pomodoro__btn{width:32px;height:32px}
+  .task-focus-card{padding:24px}
+  .subtask__check{width:20px;height:20px}
+  .subtask__check svg{width:13px;height:13px}
+  .subtask__label{font-size:14px}
+  .creative-state__chip{padding:4px 10px;font-size:10px}
+  .tool-btn{padding:5px 10px;font-size:11px}
+  .swipe-complete{height:48px}
+  .swipe-complete__knob{width:40px;height:40px}
+  .stats{grid-template-columns:1fr}
+  .stat{padding:12px}
+  .stat__value{font-size:24px}
+  .timeblock__head{gap:10px}
+  .timeblock__title{font-size:20px}
+  .timeblock__summary{flex-wrap:wrap;gap:8px}
+  .timeblock__summary-item{padding:4px 10px;font-size:11px}
+  .gauge{width:120px;height:120px}
+  .gauge__num{font-size:32px}
+  .mood__gauge{width:120px;height:120px}
+  .mood__value{font-size:36px}
+  .mood__slider-wrap{padding:16px}
+  .rec{padding:14px}
+  .rec__icon{width:36px;height:36px}
+  .rec__title{font-size:14px}
+  .settings__section{padding:16px 20px}
+  .settings__row{padding:10px 0}
+  .guide__grid{grid-template-columns:repeat(5,1fr);gap:6px}
+  .guide__step{padding:10px 8px}
+  .guide__step-title{font-size:11px}
+  .guide__step-desc{font-size:10px}
+  .apicard{padding:14px}
+  .apicard__input{padding:6px 10px;font-size:12px}
+  .projects__input-area{flex-direction:column}
+  .projects__generate-btn{align-self:stretch;padding:12px}
+  .projects__timeline-row{grid-template-columns:80px 1fr}
+  .projects__timeline-axis{padding-left:80px}
+  .projects__card-header{flex-direction:column;align-items:flex-start}
+  .projects__card-actions{align-self:flex-end}
+}
+
+@media(max-width:640px){
+  .topbar__right .btn--ghost{display:none}
+  .topbar__energy{display:none}
+  .projects__examples{gap:6px}
+  .projects__example{padding:5px 10px;font-size:11px}
+  .projects__card-meta{gap:6px}
+  .projects__ddl{padding:3px 8px;font-size:11px}
+  .projects__progress-wrap{margin-bottom:14px}
+  .task-focus-card__title{font-size:20px}
+  .creative-state{flex-wrap:wrap;gap:6px}
+  .creative-state__progress{width:100%;margin-left:0;margin-top:6px}
+  .tool-btn{padding:4px 8px;font-size:10px}
+  .swipe-complete__hint{font-size:13px}
+  .dash__left .timeblock__head{flex-direction:column;align-items:flex-start}
+  .dash__left .timeblock__summary{margin-top:8px}
+}
+
+@media(max-width:480px){
+  .main{padding:8px}
+  .topbar{padding:0 12px}
+  .topbar__title{font-size:15px}
+  .projects__generator{padding:16px}
+  .projects__input{padding:12px 14px;font-size:14px}
+  .projects__card{padding:14px}
+  .projects__card-title{font-size:17px}
+  .projects__module-header{padding:10px 12px;gap:8px}
+  .projects__module-name{font-size:14px}
+  .projects__module-time{font-size:11px;padding:2px 6px}
+  .projects__module-item{padding:5px 0;gap:8px}
+  .projects__item-label{font-size:12px}
+  .focus-now{padding:16px}
+  .focus-now__title{font-size:18px}
+  .focus-now__meta{gap:10px}
+  .focus-now__meta-item{font-size:11px}
+  .card{padding:12px}
+  .card__label{font-size:10px}
+  .btn{padding:7px 14px;font-size:12px}
+  .btn--full{padding:11px}
+  .task-focus-card{padding:20px}
+  .subtask{gap:10px;padding:10px 0}
+  .subtask__check{width:18px;height:18px}
+  .subtask__label{font-size:13px}
+  .chat__suggestion{padding:4px 8px;font-size:10px}
+  .msg__bubble{padding:10px 14px;font-size:13px}
+  .msg__avatar{width:28px;height:28px;font-size:12px}
+  .pomodoro{flex-direction:column;align-items:center;gap:12px;padding:16px}
+  .pomodoro__ring{width:80px;height:80px}
+  .pomodoro__time{font-size:20px}
+  .pomodoro__controls{flex-direction:row;margin-left:0;gap:12px}
+  .timeblock__grid{padding:16px}
+  .timeblock__ruler{grid-template-columns:40px 1fr;gap:10px}
+  .timeblock__hour-label{font-size:10px}
+  .timeblock__track{height:40px}
+  .timeblock__block{font-size:11px;padding:0 6px}
+  .gauge{width:100px;height:100px}
+  .gauge__num{font-size:28px}
+  .mood__gauge{width:100px;height:100px}
+  .mood__value{font-size:32px}
+  .mood__slider-wrap{padding:12px}
+  .rec{padding:12px;gap:12px}
+  .rec__icon{width:32px;height:32px;font-size:16px}
+  .rec__title{font-size:13px}
+  .rec__meta{font-size:11px}
+  .settings__section{padding:14px 16px}
+  .settings__row-label{font-size:13px}
+  .settings__row-desc{font-size:11px}
+  .guide__grid{grid-template-columns:1fr 1fr}
+  .guide__step{padding:12px}
+  .guide__num{width:24px;height:24px;font-size:12px}
+  .guide__step-title{font-size:13px}
+  .guide__step-desc{font-size:11px}
+  .apicard{padding:12px}
+  .apicard__field-label{width:80px;font-size:10px}
+  .apicard__input{padding:5px 8px;font-size:12px}
+  .voice{padding:20px 0}
+  .voice__stage{min-height:300px}
+  .voice__prompt{font-size:20px}
+  .mic-btn{width:80px;height:80px}
+  .mic-btn svg{width:30px;height:30px}
+  .result{padding:20px}
+  .result__title{font-size:18px}
+  .single-focus__title{font-size:clamp(28px,5vw,56px)}
+  .sos-card{padding:24px}
+  .sos-card__title{font-size:20px}
+  .sos-card__step{padding:12px;gap:12px}
+}
+
+@media(max-width:360px){
+  .projects__input{padding:10px 12px;font-size:13px}
+  .projects__card{padding:12px}
+  .projects__card-title{font-size:16px}
+  .projects__card-icon{width:32px;height:32px;font-size:16px}
+  .projects__module-header{padding:8px 10px}
+  .projects__module-name{font-size:13px}
+  .focus-now__title{font-size:17px}
+  .focus-now__meta{flex-wrap:wrap;gap:8px}
+  .task-focus-card__title{font-size:18px}
+  .subtask__label{font-size:12px}
+  .swipe-complete{height:44px}
+  .swipe-complete__knob{width:36px;height:36px}
+  .pomodoro__ring{width:70px;height:70px}
+  .pomodoro__time{font-size:18px}
+  .pomodoro__btn{width:28px;height:28px}
+  .pomodoro__btn svg{width:14px;height:14px}
+  .chat__input{font-size:12px}
+  .chat__send{width:32px;height:32px}
+}
+
+.mob-nav{display:none}
+@media(max-width:768px){
+  .mob-nav{display:flex;position:fixed;bottom:0;left:0;right:0;background:var(--ink-2);border-top:1px solid var(--line);padding:6px 12px 18px;z-index:90;gap:4px;justify-content:space-around}
+  .mob-nav__item{display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 14px;border-radius:10px;transition:background 0.2s var(--ease);color:var(--paper-dim);cursor:pointer;min-width:56px}
+  .mob-nav__item.active{background:var(--terracotta-soft);color:var(--terracotta-bright)}
+  .mob-nav__item svg{width:22px;height:22px;stroke:currentColor;stroke-width:1.5;fill:none}
+  .mob-nav__item span{font-size:10px;font-family:var(--mono)}
 }
 
 /* ============ S10: PROACTIVE PULL BANNER ============ */
@@ -876,6 +1059,12 @@ a{color:inherit;text-decoration:none}
       <div style="width:56px;height:56px;border-radius:12px;background:var(--terracotta);display:inline-flex;align-items:center;justify-content:center;color:var(--paper);font-family:var(--serif);font-size:28px;font-weight:900;margin-bottom:16px;box-shadow:0 0 32px var(--terracotta-glow)">F</div>
       <h2 style="font-family:var(--serif);font-size:24px;font-weight:900;color:var(--paper)">FlowSync</h2>
       <p style="font-size:13px;color:var(--paper-mute);margin-top:4px">让 AI 帮你编排一切</p>
+      <div style="margin-top:8px;padding:6px 14px;background:var(--terracotta-soft);border-radius:999px;font-size:11px;color:var(--terracotta-bright);font-family:var(--mono);display:inline-block">Beta · 邀请制</div>
+    </div>
+    <div id="inviteCodeForm" style="display:none;flex-direction:column;gap:12px">
+      <input id="inviteCode" type="text" placeholder="输入邀请码" style="padding:14px 16px;background:var(--ink-3);border:1px solid var(--line);border-radius:10px;color:var(--paper);font-size:15px;outline:none;text-align:center;letter-spacing:3px;font-family:var(--mono)">
+      <button onclick="submitInviteCode()" style="padding:14px;background:var(--terracotta);color:var(--paper);border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;border:none">验证邀请码</button>
+      <div style="text-align:center;font-size:12px;color:var(--paper-mute)">没有邀请码？请联系管理员获取</div>
     </div>
     <div id="authForm" style="display:flex;flex-direction:column;gap:12px">
       <!-- 登录/注册表单字段动态生成 -->
@@ -1002,7 +1191,7 @@ a{color:inherit;text-decoration:none}
       <div id="proactiveBanner"></div>
 
       <!-- 区域 1：今日概览卡片行 -->
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-bottom:24px;max-width:1200px">
+      <div class="today-cards" style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-bottom:24px;max-width:1200px">
         <!-- 能量状态 -->
         <div class="card fade-up" id="today-energy-section">
           <div class="card__label">能量状态</div>
@@ -1361,6 +1550,18 @@ a{color:inherit;text-decoration:none}
           </div>
         </div>
 
+        <div class="settings__section">
+          <div class="settings__section-label">反馈</div>
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <textarea id="feedbackText" placeholder="告诉我们你的想法、建议或遇到的问题..." style="width:100%;min-height:80px;padding:12px;background:var(--ink-3);border:1px solid var(--line);border-radius:8px;color:var(--paper);font-size:14px;outline:none;resize:vertical;font-family:inherit"></textarea>
+            <div style="display:flex;gap:10px">
+              <button class="btn btn--ghost" onclick="submitFeedback()" style="flex:1">提交反馈</button>
+              <button class="btn" style="flex:1" onclick="showToast('感谢', '反馈已收到，我们会认真处理', 'success')">分享给朋友</button>
+            </div>
+            <div style="font-size:11px;color:var(--paper-mute)">你的反馈对我们很重要，帮助我们做得更好</div>
+          </div>
+        </div>
+
         <!-- 快速上手指南 -->
         <div class="settings__section">
           <div class="settings__section-label">快速上手指南</div>
@@ -1478,6 +1679,30 @@ a{color:inherit;text-decoration:none}
     </div>
 
   </main>
+
+  <!-- MOBILE NAV -->
+  <nav class="mob-nav">
+    <button class="mob-nav__item active" data-view="projects" onclick="switchView('projects')">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><polygon points="16,8 14,14 8,16 10,10"/><line x1="12" y1="12" x2="12" y2="12"/></svg>
+      <span>工作台</span>
+    </button>
+    <button class="mob-nav__item" data-view="today" onclick="switchView('today')">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/></svg>
+      <span>今日</span>
+    </button>
+    <button class="mob-nav__item" data-view="chat" onclick="switchView('chat')">
+      <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      <span>助手</span>
+    </button>
+    <button class="mob-nav__item" data-view="someday" onclick="switchView('someday')">
+      <svg viewBox="0 0 24 24"><path d="M12 2l2.5 6.5L21 9l-5 4.5L17.5 21 12 17l-5.5 4L8 13.5 3 9l6.5-.5L12 2z"/></svg>
+      <span>想法</span>
+    </button>
+    <button class="mob-nav__item" data-view="settings" onclick="switchView('settings')">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      <span>设置</span>
+    </button>
+  </nav>
 </div>
 
 <!-- ============ S9: Welcome back (动态显示) ============ -->
@@ -1617,7 +1842,10 @@ var API = {
 
   // 能量
   logEnergy: function(level, mood, note){ return this.request('/energy', 'POST', {level:level, mood:mood, note:note}); },
-  getEnergyHistory: function(){ return this.request('/energy/history'); }
+  getEnergyHistory: function(){ return this.request('/energy/history'); },
+
+  // 反馈
+  submitFeedback: function(content){ return this.request('/feedback', 'POST', {content:content}); }
 };
 
 // 检查登录状态
@@ -1632,7 +1860,32 @@ var _currentUser = null;
 function showAuthOverlay(){
   var ov = document.getElementById('authOverlay');
   if(ov) ov.style.display = 'flex';
-  renderAuthForm();
+  var inviteForm = document.getElementById('inviteCodeForm');
+  var authForm = document.getElementById('authForm');
+  if(localStorage.getItem('flowsync_invited')){
+    inviteForm.style.display = 'none';
+    authForm.style.display = 'flex';
+    renderAuthForm();
+  } else {
+    inviteForm.style.display = 'flex';
+    authForm.style.display = 'none';
+  }
+}
+
+function submitInviteCode(){
+  var code = document.getElementById('inviteCode').value.trim().toUpperCase();
+  var validCodes = ['FLOW2026', 'PUSH2026', 'AIHELP', 'TEST001'];
+  if(validCodes.includes(code)){
+    localStorage.setItem('flowsync_invited', 'true');
+    showToast('验证成功', '欢迎加入测试', 'success');
+    var inviteForm = document.getElementById('inviteCodeForm');
+    var authForm = document.getElementById('authForm');
+    inviteForm.style.display = 'none';
+    authForm.style.display = 'flex';
+    renderAuthForm();
+  } else {
+    showToast('邀请码无效', '请检查输入或联系管理员', 'error');
+  }
 }
 
 function hideAuthOverlay(){
@@ -1709,6 +1962,21 @@ function logout(){
   updateTopbarUser();
   showAuthOverlay();
   showToast('已退出', '欢迎下次再来', 'info');
+}
+
+async function submitFeedback(){
+  var text = document.getElementById('feedbackText').value.trim();
+  if(!text){
+    showToast('请输入内容', '', 'info');
+    return;
+  }
+  try{
+    await API.submitFeedback(text);
+    showToast('提交成功', '感谢你的反馈', 'success');
+    document.getElementById('feedbackText').value = '';
+  }catch(e){
+    showToast('提交失败', e.message, 'error');
+  }
 }
 
 function updateTopbarUser(){
@@ -1838,6 +2106,9 @@ function switchView(view){
     }
 
     document.querySelectorAll('.nav-item[data-view]').forEach(function(n){
+      n.classList.toggle('active', n.dataset.view === view);
+    });
+    document.querySelectorAll('.mob-nav__item[data-view]').forEach(function(n){
       n.classList.toggle('active', n.dataset.view === view);
     });
     var meta = VIEW_TITLES[view] || {title:view,sub:''};
