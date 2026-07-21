@@ -2,7 +2,12 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#C4703A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="manifest" href="./manifest.json">
+<link rel="apple-touch-icon" href="./icon.png">
 <title>FlowSync 操作面板</title>
 <script>
   window.FLOWSYNC_API_BASE = 'https://flowsync-production-73a6.up.railway.app';
@@ -4457,6 +4462,16 @@ function initApp(){
 
   initApp();
 })();
+</script>
+<script>
+// 注册 Service Worker (PWA)
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./sw.js').then(function(reg) {
+    console.log('[PWA] Service Worker 注册成功');
+  }).catch(function(err) {
+    console.log('[PWA] Service Worker 注册失败:', err);
+  });
+}
 </script>
 </body>
 </html>
