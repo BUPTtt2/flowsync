@@ -1,0 +1,9 @@
+{
+  "name": "flowsync",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "install-deps": "cd server && npm install --production",
+    "start": "cd server && node src/app.js"
+  }
+}
