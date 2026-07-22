@@ -171,6 +171,78 @@ a{color:inherit;text-decoration:none}
 .feed__item:last-child{border-bottom:none}
 .feed__time{font-family:var(--mono);font-size:11px;color:var(--paper-mute)}
 
+/* ============ TODAY VIEW (mobile-first) ============ */
+.today-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px;gap:16px}
+.today-header__title{font-family:var(--serif);font-size:32px;font-weight:900;letter-spacing:-0.03em;line-height:1}
+.today-header__date{font-size:13px;color:var(--paper-mute);font-family:var(--mono);margin-top:4px}
+.today-header__status{font-size:13px;color:var(--paper-dim);margin-top:6px;font-weight:500}
+.today-header__energy{display:flex;align-items:center;gap:8px;background:var(--ink-2);border:1px solid var(--line);border-radius:999px;padding:8px 14px;cursor:pointer;transition:all 0.2s var(--ease);flex-shrink:0}
+.today-header__energy:hover{border-color:var(--terracotta)}
+.today-header__energy-dot{width:10px;height:10px;border-radius:50%;background:var(--terracotta);box-shadow:0 0 0 3px var(--terracotta-soft)}
+.today-header__energy-value{font-size:13px;font-weight:600;font-family:var(--mono)}
+
+.today-hero{background:linear-gradient(135deg,var(--ink-2),var(--ink-3));border:1px solid var(--line-strong);border-radius:16px;padding:28px;margin-bottom:16px;position:relative;overflow:hidden}
+.today-hero::after{content:'';position:absolute;top:-50%;right:-20%;width:300px;height:300px;background:radial-gradient(circle,var(--terracotta-soft),transparent 70%);pointer-events:none}
+.today-hero__label{font-size:11px;color:var(--terracotta-bright);font-family:var(--mono);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:10px;position:relative}
+.today-hero__title{font-family:var(--serif);font-size:28px;font-weight:800;letter-spacing:-0.02em;line-height:1.15;margin-bottom:14px;position:relative}
+.today-hero__meta{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px;position:relative;font-size:12px;color:var(--paper-dim);font-family:var(--mono);align-items:center}
+.today-hero__progress{display:flex;align-items:center;gap:12px;margin-bottom:20px;position:relative}
+.today-hero__progress-bar{flex:1;height:6px;background:var(--ink-4);border-radius:3px;overflow:hidden}
+.today-hero__progress-fill{height:100%;background:linear-gradient(90deg,var(--terracotta),var(--terracotta-bright));border-radius:3px;transition:width 0.8s var(--ease)}
+.today-hero__progress-text{font-size:12px;color:var(--paper-mute);font-family:var(--mono);white-space:nowrap}
+.today-hero__actions{display:flex;gap:12px;position:relative}
+.today-hero__btn{flex:1;justify-content:center}
+
+.today-empty{display:flex;flex-direction:column;align-items:center;text-align:center;padding:40px 24px;background:var(--ink-2);border:1px dashed var(--line-strong);border-radius:16px;margin-bottom:16px}
+.today-empty__icon{font-family:var(--serif);font-size:48px;color:var(--paper-mute);opacity:0.3;margin-bottom:12px}
+.today-empty__title{font-family:var(--serif);font-size:20px;font-weight:700;margin-bottom:6px}
+.today-empty__desc{font-size:13px;color:var(--paper-mute);line-height:1.6;max-width:32ch;margin-bottom:20px}
+
+.today-section{background:var(--ink-2);border:1px solid var(--line);border-radius:12px;padding:20px;margin-bottom:16px}
+.today-section__head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;gap:12px}
+.today-section__title{font-size:15px;font-weight:700}
+.today-section__sub{font-size:12px;color:var(--paper-mute);font-family:var(--mono);margin-top:2px}
+
+/* 能量快速选择 */
+.energy-chips{display:flex;gap:10px;flex-wrap:wrap}
+.energy-chip{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:999px;border:1px solid var(--line);background:var(--ink);color:var(--paper-dim);font-size:13px;font-weight:500;cursor:pointer;transition:all 0.2s var(--ease);-webkit-tap-highlight-color:transparent}
+.energy-chip:active{transform:scale(0.97)}
+.energy-chip.active{background:var(--terracotta-soft);border-color:var(--terracotta);color:var(--paper)}
+.energy-chip__dot{width:8px;height:8px;border-radius:50%}
+
+/* 时间块概览 */
+.timeblock-preview{position:relative;height:44px;background:var(--ink);border-radius:8px;overflow:hidden;display:flex;align-items:center}
+.timeblock-preview__track{position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent,transparent calc(12.5% - 1px),var(--line) calc(12.5% - 1px),var(--line) 12.5%)}
+.timeblock-preview__block{position:absolute;top:6px;bottom:6px;border-radius:4px;display:flex;align-items:center;padding:0 8px;font-size:11px;color:var(--paper);white-space:nowrap;overflow:hidden;border:1px solid;transition:all 0.2s var(--ease)}
+.timeblock-preview__block--high{background:var(--terracotta-soft);border-color:var(--terracotta)}
+.timeblock-preview__block--normal{background:var(--ochre-soft);border-color:var(--ochre)}
+.timeblock-preview__block--low{background:var(--moss-soft);border-color:var(--moss)}
+.timeblock-preview__now{position:absolute;top:0;bottom:0;width:2px;background:var(--terracotta);box-shadow:0 0 8px var(--terracotta-glow);z-index:2}
+.timeblock-preview__empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--paper-mute);font-family:var(--mono)}
+
+.today-energy{margin-bottom:20px}
+.today-energy__head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px}
+.today-energy .mood__slider-wrap{padding:20px;background:transparent;border:none;border-radius:0}
+.today-energy .mood__recs{margin-top:16px}
+
+.pomodoro--compact{justify-content:space-between;align-items:center;background:transparent;border:none;padding:0}
+.pomodoro--compact .pomodoro__info{display:flex;flex-direction:column;gap:2px}
+.pomodoro--compact .pomodoro__label{font-size:12px;color:var(--paper-mute);font-family:var(--mono)}
+.pomodoro--compact .pomodoro__time{font-size:32px}
+.pomodoro--compact .pomodoro__controls{flex-direction:row;margin-left:0;gap:10px}
+.pomodoro--compact .pomodoro__btn{width:44px;height:44px}
+.pomodoro--compact .pomodoro__btn svg{width:18px;height:18px}
+
+.today-focus{background:var(--ink-2);border:1px solid var(--line-strong);border-radius:16px;padding:24px;margin-bottom:16px;animation:fadeUp 0.4s var(--ease)}
+.today-focus__head{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.today-focus__label{font-size:11px;color:var(--terracotta-bright);font-family:var(--mono);letter-spacing:0.08em;text-transform:uppercase}
+.today-focus__timer{font-family:var(--mono);font-size:32px;font-weight:500;color:var(--paper);letter-spacing:0.02em;line-height:1.2;margin-top:2px}
+.today-focus__controls{display:flex;align-items:center;gap:10px}
+.today-focus .subtasks{margin-bottom:20px}
+.today-focus__progress-label{display:flex;justify-content:space-between;font-size:12px;color:var(--paper-mute);font-family:var(--mono);margin-bottom:8px}
+
+.btn--lg{padding:14px 28px;font-size:15px}
+
 /* ============ VOICE INPUT DEMO ============ */
 .voice{max-width:800px;margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:32px;padding:40px 0}
 .voice__stage{display:flex;flex-direction:column;align-items:center;gap:24px;width:100%;min-height:400px;justify-content:center}
@@ -291,6 +363,139 @@ a{color:inherit;text-decoration:none}
 
 /* ============ TEAM SYNC (Gantt) ============ */
 .team{max-width:1200px}
+/* ============ SOMEDAY VIEW (mobile-first) ============ */
+.someday-view{padding-bottom:20px}
+.someday-header{margin-bottom:18px}
+.someday-header__title{font-family:var(--serif);font-size:32px;font-weight:900;letter-spacing:-0.03em;line-height:1}
+.someday-header__sub{font-size:13px;color:var(--paper-mute);font-family:var(--mono);margin-top:4px}
+
+.someday-add{display:flex;gap:10px;margin-bottom:18px}
+.someday-add__input{flex:1;background:var(--ink-2);border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:14px;color:var(--paper);outline:none;transition:border-color 0.2s var(--ease)}
+.someday-add__input:focus{border-color:var(--terracotta)}
+.someday-add__input::placeholder{color:var(--paper-mute)}
+.someday-add__btn{width:44px;height:44px;border-radius:12px;background:var(--terracotta);color:var(--paper);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.2s var(--ease)}
+.someday-add__btn:active{transform:scale(0.94)}
+
+.someday-list{display:flex;flex-direction:column;gap:8px}
+.someday-item{background:var(--ink-2);border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:flex;align-items:center;gap:12px;transition:all 0.2s var(--ease)}
+.someday-item:active{transform:scale(0.98)}
+.someday-item__text{flex:1;font-size:14px}
+.someday-item__del{width:28px;height:28px;border-radius:8px;color:var(--paper-mute);display:flex;align-items:center;justify-content:center;transition:all 0.2s var(--ease);font-size:18px}
+.someday-item__del:active{color:var(--danger);background:rgba(201,90,74,0.15)}
+.someday-empty{text-align:center;padding:40px 20px}
+.someday-empty__icon{font-size:48px;color:var(--terracotta-soft);margin-bottom:12px;line-height:1}
+.someday-empty__title{font-family:var(--serif);font-size:18px;font-weight:700;margin-bottom:6px}
+.someday-empty__desc{font-size:13px;color:var(--paper-mute);line-height:1.6}
+
+/* ============ PROJECTS VIEW (mobile-first) ============ */
+.projects-view{padding-bottom:20px}
+.projects-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:18px}
+.projects-header__title{font-family:var(--serif);font-size:32px;font-weight:900;letter-spacing:-0.03em;line-height:1}
+.projects-header__sub{font-size:13px;color:var(--paper-mute);font-family:var(--mono);margin-top:4px}
+.projects-header__new{display:flex;align-items:center;gap:6px;background:var(--terracotta);color:var(--paper);border-radius:999px;padding:10px 16px;font-size:13px;font-weight:600;transition:all 0.2s var(--ease)}
+.projects-header__new:active{transform:scale(0.96)}
+
+.ai-generator{background:linear-gradient(135deg,var(--ink-2),var(--ink-3));border:1px solid var(--line-strong);border-radius:16px;padding:18px;margin-bottom:20px;position:relative;overflow:hidden}
+.ai-generator::after{content:'';position:absolute;top:-40%;right:-10%;width:200px;height:200px;background:radial-gradient(circle,var(--terracotta-soft),transparent 70%);pointer-events:none}
+.ai-generator__label{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--terracotta-bright);font-family:var(--mono);letter-spacing:0.04em;text-transform:uppercase;margin-bottom:12px;position:relative}
+.ai-generator__dot{width:6px;height:6px;border-radius:50%;background:var(--terracotta-bright);box-shadow:0 0 0 3px var(--terracotta-soft);animation:pulse 2s ease-in-out infinite}
+.ai-generator__input-wrap{display:flex;gap:10px;align-items:flex-end;position:relative}
+.ai-generator__input{flex:1;background:var(--ink-4);border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:14px;color:var(--paper);outline:none;resize:none;min-height:48px;max-height:120px;line-height:1.5;transition:border-color 0.2s var(--ease);font-family:inherit}
+.ai-generator__input:focus{border-color:var(--terracotta)}
+.ai-generator__input::placeholder{color:var(--paper-mute)}
+.ai-generator__btn{width:44px;height:44px;border-radius:12px;background:var(--terracotta);color:var(--paper);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.2s var(--ease)}
+.ai-generator__btn:active{transform:scale(0.94)}
+.ai-generator__examples{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;position:relative}
+.ai-chip{display:flex;align-items:center;gap:5px;background:var(--ink-4);border:1px solid var(--line);border-radius:999px;padding:6px 12px;font-size:12px;color:var(--paper-dim);transition:all 0.2s var(--ease);white-space:nowrap}
+.ai-chip:active{background:var(--terracotta-soft);border-color:var(--terracotta);color:var(--terracotta-bright)}
+
+.projects-loading{text-align:center;padding:40px 20px}
+.projects-loading__dots{display:flex;gap:8px;justify-content:center;margin-bottom:16px}
+.projects-loading__dots span{width:10px;height:10px;border-radius:50%;background:var(--terracotta);animation:pulse 1.4s ease-in-out infinite}
+.projects-loading__dots span:nth-child(2){animation-delay:0.2s}
+.projects-loading__dots span:nth-child(3){animation-delay:0.4s}
+.projects-loading__text{font-family:var(--serif);font-size:18px;font-weight:700;margin-bottom:6px}
+.projects-loading__sub{font-size:12px;color:var(--paper-mute);font-family:var(--mono)}
+
+.projects-list{display:flex;flex-direction:column;gap:14px}
+
+.projects-timeline-section{margin-top:24px}
+.projects-timeline-section__head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.projects-timeline-section__title{font-family:var(--serif);font-size:18px;font-weight:700}
+.projects-timeline-section__hint{font-size:11px;color:var(--paper-mute);font-family:var(--mono)}
+.projects-timeline-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+
+/* ============ TEAM VIEW (mobile-first) ============ */
+.team-view{padding-bottom:20px}
+.team-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:18px}
+.team-header__title{font-family:var(--serif);font-size:32px;font-weight:900;letter-spacing:-0.03em;line-height:1}
+.team-header__sub{font-size:13px;color:var(--paper-mute);font-family:var(--mono);margin-top:4px}
+.team-header__create{display:flex;align-items:center;gap:6px;background:var(--terracotta);color:var(--paper);border-radius:999px;padding:10px 16px;font-size:13px;font-weight:600;transition:all 0.2s var(--ease)}
+.team-header__create:active{transform:scale(0.96)}
+
+.team-seg{display:flex;gap:6px;background:var(--ink-2);border:1px solid var(--line);border-radius:12px;padding:4px;margin-bottom:18px}
+.team-seg__btn{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;padding:10px 12px;border-radius:8px;font-size:13px;font-weight:500;color:var(--paper-dim);transition:all 0.2s var(--ease)}
+.team-seg__btn.active{background:var(--ink-3);color:var(--paper);box-shadow:0 1px 3px rgba(0,0,0,0.2)}
+.team-seg__count{background:var(--terracotta-soft);color:var(--terracotta-bright);border-radius:999px;padding:2px 8px;font-size:11px;font-weight:700;font-family:var(--mono)}
+
+.team-list{display:flex;flex-direction:column;gap:12px}
+.team-card{background:var(--ink-2);border:1px solid var(--line);border-radius:14px;padding:18px;transition:all 0.2s var(--ease);cursor:pointer}
+.team-card:active{transform:scale(0.98);border-color:var(--terracotta)}
+.team-card__head{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.team-card__icon{width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,var(--terracotta),var(--ochre));display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-weight:900;font-size:18px;color:var(--paper)}
+.team-card__name{font-family:var(--serif);font-size:18px;font-weight:700}
+.team-card__role{font-size:11px;color:var(--paper-mute);font-family:var(--mono);margin-top:2px}
+.team-card__desc{font-size:13px;color:var(--paper-dim);line-height:1.5;margin-bottom:14px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.team-card__meta{display:flex;gap:8px;flex-wrap:wrap}
+.team-card__chip{display:flex;align-items:center;gap:5px;background:var(--ink-3);border-radius:999px;padding:5px 10px;font-size:11px;color:var(--paper-dim);font-family:var(--mono)}
+
+.team-empty{text-align:center;padding:60px 24px}
+.team-empty__icon{font-size:56px;color:var(--terracotta-soft);margin-bottom:16px;line-height:1}
+.team-empty__title{font-family:var(--serif);font-size:20px;font-weight:700;margin-bottom:8px}
+.team-empty__desc{font-size:13px;color:var(--paper-mute);line-height:1.6;margin-bottom:20px}
+.team-empty__btn{max-width:200px;margin:0 auto}
+
+.team-kanban-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;gap:12px}
+.team-kanban-select{flex:1}
+.team-kanban-select select{width:100%;background:var(--ink-2);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:13px;color:var(--paper);outline:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23b7b5a9' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px}
+.team-kanban-week{font-size:12px;color:var(--paper-mute);font-family:var(--mono);white-space:nowrap}
+
+.gantt-wrap{background:var(--ink-2);border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-bottom:14px}
+.gantt-mobile{overflow-x:auto;-webkit-overflow-scrolling:touch;min-width:100%}
+.gantt-detail-card{background:var(--ink-2);border:1px solid var(--line);border-radius:14px;padding:16px}
+.gantt-detail-card__title{font-family:var(--serif);font-size:16px;font-weight:700;margin-bottom:12px}
+.gantt-detail-card__grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.gantt-detail-card__item{display:flex;flex-direction:column;gap:4px}
+.gantt-detail-card__label{font-size:11px;color:var(--paper-mute);font-family:var(--mono)}
+.gantt-detail-card__value{font-size:13px;color:var(--paper);font-weight:500}
+
+.modal__content--team{max-width:90vw}
+
+/* team detail */
+.team-detail-section{margin-bottom:20px}
+.team-detail-section__head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.team-detail-section__title{font-family:var(--serif);font-size:15px;font-weight:700;margin-bottom:8px}
+.team-detail-section__head .team-detail-section__title{margin-bottom:0}
+.team-detail-section__desc{font-size:13px;color:var(--paper-dim);line-height:1.6}
+.team-detail-empty{text-align:center;padding:20px;color:var(--paper-mute);font-size:13px;background:var(--ink-3);border-radius:10px}
+
+.team-member-item{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
+.team-member-item:last-child{border-bottom:none}
+.team-member-item__left{display:flex;align-items:center;gap:10px}
+.team-member-item__avatar{width:32px;height:32px;border-radius:50%;color:var(--paper);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700}
+.team-member-item__name{font-size:13px;font-weight:500}
+.team-member-item__role{font-size:11px;color:var(--paper-mute);font-family:var(--mono);margin-top:2px}
+
+.team-project-item{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
+.team-project-item:last-child{border-bottom:none}
+.team-project-item__left{display:flex;align-items:center;gap:10px}
+.team-project-item__icon{width:32px;height:32px;border-radius:8px;background:var(--ink-3);display:flex;align-items:center;justify-content:center;font-size:16px}
+.team-project-item__name{font-size:13px;font-weight:500}
+.team-project-item__meta{font-size:11px;color:var(--paper-mute);font-family:var(--mono);margin-top:2px}
+
+.btn--sm{padding:5px 10px;font-size:11px;border-radius:6px}
+
+/* ---- old team classes (kept for desktop fallback) ---- */
 .team__toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;gap:16px;flex-wrap:wrap}
 .team__title{font-family:var(--serif);font-size:24px;font-weight:700}
 .team__filters{display:flex;gap:6px}
@@ -463,6 +668,11 @@ a{color:inherit;text-decoration:none}
 .apicard__input:focus{border-color:var(--terracotta)}
 .apicard__input::placeholder{color:var(--paper-mute)}
 .apicard__actions{display:flex;justify-content:flex-end;margin-top:10px}
+.api-advanced-toggle{margin-top:16px}
+.api-advanced-toggle .btn{width:100%;justify-content:center;gap:8px}
+.api-advanced-panel{margin-top:12px;padding-top:12px;border-top:1px dashed var(--line)}
+.api-advanced-panel.open{display:block}
+.api-advanced-panel .apicard{margin-top:12px}
 
 /* ============ COMMAND PALETTE ============ */
 .cmd-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);backdrop-filter:blur(12px);display:none;align-items:flex-start;justify-content:center;padding-top:15vh;z-index:600;animation:fadeUp 0.2s var(--ease)}
@@ -588,6 +798,16 @@ a{color:inherit;text-decoration:none}
   .pomodoro__ring{width:100px;height:100px}
   .pomodoro__time{font-size:24px}
   .pomodoro__btn{width:32px;height:32px}
+  .today-header{margin-bottom:16px}
+  .today-header__title{font-size:26px}
+  .today-hero{padding:22px;border-radius:14px}
+  .today-hero__title{font-size:22px}
+  .today-hero__actions{flex-direction:row}
+  .today-hero__btn{flex:1}
+  .today-section{padding:16px}
+  .energy-chip{padding:7px 12px;font-size:12px}
+  .timeblock-preview{height:40px}
+  .timeblock-preview__block{font-size:10px;padding:0 6px}
   .task-focus-card{padding:24px}
   .subtask__check{width:20px;height:20px}
   .subtask__check svg{width:13px;height:13px}
@@ -657,6 +877,19 @@ a{color:inherit;text-decoration:none}
   .projects__module-time{font-size:11px;padding:2px 6px}
   .projects__module-item{padding:5px 0;gap:8px}
   .projects__item-label{font-size:12px}
+  .today-header{margin-bottom:14px}
+  .today-header__title{font-size:24px}
+  .today-header__status{font-size:12px}
+  .today-hero{padding:18px;border-radius:12px}
+  .today-hero__title{font-size:20px;margin-bottom:12px}
+  .today-hero__meta{margin-bottom:14px}
+  .today-hero__progress{margin-bottom:16px}
+  .today-hero__actions{flex-direction:row;gap:10px}
+  .today-hero__btn{padding:12px 18px;font-size:14px}
+  .today-section{padding:14px;margin-bottom:12px}
+  .today-section__head{margin-bottom:12px}
+  .energy-chips{gap:8px}
+  .energy-chip{padding:6px 10px;font-size:11px}
   .focus-now{padding:16px}
   .focus-now__title{font-size:18px}
   .focus-now__meta{gap:10px}
@@ -1214,47 +1447,53 @@ a{color:inherit;text-decoration:none}
 
     <!-- ============ PROJECTS ORCHESTRATOR ============ -->
     <div class="view active" id="view-projects">
-      <div class="projects">
-        <!-- AI Generator -->
-        <div class="projects__generator fade-up">
-          <div class="projects__generator-label">AI 项目编排器</div>
-          <div class="projects__input-area">
-            <textarea class="projects__input" id="projectsInput" placeholder="告诉我你要做什么... 比如：下周三有腾讯面试，月底要去成都玩3天" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();generateProjects()}"></textarea>
-            <button class="btn btn--primary projects__generate-btn" onclick="generateProjects()">
-              生成规划
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      <div class="projects-view">
+        <div class="projects-header fade-up">
+          <div>
+            <h1 class="projects-header__title">工作台</h1>
+            <p class="projects-header__sub" id="projectsHeaderSub">0 个项目 · 开始规划吧</p>
+          </div>
+          <button class="projects-header__new" onclick="focusProjectsInput()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            新建
+          </button>
+        </div>
+
+        <div class="ai-generator fade-up">
+          <div class="ai-generator__label">
+            <span class="ai-generator__dot"></span>
+            AI 项目编排器
+          </div>
+          <div class="ai-generator__input-wrap">
+            <textarea class="ai-generator__input" id="projectsInput" rows="2" placeholder="告诉我你要做什么... 比如：下周三有腾讯面试" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();generateProjects()}"></textarea>
+            <button class="ai-generator__btn" onclick="generateProjects()" id="genBtn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
             </button>
           </div>
-          <div class="projects__examples">
-            <span class="projects__examples-label">试试这些</span>
-            <button class="projects__example" onclick="fillProjectExample(0)">下周三有腾讯面试</button>
-            <button class="projects__example" onclick="fillProjectExample(1)">月底要去成都玩3天</button>
-            <button class="projects__example" onclick="fillProjectExample(2)">下周有创新比赛要交</button>
+          <div class="ai-generator__examples">
+            <button class="ai-chip" onclick="fillProjectExample(0)">🎯 面试准备</button>
+            <button class="ai-chip" onclick="fillProjectExample(1)">✈️ 旅行规划</button>
+            <button class="ai-chip" onclick="fillProjectExample(2)">🏆 比赛项目</button>
           </div>
         </div>
 
-        <!-- Loading state -->
-        <div class="projects__loading" id="projectsLoading" style="display:none">
-          <div class="projects__loading-dots"><span></span><span></span><span></span></div>
-          <div class="projects__loading-text" id="projectsLoadingText">Agent 正在虚空排布...</div>
-          <div class="projects__loading-sub" id="projectsLoadingSub">推演卦象 · 拆解因缘 · 生成模块</div>
+        <div class="projects-loading" id="projectsLoading" style="display:none">
+          <div class="projects-loading__dots"><span></span><span></span><span></span></div>
+          <div class="projects-loading__text">Agent 正在虚空排布...</div>
+          <div class="projects-loading__sub">推演卦象 · 拆解因缘 · 生成模块</div>
         </div>
 
-        <!-- Empty state -->
-        <div class="projects__empty" id="projectsEmpty">
-          <div class="projects__empty-icon">◈</div>
-          <div>还没有项目 · 在上方输入你想做的事，AI 帮你拆成可执行的模块</div>
-        </div>
+        <div class="projects-list" id="projectsList"></div>
 
-        <!-- Projects list -->
-        <div class="projects__list" id="projectsList"></div>
-
-        <!-- Timeline section -->
-        <div class="projects__timeline-section" id="projectsTimelineSection" style="display:none">
-          <h3 class="projects__timeline-title">多项目时间线</h3>
-          <div class="projects__timeline-sub">横向时间轴 · 红色标记为 DDL 冲突</div>
-          <div class="projects__conflicts-wrap" id="projectsConflictsWrap"></div>
-          <div class="projects__timeline" id="projectsTimeline"></div>
+        <div class="projects-timeline-section" id="projectsTimelineSection" style="display:none">
+          <div class="projects-timeline-section__head">
+            <h3 class="projects-timeline-section__title">多项目时间线</h3>
+            <span class="projects-timeline-section__hint">横向查看</span>
+          </div>
+          <div class="projects-conflicts-wrap" id="projectsConflictsWrap"></div>
+          <div class="projects-timeline-scroll">
+            <div class="projects-timeline" id="projectsTimeline"></div>
+          </div>
         </div>
       </div>
     </div>
@@ -1264,237 +1503,192 @@ a{color:inherit;text-decoration:none}
       <!-- S10: Proactive Pull banner (动态显示) -->
       <div id="proactiveBanner"></div>
 
-      <!-- 区域 1：今日概览卡片行 -->
-      <div class="today-cards" style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-bottom:24px;max-width:1200px">
-        <!-- 能量状态 -->
-        <div class="card fade-up" id="today-energy-section">
-          <div class="card__label">能量状态</div>
-          <div class="mood__slider-wrap" style="padding:20px">
-            <div class="mood__gauge" style="width:140px;height:140px">
-              <svg class="gauge__svg" viewBox="0 0 120 120">
-                <circle class="gauge__track" cx="60" cy="60" r="50"/>
-                <circle class="gauge__fill" id="moodGaugeFill" cx="60" cy="60" r="50" stroke-dasharray="314" stroke-dashoffset="94" data-gauge-target="94" style="stroke:var(--terracotta)"/>
-              </svg>
-              <div class="gauge__value">
-                <span class="mood__value" id="moodValue">70</span>
-                <span class="gauge__unit">%</span>
-              </div>
-            </div>
-            <input type="range" min="0" max="100" value="70" class="mood__slider" id="moodSlider" oninput="updateMood(this.value)">
-            <div class="mood__labels">
-              <span>没电</span>
-              <span>一般</span>
-              <span>满电</span>
-            </div>
-            <div class="mood__status" id="moodStatus">状态不错 · 可以上硬骨头</div>
+      <!-- 今日头部：日期 + 当日状态 + 能量快速入口 -->
+      <div class="today-header fade-up">
+        <div>
+          <h1 class="today-header__title">今天</h1>
+          <p class="today-header__date" id="todayDate">7月22日 周二</p>
+          <p class="today-header__status" id="todayStatus">还有 3 件待办</p>
+        </div>
+        <button class="today-header__energy" onclick="toggleEnergyPanel()" aria-label="能量状态">
+          <span class="today-header__energy-dot" id="moodDot"></span>
+          <span class="today-header__energy-value" id="moodValueMini">不错</span>
+        </button>
+      </div>
+
+      <!-- 下一件（主 CTA） -->
+      <div class="today-hero fade-up" id="today-focus-section">
+        <div class="today-hero__label">下一件</div>
+        <h2 class="today-hero__title" id="focusTitleHero">完成产品方案初稿</h2>
+        <div class="today-hero__meta">
+          <span class="chip chip--high" id="focusPriorityHero">高优先级</span>
+          <span id="focusDueHero">今天 18:00</span>
+          <span id="focusEstHero">预估 2h</span>
+        </div>
+        <div class="today-hero__progress">
+          <div class="today-hero__progress-bar"><div class="today-hero__progress-fill" id="focusProgressHero" style="width:0%"></div></div>
+          <span class="today-hero__progress-text" id="focusProgressTextHero">0 / 3</span>
+        </div>
+        <div class="today-hero__actions">
+          <button class="btn btn--primary btn--lg today-hero__btn" onclick="startTodayFocus()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polygon points="5,3 19,12 5,21"/></svg>
+            开始专注
+          </button>
+          <button class="btn btn--ghost today-hero__btn" onclick="skipTask()">跳过</button>
+        </div>
+      </div>
+
+      <!-- 空状态引导：无任务时显示 -->
+      <div class="today-empty" id="todayEmpty" style="display:none">
+        <div class="today-empty__icon">◈</div>
+        <div class="today-empty__title">今天还没有任务</div>
+        <div class="today-empty__desc">去工作台生成一个项目，AI 会帮你排好今天要做什么。</div>
+        <button class="btn btn--primary" onclick="switchView('projects')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          生成项目
+        </button>
+      </div>
+
+      <!-- 专注面板：点击「开始专注」后展开 -->
+      <div class="today-focus" id="todayFocusPanel" style="display:none">
+        <div class="today-focus__head">
+          <div>
+            <div class="today-focus__label">正在专注</div>
+            <div class="today-focus__timer" id="todayFocusTimer">25:00</div>
           </div>
-          <div class="mood__recs" style="margin-top:12px">
-            <div class="mood__recs-label" id="recsLabel">推荐 3 件中等难度任务</div>
-            <div id="recsList" class="stagger" style="display:flex;flex-direction:column;gap:12px">
-              <!-- 由 JS 渲染 -->
-            </div>
+          <div class="today-focus__controls">
+            <button class="pomodoro__btn" id="todayPomoToggle" onclick="toggleTodayPomo()" title="开始/暂停">
+              <svg id="todayPomoPlay" viewBox="0 0 24 24"><polygon points="6,4 20,12 6,20"/></svg>
+              <svg id="todayPomoPause" viewBox="0 0 24 24" style="display:none"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+            </button>
+            <button class="btn btn--ghost" style="padding:6px 12px;font-size:12px" onclick="closeTodayFocus()">收起</button>
           </div>
         </div>
+        <div class="subtasks" id="todaySubtaskList"></div>
+        <div class="today-focus__progress">
+          <div class="today-focus__progress-label">
+            <span>进度</span>
+            <span id="todayFocusProgressText">0 / 3</span>
+          </div>
+          <div class="progress"><div class="progress__fill" id="todayFocusProgress" style="width:0%"></div></div>
+        </div>
+        <button class="btn btn--primary btn--full" style="margin-top:16px" onclick="completeTodayTask()">
+          标记完成
+        </button>
+      </div>
 
-        <!-- 今日统计 -->
-        <div class="card fade-up" style="animation-delay:0.1s">
-          <div class="card__label">今日统计</div>
-          <div class="stats" style="grid-template-columns:1fr 1fr 1fr">
-            <div class="stat">
-              <div class="stat__label">今日完成</div>
-              <div class="stat__value" data-count="2">0</div>
-            </div>
-            <div class="stat">
-              <div class="stat__label">待处理</div>
-              <div class="stat__value" data-count="6">0</div>
-            </div>
-            <div class="stat">
-              <div class="stat__label">连续天数</div>
-              <div class="stat__value" data-count="3">0</div>
-            </div>
+      <!-- 能量快速选择 -->
+      <div class="today-section fade-up">
+        <div class="today-section__head">
+          <div>
+            <h3 class="today-section__title">现在状态如何？</h3>
+            <p class="today-section__sub" id="energyAdvice">状态不错 · 可以上硬骨头</p>
           </div>
         </div>
-
-        <!-- 下一个动作 -->
-        <div class="focus-now fade-up" style="animation-delay:0.15s">
-          <div class="card__label">下一个动作</div>
-          <h2 class="focus-now__title">完成产品方案初稿</h2>
-          <div class="focus-now__meta">
-            <span class="focus-now__meta-item">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>
-              今天 18:00
-            </span>
-            <span class="chip chip--high">高优先级</span>
-            <span class="focus-now__meta-item">2/5 子任务</span>
-          </div>
-          <div class="progress"><div class="progress__fill" style="width:40%"></div></div>
-          <button class="btn btn--primary" onclick="switchView('today');setTimeout(function(){document.getElementById('today-focus-section').scrollIntoView({behavior:'smooth'})},300)">
-            开始聚焦
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        <div class="energy-chips" id="energyChips">
+          <button class="energy-chip" data-key="full" onclick="quickEnergy(this,'full')">
+            <span class="energy-chip__dot" style="background:var(--terracotta)"></span>
+            满电
+          </button>
+          <button class="energy-chip active" data-key="ok" onclick="quickEnergy(this,'ok')">
+            <span class="energy-chip__dot" style="background:var(--ochre)"></span>
+            不错
+          </button>
+          <button class="energy-chip" data-key="mid" onclick="quickEnergy(this,'mid')">
+            <span class="energy-chip__dot" style="background:var(--moss)"></span>
+            一般
+          </button>
+          <button class="energy-chip" data-key="low" onclick="quickEnergy(this,'low')">
+            <span class="energy-chip__dot" style="background:var(--paper-mute)"></span>
+            偏累
           </button>
         </div>
       </div>
 
-      <!-- 区域 2：时间块 + 番茄钟 -->
-      <div class="dash" style="margin-bottom:24px">
-        <div class="dash__left">
-          <div class="timeblock fade-up">
-            <div class="timeblock__head">
-              <div>
-                <h2 class="timeblock__title">今日时间块</h2>
-                <p class="timeblock__sub">让时间可见 · 任务按预估时长放进 8h 工作日</p>
-              </div>
-              <div class="timeblock__summary">
-                <div class="timeblock__summary-item" id="tbCapacity">容量 8h</div>
-                <div class="timeblock__summary-item" id="tbPlanned">计划 5.5h</div>
-                <div class="timeblock__summary-item" id="tbRemaining">剩余 2.5h</div>
-              </div>
-            </div>
-            <div class="timeblock__grid" id="timeblockGrid"></div>
+      <!-- 时间块概览 -->
+      <div class="today-section fade-up">
+        <div class="today-section__head">
+          <div>
+            <h3 class="today-section__title">今日时间块</h3>
+            <p class="today-section__sub" id="timeblockSummary">容量 8h · 计划 5.5h · 剩余 2.5h</p>
           </div>
+          <button class="btn btn--ghost" style="padding:6px 14px;font-size:12px" onclick="switchView('timeblock')">展开</button>
         </div>
-        <div class="dash__right">
-          <div class="fade-up" style="animation-delay:0.1s">
-            <div class="pomodoro" style="flex-direction:column;align-items:center;gap:16px;padding:24px;height:100%;justify-content:center">
-              <div class="pomodoro__ring" style="width:160px;height:160px">
-                <div class="pomodoro__time" id="pomoTime">25:00</div>
-                <div class="pomodoro__breathe"></div>
-              </div>
-              <div class="pomodoro__controls" style="flex-direction:row;margin-left:0">
-                <button class="pomodoro__btn" id="pomoToggle" onclick="togglePomo()" title="开始/暂停">
-                  <svg id="pomoPlay" viewBox="0 0 24 24"><polygon points="6,4 20,12 6,20"/></svg>
-                  <svg id="pomoPause" viewBox="0 0 24 24" style="display:none"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
-                </button>
-                <button class="pomodoro__btn" onclick="resetPomo()" title="重置">
-                  <svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5"/></svg>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 区域 3：任务聚焦 -->
-      <div id="today-focus-section" class="fade-up" style="margin-bottom:24px">
-        <div class="focus-mode">
-          <div class="focus-mode__topbar">
-            <div class="focus-mode__counter">第 <strong id="taskIdx">1</strong> 件 · 共 <strong id="taskTotal">3</strong> 件待办</div>
-            <div class="focus-mode__topbar-actions">
-              <button class="btn btn--ghost" id="pomoFsBtn" onclick="togglePomoFullscreen()" title="沉浸模式">⛶</button>
-              <button class="btn btn--ghost" onclick="skipTask()">跳过</button>
-            </div>
-          </div>
-
-          <div class="task-focus-card" id="focusCard">
-            <h2 class="task-focus-card__title" id="focusTitle">完成产品方案初稿</h2>
-            <div class="task-focus-card__meta">
-              <span class="chip chip--high" id="focusPriority">高优先级</span>
-              <span class="focus-now__meta-item" id="focusDue">今天 18:00</span>
-              <span class="focus-now__meta-item" id="focusEst">预估 2h</span>
-            </div>
-            <div class="task-focus-card__divider"></div>
-            <div class="subtasks" id="subtaskList">
-              <!-- 由 JS 渲染 -->
-            </div>
-            <div class="task-focus-card__progress">
-              <div class="task-focus-card__progress-label">
-                <span>进度</span>
-                <span id="focusProgressText">0 / 5</span>
-              </div>
-              <div class="progress"><div class="progress__fill" id="focusProgress" style="width:0%"></div></div>
-            </div>
-
-            <!-- S12: 创意状态机 -->
-            <div class="creative-state" id="creativeState">
-              <span class="creative-state__label">阶段</span>
-              <span class="creative-state__chip" data-state="idea" onclick="setCreativeState('idea')">想法</span>
-              <span class="creative-state__chip active" data-state="drafting" onclick="setCreativeState('drafting')">起草</span>
-              <span class="creative-state__chip" data-state="reviewing" onclick="setCreativeState('reviewing')">审阅</span>
-              <span class="creative-state__chip" data-state="shipped" onclick="setCreativeState('shipped')">交付</span>
-              <div class="creative-state__progress"><div class="creative-state__progress-fill" id="creativeProgress" style="width:25%"></div></div>
-            </div>
-
-            <!-- S2+S3+S4: 工具栏 + S5: kind line -->
-            <div class="task-tools">
-              <button class="tool-btn" onclick="toggleSplitTree()">
-                <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="15" y2="12"/><line x1="3" y1="18" x2="9" y2="18"/></svg>
-                拆到可执行
-              </button>
-              <span class="tool-btn est-tooltip" style="cursor:help">
-                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>
-                AI 估时 <span id="estTime">2h</span>
-                <span class="est-tooltip__body">基于类型「创作类」+ 历史 5 次 · 中位 1.8h · 区间 1.2-2.5h</span>
-              </span>
-              <button class="tool-btn" onclick="showSOS()">
-                <svg viewBox="0 0 24 24"><path d="M12 2L2 22h20L12 2z"/><line x1="12" y1="9" x2="12" y2="14"/><circle cx="12" cy="17" r="0.5" fill="currentColor"/></svg>
-                拖延 SOS
-              </button>
-            </div>
-
-            <div class="subtask-tree" id="splitTree">
-              <!-- 由 JS 渲染 -->
-            </div>
-
-            <div class="kind-line" id="kindLine">
-              <strong>慢一点没关系</strong> · P 型人格的节奏本来就不同于 J 型，今天能开始就已经赢了一半。
-            </div>
-
-            <div class="swipe-complete" id="swipeComplete" onclick="completeTask()">
-              <div class="swipe-complete__fill"></div>
-              <div class="swipe-complete__hint">滑动标记完成 →</div>
-              <div class="swipe-complete__knob">
-                <svg viewBox="0 0 24 24"><polyline points="5,12 10,17 19,8" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 区域 4：今日活动 -->
-      <div class="card fade-up" style="max-width:1200px">
-        <div class="card__label">今日活动</div>
-        <div class="feed">
-          <div class="feed__item"><span>张三 完成了「数据收集」</span><span class="feed__time">10:32</span></div>
-          <div class="feed__item"><span>你 创建了「回复客户邮件」</span><span class="feed__time">09:15</span></div>
-          <div class="feed__item"><span>AI 推荐了 3 个低耗任务</span><span class="feed__time">08:00</span></div>
-          <div class="feed__item"><span>小王 更新了依赖项状态</span><span class="feed__time">昨天</span></div>
+        <div class="timeblock-preview" id="timeblockPreview" aria-label="今日时间块概览">
+          <!-- 由 JS 渲染 -->
         </div>
       </div>
     </div>
 
     <!-- ============ TEAM SYNC ============ -->
     <div class="view" id="view-team">
-      <div class="team">
-        <div class="team__toolbar">
-          <h2 class="team__title">团队协作</h2>
-          <button class="btn btn--primary" onclick="showCreateTeamModal()">创建团队</button>
+      <div class="team-view">
+        <div class="team-header fade-up">
+          <div>
+            <h1 class="team-header__title">团队</h1>
+            <p class="team-header__sub">协作看板 · 成员进度一目了然</p>
+          </div>
+          <button class="team-header__create" onclick="showCreateTeamModal()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            新建
+          </button>
         </div>
 
-        <div class="team__tabs">
-          <button class="team__tab active" onclick="switchTeamTab('my-teams')">我的团队</button>
-          <button class="team__tab" onclick="switchTeamTab('kanban')">协作看板</button>
+        <div class="team-seg fade-up">
+          <button class="team-seg__btn active" data-seg="teams" onclick="switchTeamSeg('teams')">
+            <span>我的团队</span>
+            <span class="team-seg__count" id="teamCountBadge">0</span>
+          </button>
+          <button class="team-seg__btn" data-seg="kanban" onclick="switchTeamSeg('kanban')">
+            <span>协作看板</span>
+          </button>
         </div>
 
-        <div class="team__content" id="teamContent">
-          <div class="team__list" id="teamList">
-            <div class="team__empty">
-              <div class="team__empty-icon">◈</div>
-              <div>还没有团队 · 点击上方创建团队，邀请成员协作</div>
+        <div id="teamListPanel">
+          <div class="team-list" id="teamList">
+            <div class="team-empty">
+              <div class="team-empty__icon">◈</div>
+              <div class="team-empty__title">还没有团队</div>
+              <div class="team-empty__desc">创建一个团队，邀请成员一起协作项目</div>
+              <button class="btn btn--primary btn--full team-empty__btn" onclick="showCreateTeamModal()">创建第一个团队</button>
             </div>
           </div>
-
-          <div class="gantt" id="gantt" style="display:none">
-            <!-- 由 JS 渲染 -->
-          </div>
         </div>
 
-        <div class="gantt__detail" id="ganttDetail">
-          <div class="gantt__detail-title" id="detailTitle">任务详情</div>
-          <div class="gantt__detail-grid">
-            <div class="gantt__detail-item"><span class="gantt__detail-label">负责人</span><span class="gantt__detail-value" id="detailOwner">-</span></div>
-            <div class="gantt__detail-item"><span class="gantt__detail-label">起止</span><span class="gantt__detail-value" id="detailRange">-</span></div>
-            <div class="gantt__detail-item"><span class="gantt__detail-label">依赖</span><span class="gantt__detail-value" id="detailDep">-</span></div>
-            <div class="gantt__detail-item"><span class="gantt__detail-label">状态</span><span class="gantt__detail-value" id="detailStatus">-</span></div>
+        <div id="teamKanbanPanel" style="display:none">
+          <div class="team-kanban-head fade-up">
+            <div class="team-kanban-select">
+              <select id="kanbanTeamSelect" onchange="renderGantt()">
+                <option value="">选择团队</option>
+              </select>
+            </div>
+            <div class="team-kanban-week" id="kanbanWeekLabel">本周</div>
+          </div>
+          <div class="gantt-wrap">
+            <div class="gantt-mobile" id="gantt">
+              <!-- 由 JS 渲染 -->
+            </div>
+          </div>
+          <div class="gantt-detail-card" id="ganttDetail" style="display:none">
+            <div class="gantt-detail-card__title" id="detailTitle">任务详情</div>
+            <div class="gantt-detail-card__grid">
+              <div class="gantt-detail-card__item">
+                <span class="gantt-detail-card__label">负责人</span>
+                <span class="gantt-detail-card__value" id="detailOwner">-</span>
+              </div>
+              <div class="gantt-detail-card__item">
+                <span class="gantt-detail-card__label">起止时间</span>
+                <span class="gantt-detail-card__value" id="detailRange">-</span>
+              </div>
+              <div class="gantt-detail-card__item">
+                <span class="gantt-detail-card__label">优先级</span>
+                <span class="gantt-detail-card__value" id="detailPriority">-</span>
+              </div>
+              <div class="gantt-detail-card__item">
+                <span class="gantt-detail-card__label">状态</span>
+                <span class="gantt-detail-card__value" id="detailStatus">-</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -1514,7 +1708,7 @@ a{color:inherit;text-decoration:none}
 
       <div class="modal" id="teamDetailModal" style="display:none">
         <div class="modal__backdrop" onclick="hideTeamDetailModal()"></div>
-        <div class="modal__content" style="max-width:500px">
+        <div class="modal__content modal__content--team">
           <div class="modal__header">
             <h3 class="modal__title" id="teamDetailTitle">团队详情</h3>
             <button class="modal__close" onclick="hideTeamDetailModal()">×</button>
@@ -1526,16 +1720,22 @@ a{color:inherit;text-decoration:none}
 
     <!-- ============ SOMEDAY 想法桶 ============ -->
     <div class="view" id="view-someday">
-      <div class="someday">
-        <div class="someday__head">
-          <h2 class="someday__title">想法桶</h2>
-          <p class="someday__sub">someday / maybe · 不进主线，等想做了再晋升</p>
+      <div class="someday-view">
+        <div class="someday-header fade-up">
+          <div>
+            <h1 class="someday-header__title">想法</h1>
+            <p class="someday-header__sub" id="somedayCount">0 个想法 · 以后再做</p>
+          </div>
         </div>
-        <div class="someday__add">
-          <input class="someday__input" id="somedayInput" placeholder="随手记一个想法..." onkeydown="if(event.key==='Enter')addSomeday()">
-          <button class="btn btn--primary" onclick="addSomeday()">记下</button>
+
+        <div class="someday-add fade-up">
+          <input class="someday-add__input" id="somedayInput" placeholder="随手记一个想法..." onkeydown="if(event.key==='Enter')addSomeday()">
+          <button class="someday-add__btn" onclick="addSomeday()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </button>
         </div>
-        <div class="someday__list" id="somedayList"></div>
+
+        <div class="someday-list" id="somedayList"></div>
       </div>
     </div>
 
@@ -1704,82 +1904,70 @@ a{color:inherit;text-decoration:none}
 
         <!-- 外部服务接入 -->
         <div class="settings__section">
-          <div class="settings__section-label">外部服务接入</div>
-          <div class="settings__row-desc" style="margin-bottom:4px">配置 API Key 后，AI 生成与外部数据会使用你自己的额度。Key 仅保存在本机浏览器。</div>
+          <div class="settings__section-label">AI 服务状态</div>
+          <div class="settings__row-desc" style="margin-bottom:12px">AI 生成、地点搜索、路线规划已默认启用，无需申请 API Key 即可使用。</div>
 
-          <!-- 高德地图 -->
-          <div class="apicard">
-            <div class="apicard__head">
-              <div class="apicard__icon">📍</div>
-              <div class="apicard__name">高德地图</div>
-              <span class="apicard__badge apicard__badge--off" id="amapBadge">未配置</span>
+          <div class="settings__row">
+            <div>
+              <div class="settings__row-label">AI 项目生成</div>
+              <div class="settings__row-desc">输入想法，自动拆解为可执行任务</div>
             </div>
-            <div class="apicard__desc">用于地点搜索、路线规划、天气、通勤推荐。<a href="https://lbs.amap.com/" target="_blank">获取 Key →</a></div>
-            <div class="apicard__field">
-              <div class="apicard__field-label">AMAP_API_KEY</div>
-              <input class="apicard__input" id="amapKey" type="password" placeholder="粘贴高德 Web 服务 Key">
+            <span class="chip chip--low" id="llmStatusBadge">已启用</span>
+          </div>
+          <div class="settings__row">
+            <div>
+              <div class="settings__row-label">地图与路线</div>
+              <div class="settings__row-desc">地点搜索、路线规划、通勤推荐</div>
             </div>
-            <div class="apicard__actions">
-              <button class="btn btn--primary" style="padding:6px 16px;font-size:12px" onclick="saveApiKey('amap')">保存</button>
-            </div>
+            <span class="chip chip--low" id="amapStatusBadge">已启用</span>
           </div>
 
-          <!-- 智谱 AI -->
-          <div class="apicard">
-            <div class="apicard__head">
-              <div class="apicard__icon">✨</div>
-              <div class="apicard__name">智谱 AI (GLM)</div>
-              <span class="apicard__badge apicard__badge--off" id="llmBadge">未配置</span>
-            </div>
-            <div class="apicard__desc">用于 AI 项目生成、模块补充。<a href="https://open.bigmodel.cn/" target="_blank">获取 Key →</a></div>
-            <div class="apicard__field">
-              <div class="apicard__field-label">LLM_API_KEY</div>
-              <input class="apicard__input" id="llmKey" type="password" placeholder="粘贴智谱 API Key">
-            </div>
-            <div class="apicard__field">
-              <div class="apicard__field-label">LLM_API_URL</div>
-              <input class="apicard__input" id="llmUrl" type="text" placeholder="https://open.bigmodel.cn/api/paas/v4/chat/completions">
-            </div>
-            <div class="apicard__field">
-              <div class="apicard__field-label">LLM_MODEL</div>
-              <input class="apicard__input" id="llmModel" type="text" placeholder="glm-4-flash">
-            </div>
-            <div class="apicard__actions">
-              <button class="btn btn--primary" style="padding:6px 16px;font-size:12px" onclick="saveApiKey('llm')">保存</button>
-            </div>
+          <div class="api-advanced-toggle">
+            <button class="btn btn--ghost" onclick="toggleAdvancedApi()">
+              <svg id="apiAdvancedIcon" viewBox="0 0 24 24" style="width:14px;height:14px;transition:transform .2s"><polyline points="6,9 12,15 18,9"/></svg>
+              <span id="apiAdvancedLabel">高级设置：使用自己的 API Key</span>
+            </button>
           </div>
 
-          <!-- 和风天气（预留） -->
-          <div class="apicard">
-            <div class="apicard__head">
-              <div class="apicard__icon">🌤</div>
-              <div class="apicard__name">和风天气 <span style="font-size:11px;color:var(--paper-mute);font-family:var(--mono);margin-left:4px">预留</span></div>
-              <span class="apicard__badge apicard__badge--off" id="qweatherBadge">未配置</span>
-            </div>
-            <div class="apicard__desc">用于更详细的天气信息。<a href="https://dev.qweather.com/" target="_blank">获取 Key →</a></div>
-            <div class="apicard__field">
-              <div class="apicard__field-label">QWEATHER_API_KEY</div>
-              <input class="apicard__input" id="qweatherKey" type="password" placeholder="预留，暂未启用">
-            </div>
-            <div class="apicard__actions">
-              <button class="btn btn--primary" style="padding:6px 16px;font-size:12px" onclick="saveApiKey('qweather')">保存</button>
-            </div>
-          </div>
+          <div class="api-advanced-panel" id="apiAdvancedPanel" style="display:none">
+            <div class="settings__row-desc" style="margin-bottom:12px">只有在你想使用自己的账号额度时才需要填写。不填时由 FlowSync 统一提供服务。</div>
 
-          <!-- 航班查询（预留） -->
-          <div class="apicard">
-            <div class="apicard__head">
-              <div class="apicard__icon">✈</div>
-              <div class="apicard__name">航班查询 <span style="font-size:11px;color:var(--paper-mute);font-family:var(--mono);margin-left:4px">预留</span></div>
-              <span class="apicard__badge apicard__badge--off" id="flightBadge">未配置</span>
+            <div class="apicard">
+              <div class="apicard__head">
+                <div class="apicard__icon">✨</div>
+                <div class="apicard__name">AI 模型</div>
+                <span class="apicard__badge apicard__badge--off" id="llmBadge">使用默认</span>
+              </div>
+              <div class="apicard__field">
+                <div class="apicard__field-label">API Key（可选）</div>
+                <input class="apicard__input" id="llmKey" type="password" placeholder="粘贴智谱 API Key，留空使用默认">
+              </div>
+              <div class="apicard__field">
+                <div class="apicard__field-label">API URL（可选）</div>
+                <input class="apicard__input" id="llmUrl" type="text" placeholder="https://open.bigmodel.cn/api/paas/v4/chat/completions">
+              </div>
+              <div class="apicard__field">
+                <div class="apicard__field-label">模型（可选）</div>
+                <input class="apicard__input" id="llmModel" type="text" placeholder="glm-4-flash">
+              </div>
+              <div class="apicard__actions">
+                <button class="btn btn--primary" style="padding:6px 16px;font-size:12px" onclick="saveApiKey('llm')">保存</button>
+              </div>
             </div>
-            <div class="apicard__desc">用于旅行规划中的航班信息。需要第三方航班 API 服务。</div>
-            <div class="apicard__field">
-              <div class="apicard__field-label">FLIGHT_API_KEY</div>
-              <input class="apicard__input" id="flightKey" type="password" placeholder="预留，暂未启用">
-            </div>
-            <div class="apicard__actions">
-              <button class="btn btn--primary" style="padding:6px 16px;font-size:12px" onclick="saveApiKey('flight')">保存</button>
+
+            <div class="apicard">
+              <div class="apicard__head">
+                <div class="apicard__icon">📍</div>
+                <div class="apicard__name">高德地图</div>
+                <span class="apicard__badge apicard__badge--off" id="amapBadge">使用默认</span>
+              </div>
+              <div class="apicard__field">
+                <div class="apicard__field-label">API Key（可选）</div>
+                <input class="apicard__input" id="amapKey" type="password" placeholder="粘贴高德 Web 服务 Key，留空使用默认">
+              </div>
+              <div class="apicard__actions">
+                <button class="btn btn--primary" style="padding:6px 16px;font-size:12px" onclick="saveApiKey('amap')">保存</button>
+              </div>
             </div>
           </div>
         </div>
@@ -2169,34 +2357,66 @@ var TEAM_TASKS = [];
 
 function generateTeamTasks(){
   TEAM_TASKS = [];
-  var members = ['张三','李四','小王','王芳','赵磊'];
-  var colors = ['#d97757','#7a8c5e','#c89968','#b85c3e','#8c8a80'];
+  var teamId = document.getElementById('kanbanTeamSelect')?.value;
+  var team = TEAMS.find(function(t){ return String(t.id) === String(teamId); });
+  var members = [];
+  var projects = [];
+
+  if(team && team.projects && team.projects.length > 0){
+    members = (team.members || []).map(function(m){
+      return { name: m.username || m.email || '成员', avatarBg: '#d97757' };
+    });
+    if(members.length === 0){
+      members = [{ name: '我', avatarBg: '#d97757' }];
+    }
+    projects = team.projects.map(function(p){
+      return PROJECTS.find(function(proj){ return String(proj.id) === String(p.id); });
+    }).filter(Boolean);
+  }
+
+  if(projects.length === 0){
+    projects = PROJECTS.slice(0, 2);
+  }
+  if(members.length === 0){
+    members = [{ name: '我', avatarBg: '#d97757' }];
+  }
+
+  var colors = ['#d97757','#7a8c5e','#c89968','#b85c3e','#8c8a80','#6b8ba8'];
   var id = 1;
-  PROJECTS.forEach(function(proj, pi){
-    proj.modules.forEach(function(mod){
+  var dayOffset = 0;
+
+  projects.forEach(function(proj, pi){
+    var projMemberIdx = pi % members.length;
+    proj.modules.forEach(function(mod, mi){
       mod.items.forEach(function(item, ii){
-        var owner = members[(pi + ii) % members.length];
-        var avatarBg = colors[(pi + ii) % colors.length];
-        var start = (pi * 1.5 + ii * 0.8) % 5;
-        var dur = item.done ? 0.5 : (item.priority === 'high' ? 2 : (item.priority === 'normal' ? 1.5 : 1));
+        var memberIdx = (pi + mi + ii) % members.length;
+        var member = members[memberIdx];
+        var start = dayOffset + (ii * 0.7);
+        var dur = item.done ? 0.5 : (item.priority === 'high' ? 2 : (item.priority === 'normal' ? 1.2 : 0.8));
+        if(start + dur > 7) dur = Math.max(0.5, 7 - start);
         TEAM_TASKS.push({
           id: id++,
           name: item.label || item.title || '未命名任务',
-          owner: owner,
-          avatarBg: avatarBg,
-          start: start,
+          owner: member.name,
+          avatarBg: colors[memberIdx % colors.length],
+          start: Math.min(start, 6.5),
           end: Math.min(start + dur, 7),
           priority: item.priority || 'normal',
           status: item.done ? 'done' : 'active',
-          dep: ii > 0 ? [id - 2] : []
+          dep: ii > 0 ? [id - 2] : [],
+          projectId: proj.id,
+          projectName: proj.name,
+          moduleName: mod.title || mod.name
         });
       });
+      dayOffset += 0.5;
     });
   });
+
   if(TEAM_TASKS.length === 0){
     TEAM_TASKS = [
-      {id:1,name:'点击上方生成项目',owner:'你',avatarBg:'#d97757',start:0,end:2,priority:'high',status:'active',dep:[]},
-      {id:2,name:'创建团队协作任务',owner:'团队',avatarBg:'#7a8c5e',start:2,end:4,priority:'normal',status:'pending',dep:[1]}
+      {id:1,name:'去工作台创建项目',owner:members[0].name,avatarBg:colors[0],start:0,end:2,priority:'high',status:'active',dep:[]},
+      {id:2,name:'共享项目到团队',owner:members[0].name,avatarBg:colors[1],start:2,end:4,priority:'normal',status:'pending',dep:[1]}
     ];
   }
 }
@@ -2296,9 +2516,11 @@ function switchView(view){
 
     // 触发对应视图的初始化
     if(view === 'today') {
-      renderMoodRecs(70);
       renderTimeblock();
       renderFocusTask(currentTaskIdx);
+      // 默认选中「不错」
+      var okChip = document.querySelector('.energy-chip[data-key="ok"]');
+      if(okChip && !document.querySelector('.energy-chip.active')) quickEnergy(okChip, 'ok');
     }
     if(view === 'team') renderGantt();
     if(view === 'someday') renderSomeday();
@@ -2429,52 +2651,123 @@ var pomoRunning = false;
 
 function renderFocusTask(idx){
   generateFocusTasks();
+  var empty = document.getElementById('todayEmpty');
+  var hero = document.getElementById('today-focus-section');
+  if(TASKS_FOCUS.length === 0 || (TASKS_FOCUS.length === 1 && TASKS_FOCUS[0].title === '点击上方生成项目')){
+    if(empty) empty.style.display = 'flex';
+    if(hero) hero.style.display = 'none';
+    var status = document.getElementById('todayStatus');
+    if(status) status.textContent = '今天还没有任务';
+    return;
+  }
   if(idx < 0 || idx >= TASKS_FOCUS.length) idx = 0;
   currentTaskIdx = idx;
   var task = TASKS_FOCUS[idx];
   if(!task) return;
-  document.getElementById('focusTitle').textContent = task.title;
-  document.getElementById('focusPriority').textContent = task.priority === 'high' ? '高优先级' : (task.priority === 'normal' ? '中优先级' : '低优先级');
-  document.getElementById('focusPriority').className = 'chip chip--' + task.priority;
-  document.getElementById('focusDue').textContent = task.due;
-  document.getElementById('focusEst').textContent = task.est;
-  document.getElementById('taskIdx').textContent = (idx + 1);
-  document.getElementById('taskTotal').textContent = TASKS_FOCUS.length;
+  var priorityLabel = task.priority === 'high' ? '高优先级' : (task.priority === 'normal' ? '中优先级' : '低优先级');
+  var priorityClass = 'chip chip--' + task.priority;
 
-  var list = document.getElementById('subtaskList');
+  if(empty) empty.style.display = 'none';
+  if(hero) hero.style.display = 'block';
+
+  // 顶部状态
+  var statusEl = document.getElementById('todayStatus');
+  if(statusEl) statusEl.textContent = '还有 ' + (TASKS_FOCUS.length - idx) + ' 件待办';
+
+  // 旧的 focus card（兼容）
+  var focusTitle = document.getElementById('focusTitle');
+  if(focusTitle) focusTitle.textContent = task.title;
+  var fp = document.getElementById('focusPriority');
+  if(fp){
+    fp.textContent = priorityLabel;
+    fp.className = priorityClass;
+  }
+  var focusDue = document.getElementById('focusDue');
+  if(focusDue) focusDue.textContent = task.due;
+  var focusEst = document.getElementById('focusEst');
+  if(focusEst) focusEst.textContent = task.est;
+  var taskIdx = document.getElementById('taskIdx');
+  if(taskIdx) taskIdx.textContent = (idx + 1);
+  var taskTotal = document.getElementById('taskTotal');
+  if(taskTotal) taskTotal.textContent = TASKS_FOCUS.length;
+
+  // 同步更新 hero 区域
+  var heroTitle = document.getElementById('focusTitleHero');
+  if(heroTitle) heroTitle.textContent = task.title;
+  var heroPriority = document.getElementById('focusPriorityHero');
+  if(heroPriority){
+    heroPriority.textContent = priorityLabel;
+    heroPriority.className = priorityClass;
+  }
+  var heroDue = document.getElementById('focusDueHero');
+  if(heroDue) heroDue.textContent = task.due;
+  var heroEst = document.getElementById('focusEstHero');
+  if(heroEst) heroEst.textContent = task.est;
+
+  // 同步更新今日专注面板
+  renderTodayFocusSubtasks();
+  updateTodayFocusProgress();
+  updateHeroProgress();
+}
+
+function renderTodayFocusSubtasks(){
+  var task = TASKS_FOCUS[currentTaskIdx];
+  if(!task) return;
+  var list = document.getElementById('todaySubtaskList');
+  if(!list) return;
   list.innerHTML = '';
   task.subtasks.forEach(function(s, i){
     var div = document.createElement('div');
     div.className = 'subtask' + (s.done ? ' done-sub' : '');
-    div.innerHTML = '<div class="subtask__check' + (s.done ? ' done' : '') + '" onclick="toggleSubtask(this,'+i+')">' +
+    div.innerHTML = '<div class="subtask__check' + (s.done ? ' done' : '') + '" onclick="toggleTodaySubtask(this,'+i+')">' +
       '<svg viewBox="0 0 24 24"><polyline points="5,12 10,17 19,8"/></svg>' +
       '</div><span class="subtask__label' + (s.done ? ' done' : '') + '">'+s.label+'</span>';
     list.appendChild(div);
   });
-  updateFocusProgress();
-  var sc = document.getElementById('swipeComplete');
-  if(sc) sc.classList.remove('done');
 }
 
-function toggleSubtask(el, idx){
+function toggleTodaySubtask(el, idx){
   var task = TASKS_FOCUS[currentTaskIdx];
+  if(!task || !task.subtasks[idx]) return;
   task.subtasks[idx].done = !task.subtasks[idx].done;
   var done = task.subtasks[idx].done;
   el.classList.toggle('done', done);
   el.nextElementSibling.classList.toggle('done', done);
-  updateFocusProgress();
+  updateTodayFocusProgress();
+  updateHeroProgress();
 }
 
-function updateFocusProgress(){
+function updateTodayFocusProgress(){
   var task = TASKS_FOCUS[currentTaskIdx];
   if(!task || !task.subtasks) return;
   var total = task.subtasks.length;
   var done = task.subtasks.filter(function(s){return s.done}).length;
   var pct = total > 0 ? Math.round((done / total) * 100) : 0;
-  var el = document.getElementById('focusProgress');
-  var textEl = document.getElementById('focusProgressText');
+  var el = document.getElementById('todayFocusProgress');
+  var textEl = document.getElementById('todayFocusProgressText');
   if(el) el.style.width = pct + '%';
   if(textEl) textEl.textContent = done + ' / ' + total;
+}
+
+function updateHeroProgress(){
+  var task = TASKS_FOCUS[currentTaskIdx];
+  if(!task || !task.subtasks) return;
+  var total = task.subtasks.length;
+  var done = task.subtasks.filter(function(s){return s.done}).length;
+  var pct = total > 0 ? Math.round((done / total) * 100) : 0;
+  var bar = document.getElementById('focusProgressHero');
+  var text = document.getElementById('focusProgressTextHero');
+  if(bar) bar.style.width = pct + '%';
+  if(text) text.textContent = done + ' / ' + total;
+}
+
+// 兼容旧 focus card
+function toggleSubtask(el, idx){
+  toggleTodaySubtask(el, idx);
+}
+function updateFocusProgress(){
+  updateTodayFocusProgress();
+  updateHeroProgress();
 }
 
 function completeTask(){
@@ -2512,9 +2805,80 @@ function completeTask(){
 function skipTask(){
   currentTaskIdx = (currentTaskIdx + 1) % TASKS_FOCUS.length;
   renderFocusTask(currentTaskIdx);
+  closeTodayFocus();
 }
 
-// Pomodoro
+// 今日专注面板
+function startTodayFocus(){
+  var panel = document.getElementById('todayFocusPanel');
+  if(panel){
+    panel.style.display = 'block';
+    panel.scrollIntoView({behavior:'smooth', block:'nearest'});
+  }
+  // 自动开始番茄钟
+  if(!pomoRunning) toggleTodayPomo();
+}
+
+function closeTodayFocus(){
+  var panel = document.getElementById('todayFocusPanel');
+  if(panel) panel.style.display = 'none';
+}
+
+function toggleTodayPomo(){
+  pomoRunning = !pomoRunning;
+  var play = document.getElementById('todayPomoPlay');
+  var pause = document.getElementById('todayPomoPause');
+  var timer = document.getElementById('todayFocusTimer');
+  if(play) play.style.display = pomoRunning ? 'none' : 'block';
+  if(pause) pause.style.display = pomoRunning ? 'block' : 'none';
+  if(timer) timer.classList.toggle('paused', !pomoRunning);
+  if(pomoRunning){
+    pomoInterval = setInterval(function(){
+      pomoSeconds--;
+      if(pomoSeconds <= 0){
+        clearInterval(pomoInterval);
+        pomoRunning = false;
+        pomoSeconds = 25 * 60;
+        if(play) play.style.display = 'block';
+        if(pause) pause.style.display = 'none';
+        showToast('番茄完成', '休息 5 分钟', 'success');
+      }
+      updateTodayPomoDisplay();
+    }, 1000);
+  } else {
+    clearInterval(pomoInterval);
+  }
+}
+
+function updateTodayPomoDisplay(){
+  var m = Math.floor(pomoSeconds / 60);
+  var s = pomoSeconds % 60;
+  var el = document.getElementById('todayFocusTimer');
+  if(el) el.textContent = (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+}
+
+function completeTodayTask(){
+  var task = TASKS_FOCUS[currentTaskIdx];
+  if(task && task.subtasks){
+    task.subtasks.forEach(function(s){ s.done = true; });
+  }
+  renderTodayFocusSubtasks();
+  updateTodayFocusProgress();
+  updateHeroProgress();
+  // 触发庆祝
+  var flash = document.getElementById('completeFlash');
+  if(flash) flash.classList.add('show');
+  setTimeout(function(){ if(flash) flash.classList.remove('show'); }, 400);
+  triggerCelebrate();
+  showToast('完成', '做得好，进入下一件', 'success');
+  setTimeout(function(){
+    currentTaskIdx = (currentTaskIdx + 1) % TASKS_FOCUS.length;
+    renderFocusTask(currentTaskIdx);
+    closeTodayFocus();
+  }, 800);
+}
+
+// Pomodoro（兼容旧视图）
 function togglePomo(){
   pomoRunning = !pomoRunning;
   document.getElementById('pomoPlay').style.display = pomoRunning ? 'none' : 'block';
@@ -2576,11 +2940,13 @@ function togglePomoFullscreen(){
 function renderGantt(){
   generateTeamTasks();
   var gantt = document.getElementById('gantt');
-  var days = ['周一','周二','周三','周四','周五','周六','周日'];
-  var todayIdx = 2; // 周三
+  if(!gantt) return;
+  var days = ['一','二','三','四','五','六','日'];
+  var todayIdx = new Date().getDay();
+  todayIdx = todayIdx === 0 ? 6 : todayIdx - 1;
 
-  var html = '<div class="gantt__header">' +
-    '<div class="gantt__team-label">成员 / 任务</div>' +
+  var html = '<div class="gantt__header" style="min-width:520px">' +
+    '<div class="gantt__team-label" style="width:80px">成员</div>' +
     '<div class="gantt__timeline">' +
       days.map(function(d, i){
         return '<div class="gantt__day' + (i === todayIdx ? ' today' : '') + '">' + d + '</div>';
@@ -2588,25 +2954,23 @@ function renderGantt(){
     '</div>' +
   '</div>';
 
-  // 按成员分组
   var members = {};
   TEAM_TASKS.forEach(function(t){
     if(!members[t.owner]) members[t.owner] = [];
     members[t.owner].push(t);
   });
 
-  html += '<div class="gantt__rows">';
+  html += '<div class="gantt__rows" style="min-width:520px">';
   Object.keys(members).forEach(function(owner){
     var tasks = members[owner];
     var firstTask = tasks[0];
     html += '<div class="gantt__row">' +
-      '<div class="gantt__member">' +
-        '<div class="gantt__avatar" style="background:'+firstTask.avatarBg+'">'+owner.charAt(0)+'</div>' +
-        '<span>'+owner+'</span>' +
+      '<div class="gantt__member" style="width:80px">' +
+        '<div class="gantt__avatar">'+owner.charAt(0)+'</div>' +
+        '<span style="font-size:11px">'+owner+'</span>' +
       '</div>' +
       '<div class="gantt__tracks" data-owner="'+owner+'">';
 
-    // 任务条
     tasks.forEach(function(t){
       var left = (t.start / 7) * 100;
       var width = ((t.end - t.start) / 7) * 100;
@@ -2620,18 +2984,23 @@ function renderGantt(){
   });
   html += '</div>';
 
-  // SVG 依赖线（叠加在整个 rows 上）
-  html += '<svg class="gantt__dep-svg" id="depSvg" style="position:absolute;top:0;left:216px;right:0;bottom:0;width:calc(100% - 216px);height:100%;pointer-events:none"></svg>';
-
   gantt.innerHTML = html;
-
-  // 渲染依赖线
-  setTimeout(drawDependencyLines, 100);
 }
 
-function drawDependencyLines(){
-  // 简化版：在 detail 里显示依赖文字即可，SVG 跨行画线在静态布局里复杂
-  // 这里用 CSS 简单标记 blocked 任务即可
+function showTaskDetail(taskId){
+  var task = TEAM_TASKS.find(function(t){ return t.id === taskId; });
+  if(!task) return;
+  var detail = document.getElementById('ganttDetail');
+  if(!detail) return;
+  detail.style.display = 'block';
+  detail.classList.add('show');
+  document.getElementById('detailTitle').textContent = task.name;
+  document.getElementById('detailOwner').textContent = task.owner;
+  document.getElementById('detailRange').textContent = '第'+task.start+'天 - 第'+task.end+'天';
+  var pEl = document.getElementById('detailPriority');
+  if(pEl) pEl.textContent = task.priority === 'high' ? '高' : (task.priority === 'normal' ? '中' : '低');
+  var statusMap = {pending:'进行中',done:'已完成',blocked:'受阻'};
+  document.getElementById('detailStatus').textContent = statusMap[task.status] || task.status;
 }
 
 var _currentTeamTab = 'my-teams';
@@ -2650,22 +3019,45 @@ function saveTeamsLocal(){
   }catch(e){}
 }
 
-function switchTeamTab(tab){
-  _currentTeamTab = tab;
-  document.querySelectorAll('.team__tab').forEach(function(t){
-    t.classList.toggle('active', t.textContent.trim() === (tab === 'my-teams' ? '我的团队' : '协作看板'));
+function switchTeamSeg(seg){
+  _currentTeamTab = seg === 'teams' ? 'my-teams' : 'kanban';
+  document.querySelectorAll('.team-seg__btn').forEach(function(b){
+    b.classList.toggle('active', b.dataset.seg === seg);
   });
-  var teamList = document.getElementById('teamList');
-  var gantt = document.getElementById('gantt');
-  if(tab === 'my-teams'){
-    teamList.style.display = 'grid';
-    gantt.style.display = 'none';
+  var listPanel = document.getElementById('teamListPanel');
+  var kanbanPanel = document.getElementById('teamKanbanPanel');
+  if(seg === 'teams'){
+    listPanel.style.display = 'block';
+    kanbanPanel.style.display = 'none';
     loadTeams();
   } else {
-    teamList.style.display = 'none';
-    gantt.style.display = 'block';
+    listPanel.style.display = 'none';
+    kanbanPanel.style.display = 'block';
+    updateTeamSelect();
     renderGantt();
   }
+}
+
+function switchTeamTab(tab){
+  switchTeamSeg(tab === 'my-teams' ? 'teams' : 'kanban');
+}
+
+function updateTeamCountBadge(){
+  var badge = document.getElementById('teamCountBadge');
+  if(badge) badge.textContent = TEAMS.length;
+}
+
+function updateTeamSelect(){
+  var sel = document.getElementById('kanbanTeamSelect');
+  if(!sel) return;
+  sel.innerHTML = '<option value="">选择团队</option>';
+  TEAMS.forEach(function(t){
+    var opt = document.createElement('option');
+    opt.value = t.id;
+    opt.textContent = t.name;
+    sel.appendChild(opt);
+  });
+  if(TEAMS.length > 0) sel.value = TEAMS[0].id;
 }
 
 async function loadTeams(){
@@ -2674,31 +3066,44 @@ async function loadTeams(){
   if(TEAMS.length > 0){
     renderTeamsList();
   }
+  updateTeamCountBadge();
   try{
     var result = await API.getTeams();
     TEAMS = result.data || [];
     saveTeamsLocal();
     renderTeamsList();
+    updateTeamCountBadge();
   }catch(e){
     if(TEAMS.length === 0){
-      list.innerHTML = '<div class="team__empty"><div class="team__empty-icon">◈</div><div>还没有团队 · 点击上方创建团队，邀请成员协作</div></div>';
+      list.innerHTML = '<div class="team-empty"><div class="team-empty__icon">◈</div><div class="team-empty__title">还没有团队</div><div class="team-empty__desc">创建一个团队，邀请成员一起协作项目</div><button class="btn btn--primary btn--full team-empty__btn" onclick="showCreateTeamModal()">创建第一个团队</button></div>';
     }
   }
 }
 
 function renderTeamsList(){
   var list = document.getElementById('teamList');
+  if(!list) return;
   if(TEAMS.length === 0){
-    list.innerHTML = '<div class="team__empty"><div class="team__empty-icon">◈</div><div>还没有团队 · 点击上方创建团队，邀请成员协作</div></div>';
+    list.innerHTML = '<div class="team-empty"><div class="team-empty__icon">◈</div><div class="team-empty__title">还没有团队</div><div class="team-empty__desc">创建一个团队，邀请成员一起协作项目</div><button class="btn btn--primary btn--full team-empty__btn" onclick="showCreateTeamModal()">创建第一个团队</button></div>';
     return;
   }
-  var html = TEAMS.map(function(t){
-    return '<div class="team__card" onclick="showTeamDetail('+t.id+')">' +
-      '<div class="team__card-name">'+escapeHtml(t.name)+'</div>' +
-      '<div class="team__card-desc">'+(t.description || '暂无描述')+'</div>' +
-      '<div class="team__card-meta">' +
-        '<span>成员: '+(t.members ? t.members.length : 0)+'人</span>' +
-        '<span>项目: '+(t.projects ? t.projects.length : 0)+'个</span>' +
+  var colors = ['linear-gradient(135deg,var(--terracotta),var(--ochre))','linear-gradient(135deg,var(--moss),var(--ochre))','linear-gradient(135deg,#6b8ba8,var(--moss))','linear-gradient(135deg,var(--terracotta),#a86ba8)'];
+  var html = TEAMS.map(function(t, i){
+    var initial = t.name ? t.name.charAt(0) : 'T';
+    var role = t.owner_id === _currentUser.id ? '创建者' : '成员';
+    var colorIdx = i % colors.length;
+    return '<div class="team-card" onclick="showTeamDetail('+t.id+')">' +
+      '<div class="team-card__head">' +
+        '<div class="team-card__icon" style="background:'+colors[colorIdx]+'">'+escapeHtml(initial)+'</div>' +
+        '<div>' +
+          '<div class="team-card__name">'+escapeHtml(t.name)+'</div>' +
+          '<div class="team-card__role">'+role+'</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="team-card__desc">'+escapeHtml(t.description || '暂无描述')+'</div>' +
+      '<div class="team-card__meta">' +
+        '<span class="team-card__chip">👥 '+(t.members ? t.members.length : 0)+' 人</span>' +
+        '<span class="team-card__chip">📁 '+(t.projects ? t.projects.length : 0)+' 项目</span>' +
       '</div>' +
     '</div>';
   }).join('');
@@ -2778,39 +3183,52 @@ async function loadTeamDetail(id){
 
 function renderTeamDetail(team){
   var body = document.getElementById('teamDetailBody');
-  var membersHtml = (team.members || []).map(function(m){
-    return '<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)">' +
-      '<div style="display:flex;align-items:center;gap:10px">' +
-        '<div style="width:32px;height:32px;border-radius:50%;background:var(--terracotta);color:white;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600">'+(m.username || m.email || '?').charAt(0).toUpperCase()+'</div>' +
-        '<span>'+escapeHtml(m.username || m.email || '成员')+'</span>' +
+  var membersHtml = (team.members || []).map(function(m, i){
+    var colors = ['#d97757','#7a8c5e','#c89968','#6b8ba8','#b85c3e'];
+    var color = colors[i % colors.length];
+    var name = m.username || m.email || '成员';
+    var role = m.role === 'owner' ? '创建者' : (m.role || '成员');
+    return '<div class="team-member-item">' +
+      '<div class="team-member-item__left">' +
+        '<div class="team-member-item__avatar" style="background:'+color+'">'+name.charAt(0).toUpperCase()+'</div>' +
+        '<div class="team-member-item__info">' +
+          '<div class="team-member-item__name">'+escapeHtml(name)+'</div>' +
+          '<div class="team-member-item__role">'+role+'</div>' +
+        '</div>' +
       '</div>' +
-      '<span style="font-size:12px;color:var(--paper-mute)">'+(m.role === 'owner' ? '创建者' : (m.role || '成员'))+'</span>' +
     '</div>';
   }).join('');
-  var projectsHtml = (team.projects || []).map(function(p){
-    return '<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)">' +
-      '<div style="display:flex;align-items:center;gap:8px">' +
-        '<span style="font-size:18px">'+(p.icon || '📋')+'</span>' +
-        '<span>'+escapeHtml(p.name || '未命名项目')+'</span>' +
+
+  var projectsHtml = (team.projects || []).map(function(p, i){
+    return '<div class="team-project-item">' +
+      '<div class="team-project-item__left">' +
+        '<div class="team-project-item__icon">📋</div>' +
+        '<div class="team-project-item__info">' +
+          '<div class="team-project-item__name">'+escapeHtml(p.name || '未命名项目')+'</div>' +
+          '<div class="team-project-item__meta">'+(p.modules ? p.modules.length + ' 模块' : '协作中')+'</div>' +
+        '</div>' +
       '</div>' +
-      '<span style="font-size:12px;color:var(--paper-mute)">'+(p.status || '进行中')+'</span>' +
+      '<button class="btn btn--ghost btn--sm" onclick="removeTeamProject('+p.id+')">移除</button>' +
     '</div>';
   }).join('');
-  body.innerHTML = '<div style="margin-bottom:20px">' +
-      '<div style="font-size:13px;color:var(--paper-mute);margin-bottom:6px">团队描述</div>' +
-      '<div style="font-size:14px">'+(team.description || '暂无描述')+'</div>' +
+
+  body.innerHTML = '<div class="team-detail-section">' +
+      '<div class="team-detail-section__title">团队简介</div>' +
+      '<div class="team-detail-section__desc">'+escapeHtml(team.description || '暂无描述')+'</div>' +
     '</div>' +
-    '<div style="margin-bottom:20px">' +
-      '<div style="font-size:13px;color:var(--paper-mute);margin-bottom:10px">成员 ('+(team.members ? team.members.length : 0)+')</div>' +
-      (membersHtml || '<div style="text-align:center;color:var(--paper-mute);padding:20px">暂无成员</div>') +
+    '<div class="team-detail-section">' +
+      '<div class="team-detail-section__head">' +
+        '<div class="team-detail-section__title">成员 · '+(team.members ? team.members.length : 0)+'人</div>' +
+        '<button class="btn btn--primary btn--sm" onclick="showInviteMemberModal()">+ 邀请</button>' +
+      '</div>' +
+      (membersHtml || '<div class="team-detail-empty">暂无成员，邀请伙伴一起协作</div>') +
     '</div>' +
-    '<div style="margin-bottom:20px">' +
-      '<div style="font-size:13px;color:var(--paper-mute);margin-bottom:10px">共享项目 ('+(team.projects ? team.projects.length : 0)+')</div>' +
-      (projectsHtml || '<div style="text-align:center;color:var(--paper-mute);padding:20px">暂无共享项目</div>') +
-    '</div>' +
-    '<div style="display:flex;gap:10px">' +
-      '<button class="btn btn--secondary" style="flex:1" onclick="showInviteMemberModal()">邀请成员</button>' +
-      '<button class="btn btn--secondary" style="flex:1" onclick="showAddProjectModal()">共享项目</button>' +
+    '<div class="team-detail-section">' +
+      '<div class="team-detail-section__head">' +
+        '<div class="team-detail-section__title">共享项目 · '+(team.projects ? team.projects.length : 0)+'个</div>' +
+        '<button class="btn btn--primary btn--sm" onclick="showAddProjectModal()">+ 共享</button>' +
+      '</div>' +
+      (projectsHtml || '<div class="team-detail-empty">暂无共享项目，添加一个开始协作</div>') +
     '</div>';
 }
 
@@ -2911,6 +3329,20 @@ async function submitAddProject(projectId){
   showToast('项目已共享', '', 'success');
 }
 
+function removeTeamProject(projectId){
+  var teamIdx = TEAMS.findIndex(function(t){ return String(t.id) === String(_currentTeamId); });
+  if(teamIdx < 0) return;
+  TEAMS[teamIdx].projects = (TEAMS[teamIdx].projects || []).filter(function(p){
+    return String(p.id) !== String(projectId);
+  });
+  saveTeamsLocal();
+  try{
+    API.removeTeamProject && API.removeTeamProject(_currentTeamId, projectId);
+  }catch(e){}
+  renderTeamDetail(TEAMS[teamIdx]);
+  showToast('已移除', '', 'info');
+}
+
 function showTaskDetail(id){
   var task = TEAM_TASKS.find(function(t){return t.id === id});
   if(!task) return;
@@ -2997,7 +3429,7 @@ function selectEnergy(el, key){
   el.classList.add('selected');
   var e = ENERGY_MAP[key];
   var result = document.getElementById('energyResult');
-  result.innerHTML = '<strong>' + e.label + '</strong> · ' + e.advice;
+  if(result) result.innerHTML = '<strong>' + e.label + '</strong> · ' + e.advice;
   // 同步 topbar 能量显示
   var topbar = document.getElementById('topbarEnergy');
   if(topbar) topbar.textContent = '当前 ' + e.val + '% · ' + e.label;
@@ -3014,33 +3446,46 @@ function selectEnergy(el, key){
   }
 }
 
+function quickEnergy(el, key){
+  document.querySelectorAll('.energy-chip').forEach(function(c){c.classList.remove('active')});
+  el.classList.add('active');
+  var e = ENERGY_MAP[key];
+  var advice = document.getElementById('energyAdvice');
+  if(advice) advice.textContent = e.label + ' · ' + e.advice;
+  var mini = document.getElementById('moodValueMini');
+  if(mini) mini.textContent = e.label;
+  var dot = document.getElementById('moodDot');
+  if(dot) dot.style.background = e.color;
+  // 触发重排
+  reshuffleToday(key);
+  // 记录到后端
+  if(isLoggedIn()){
+    API.logEnergy(e.val, e.label, e.advice).catch(function(err){
+      console.error('能量记录失败:', err);
+    });
+  }
+}
+
 function reshuffleToday(energyKey){
-  // 模拟重排：dashboard focus-now 卡片渐隐再渐显
-  var focusNow = document.querySelector('.focus-now');
-  if(!focusNow) return;
-  focusNow.style.transition = 'opacity 0.4s var(--ease), transform 0.4s var(--ease)';
-  focusNow.style.opacity = '0.3';
-  focusNow.style.transform = 'translateY(8px)';
-  setTimeout(function(){
-    // 根据 energy 重排任务优先级
-    var task = TASKS_FOCUS[0];
-    if(energyKey === 'low'){
-      task.title = '整理桌面 5 分钟';
-      task.priority = 'low';
-    } else if(energyKey === 'mid'){
-      task.title = '回复客户邮件';
-      task.priority = 'normal';
-    } else {
-      task.title = '完成产品方案初稿';
-      task.priority = 'high';
-    }
-    document.querySelector('.focus-now__title').textContent = task.title;
-    var chip = document.querySelector('.focus-now .chip');
-    chip.className = 'chip chip--' + task.priority;
-    chip.textContent = task.priority === 'high' ? '高优先级' : (task.priority === 'normal' ? '中优先级' : '低优先级');
-    focusNow.style.opacity = '1';
-    focusNow.style.transform = 'none';
-  }, 500);
+  // 根据能量状态高亮当前任务卡片
+  var hero = document.getElementById('today-focus-section');
+  if(hero){
+    hero.style.transition = 'opacity 0.3s var(--ease), transform 0.3s var(--ease)';
+    hero.style.opacity = '0.6';
+    hero.style.transform = 'scale(0.99)';
+    setTimeout(function(){
+      hero.style.opacity = '1';
+      hero.style.transform = 'none';
+    }, 300);
+  }
+}
+
+function toggleEnergyPanel(){
+  var mini = document.getElementById('moodValueMini');
+  var label = mini ? mini.textContent : '不错';
+  var map = ENERGY_MAP;
+  var current = Object.keys(map).find(function(k){ return map[k].label === label; }) || 'ok';
+  showToast('当前能量：' + map[current].label, map[current].advice, 'info');
 }
 
 // =====================================================================
@@ -3215,18 +3660,19 @@ var SOMEDAY_ITEMS = [
 
 function renderSomeday(){
   var list = document.getElementById('somedayList');
+  var countEl = document.getElementById('somedayCount');
+  if(countEl){
+    countEl.textContent = SOMEDAY_ITEMS.length + ' 个想法 · 以后再做';
+  }
+  if(!list) return;
   if(SOMEDAY_ITEMS.length === 0){
-    list.innerHTML = '<div class="someday__empty"><div class="someday__empty-icon">○</div>还没有想法 · 随手记一个吧</div>';
+    list.innerHTML = '<div class="someday-empty"><div class="someday-empty__icon">✦</div><div class="someday-empty__title">还没有想法</div><div class="someday-empty__desc">随手记下灵感，以后再晋升为任务</div></div>';
     return;
   }
   list.innerHTML = SOMEDAY_ITEMS.map(function(item, i){
-    return '<div class="someday__item">' +
-      '<div class="someday__item-idea">想</div>' +
-      '<div class="someday__item-body">' +
-        '<div class="someday__item-title">' + item.t + '</div>' +
-        '<div class="someday__item-meta">' + item.m + ' · ' + item.ts + '</div>' +
-      '</div>' +
-      '<button class="someday__item-promote" onclick="promoteSomeday(' + i + ')">晋升今日</button>' +
+    return '<div class="someday-item">' +
+      '<div class="someday-item__text">' + escapeHtml(item.t) + '</div>' +
+      '<button class="someday-item__del" onclick="removeSomeday(' + i + ')" title="删除">×</button>' +
     '</div>';
   }).join('');
 }
@@ -3237,6 +3683,13 @@ function addSomeday(){
   if(!v) return;
   SOMEDAY_ITEMS.unshift({t:v, m:'刚刚记下', ts:'今天'});
   input.value = '';
+  saveSomedayLocal();
+  renderSomeday();
+}
+
+function removeSomeday(idx){
+  SOMEDAY_ITEMS.splice(idx, 1);
+  saveSomedayLocal();
   renderSomeday();
 }
 
@@ -3470,6 +3923,11 @@ function renderTimeblock(){
     }
   });
 
+  var summaryEl = document.getElementById('timeblockSummary');
+  if(summaryEl){
+    summaryEl.textContent = '容量 ' + TB_TOTAL_HOURS + 'h · 计划 ' + totalPlanned.toFixed(1) + 'h · ' + (overflow ? '超 ' + (totalPlanned - TB_TOTAL_HOURS).toFixed(1) + 'h' : '剩余 ' + remaining.toFixed(1) + 'h');
+  }
+
   var html = '';
   for(var h = 0; h < TB_TOTAL_HOURS; h++){
     var hour = TB_START_HOUR + h;
@@ -3529,6 +3987,38 @@ function renderTimeblock(){
       }
     }
   });
+
+  renderTimeblockPreview();
+}
+
+function renderTimeblockPreview(){
+  var preview = document.getElementById('timeblockPreview');
+  if(!preview) return;
+  preview.innerHTML = '<div class="timeblock-preview__track"></div>';
+  if(TIMEBLOCK_TASKS.length === 0 || (TIMEBLOCK_TASKS.length === 1 && TIMEBLOCK_TASKS[0].t === '点击上方生成项目')){
+    preview.innerHTML += '<div class="timeblock-preview__empty">还没有安排任务</div>';
+    return;
+  }
+  TIMEBLOCK_TASKS.forEach(function(t){
+    if(t.t === '点击上方生成项目') return;
+    var leftPct = (t.start / TB_TOTAL_HOURS) * 100;
+    var widthPct = (t.dur / TB_TOTAL_HOURS) * 100;
+    var block = document.createElement('div');
+    block.className = 'timeblock-preview__block timeblock-preview__block--' + t.priority;
+    block.style.left = leftPct + '%';
+    block.style.width = Math.min(widthPct, 100 - leftPct) + '%';
+    block.textContent = t.t;
+    preview.appendChild(block);
+  });
+  var now = new Date();
+  var nowHour = now.getHours() + now.getMinutes() / 60;
+  if(nowHour >= TB_START_HOUR && nowHour < TB_START_HOUR + TB_TOTAL_HOURS){
+    var nowPct = ((nowHour - TB_START_HOUR) / TB_TOTAL_HOURS) * 100;
+    var line = document.createElement('div');
+    line.className = 'timeblock-preview__now';
+    line.style.left = nowPct + '%';
+    preview.appendChild(line);
+  }
 }
 
 // =====================================================================
@@ -3891,9 +4381,7 @@ function loadApiKeysPanel(){
     amapKey: store.AMAP_API_KEY || '',
     llmKey: store.LLM_API_KEY || '',
     llmUrl: store.LLM_API_URL || '',
-    llmModel: store.LLM_MODEL || '',
-    qweatherKey: store.QWEATHER_API_KEY || '',
-    flightKey: store.FLIGHT_API_KEY || ''
+    llmModel: store.LLM_MODEL || ''
   };
   for(var id in fields){
     var el = document.getElementById(id);
@@ -3903,23 +4391,33 @@ function loadApiKeysPanel(){
 }
 
 function updateApiBadges(store){
-  var map = {
+  // 卡片内 badge：用户填了自定义 key 才显示“自定义”，否则“使用默认”
+  var cardMap = {
     amapBadge: !!store.AMAP_API_KEY,
-    llmBadge: !!store.LLM_API_KEY,
-    qweatherBadge: !!store.QWEATHER_API_KEY,
-    flightBadge: !!store.FLIGHT_API_KEY
+    llmBadge: !!(store.LLM_API_KEY || store.LLM_API_URL || store.LLM_MODEL)
   };
-  for(var id in map){
+  for(var id in cardMap){
     var el = document.getElementById(id);
     if(!el) continue;
-    if(map[id]){
-      el.textContent = '已配置';
+    if(cardMap[id]){
+      el.textContent = '自定义';
       el.className = 'apicard__badge apicard__badge--on';
     } else {
-      el.textContent = '未配置';
+      el.textContent = '使用默认';
       el.className = 'apicard__badge apicard__badge--off';
     }
   }
+}
+
+function toggleAdvancedApi(){
+  var panel = document.getElementById('apiAdvancedPanel');
+  var icon = document.getElementById('apiAdvancedIcon');
+  var label = document.getElementById('apiAdvancedLabel');
+  if(!panel) return;
+  var open = panel.style.display === 'block';
+  panel.style.display = open ? 'none' : 'block';
+  if(icon) icon.style.transform = open ? 'rotate(0deg)' : 'rotate(180deg)';
+  if(label) label.textContent = open ? '高级设置：使用自己的 API Key' : '收起高级设置';
 }
 
 function saveApiKey(service){
@@ -4485,6 +4983,26 @@ function renderProjectsLocal(){
   var empty = document.getElementById('projectsEmpty');
   var tlSection = document.getElementById('projectsTimelineSection');
   if(!list) return;
+
+  var headerSub = document.getElementById('projectsHeaderSub');
+  if(headerSub){
+    if(PROJECTS.length === 0){
+      headerSub.textContent = '0 个项目 · 开始规划吧';
+    } else {
+      var totalTasks = 0;
+      var doneTasks = 0;
+      PROJECTS.forEach(function(p){
+        (p.modules || []).forEach(function(m){
+          (m.items || m.tasks || []).forEach(function(t){
+            totalTasks++;
+            if(t.done) doneTasks++;
+          });
+        });
+      });
+      headerSub.textContent = PROJECTS.length + ' 个项目 · ' + doneTasks + '/' + totalTasks + ' 任务';
+    }
+  }
+
   if(PROJECTS.length === 0){
     list.innerHTML = '';
     if(empty) empty.style.display = 'block';
@@ -4496,6 +5014,14 @@ function renderProjectsLocal(){
   if(tlSection) tlSection.style.display = 'block';
   renderTimeline();
   enableModuleDrag();
+}
+
+function focusProjectsInput(){
+  var input = document.getElementById('projectsInput');
+  if(input){
+    input.focus();
+    input.scrollIntoView({behavior:'smooth', block:'center'});
+  }
 }
 
 // ---- 后端数据归一化 ----
