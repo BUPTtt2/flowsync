@@ -3,1291 +3,1660 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FlowSync - 给 P 型人格的 AI 任务伙伴</title>
-<meta name="description" content="FlowSync 用语音输入、情绪感知和沉浸式聚焦，帮 P 型人格创意工作者告别启动困难与决策疲劳。">
+<title>FlowSync · 小监 Agent 控制台</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&family=Noto+Serif+SC:wght@400;600;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Serif+SC:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
 <style>
-*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-:root {
-  --paper: #faf8f5;
-  --paper-warm: #fdfbf7;
-  --paper-muted: #a8a69d;
-  --paper-dim: #c5c3ba;
-  --ink: #242422;
-  --ink-soft: #3a3a38;
-  --ink-light: #5a5a58;
-  
-  --terracotta: #d97757;
-  --terracotta-deep: #b85c3e;
-  --terracotta-soft: rgba(217, 119, 87, 0.08);
-  --terracotta-warm: rgba(217, 119, 87, 0.12);
-  
-  --moss: #7a8c5e;
-  --moss-soft: rgba(122, 140, 94, 0.08);
-  
-  --ochre: #c89968;
-  --ochre-soft: rgba(200, 153, 104, 0.08);
-  
-  --line: rgba(168, 166, 157, 0.25);
-  --line-soft: rgba(168, 166, 157, 0.12);
-  
-  --font: 'Noto Sans SC', system-ui, sans-serif;
-  --serif: 'Noto Serif SC', 'Songti SC', serif;
-  --mono: 'JetBrains Mono', monospace;
-  
-  --max: 1400px;
-  --gut: clamp(1.5rem, 4vw, 3.5rem);
-  --ease: cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
-body {
-  font-family: var(--font);
-  font-weight: 400;
-  font-size: 16px;
-  line-height: 1.7;
-  color: var(--ink);
-  background-color: var(--paper-warm);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
-}
-
-img { display: block; max-width: 100%; height: auto; }
-a { text-decoration: none; color: inherit; }
-button { border: none; cursor: pointer; font-family: inherit; background: none; }
-
-::selection { background: var(--terracotta); color: var(--paper); }
-
-[hidden] { display: none !important; }
-
-/* ============================================
-   MOTION
-   ============================================ */
-[data-reveal] {
-  opacity: 0;
-  transform: translateY(24px);
-  transition: opacity 1s var(--ease), transform 1s var(--ease);
-  will-change: opacity, transform;
-}
-[data-reveal].is-in {
-  opacity: 1;
-  transform: none;
-}
-
-[data-stagger] > * {
-  opacity: 0;
-  transform: translateY(18px);
-  transition: opacity 0.8s var(--ease), transform 0.8s var(--ease);
-}
-[data-stagger].is-in > * { opacity: 1; transform: none; }
-[data-stagger].is-in > *:nth-child(1) { transition-delay: 0.08s; }
-[data-stagger].is-in > *:nth-child(2) { transition-delay: 0.16s; }
-[data-stagger].is-in > *:nth-child(3) { transition-delay: 0.24s; }
-[data-stagger].is-in > *:nth-child(4) { transition-delay: 0.32s; }
-
-@keyframes breathe {
-  0%, 100% { opacity: 0.4; transform: scale(1); }
-  50% { opacity: 0.7; transform: scale(1.05); }
-}
-@keyframes pulse-soft {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(217, 119, 87, 0); }
-  50% { box-shadow: 0 0 0 12px rgba(217, 119, 87, 0.08); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    transition-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
+  :root {
+    --bg: #fafaf8;
+    --surface: #ffffff;
+    --surface-2: #f5f5f2;
+    --ink: #1a1a18;
+    --ink-soft: #6b6b66;
+    --ink-muted: #a0a09a;
+    --line: #ebebe6;
+    --accent: #2d5a27;
+    --accent-soft: #e8f0e6;
+    --accent-ink: #ffffff;
+    --user-bg: #2d5a27;
+    --user-text: #ffffff;
+    --bot-bg: #ffffff;
+    --bot-text: #1a1a18;
+    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-serif: 'Noto Serif SC', 'Songti SC', serif;
+    --font-mono: 'JetBrains Mono', monospace;
+    --radius: 16px;
+    --radius-sm: 8px;
   }
-  [data-reveal], [data-stagger] > * {
-    opacity: 1 !important;
-    transform: none !important;
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f0f0e;
+      --surface: #181817;
+      --surface-2: #1f1f1e;
+      --ink: #f0f0ed;
+      --ink-soft: #a0a09a;
+      --ink-muted: #6b6b66;
+      --line: #2a2a28;
+      --accent: #6ba362;
+      --accent-soft: #1a2e17;
+      --accent-ink: #0f0f0e;
+      --user-bg: #6ba362;
+      --user-text: #0f0f0e;
+      --bot-bg: #181817;
+      --bot-text: #f0f0ed;
+    }
   }
-}
 
-/* ============================================
-   NAV
-   ============================================ */
-.nav {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  height: 72px;
-  display: flex;
-  align-items: center;
-  padding: 0 var(--gut);
-  background: rgba(253, 251, 247, 0.85);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid var(--line-soft);
-}
-.nav__inner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  max-width: var(--max);
-  margin: 0 auto;
-}
-.nav__brand {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--ink);
-  letter-spacing: -0.02em;
-}
-.nav__brand-dot {
-  width: 8px; height: 8px;
-  border-radius: 50%;
-  background: var(--terracotta);
-}
-.nav__links {
-  display: flex;
-  align-items: center;
-  gap: 2.5rem;
-  list-style: none;
-}
-.nav__links a {
-  font-size: 0.9rem;
-  color: var(--ink-light);
-  transition: color 0.25s ease;
-}
-.nav__links a:hover { color: var(--ink); }
-.nav__cta {
-  padding: 0.65rem 1.5rem;
-  background: var(--ink);
-  color: var(--paper);
-  font-size: 0.9rem;
-  font-weight: 500;
-  border-radius: 999px;
-  transition: all 0.25s ease;
-}
-.nav__cta:hover { background: var(--ink-soft); }
-.nav__hamburger { display: none; }
+  html, body {
+    height: 100%;
+    font-family: var(--font-sans);
+    background: var(--bg);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+    font-size: 14px;
+    line-height: 1.6;
+  }
 
-@media (max-width: 768px) {
-  .nav__links { display: none; }
-  .nav__hamburger {
+  .app {
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  /* Sidebar */
+  .sidebar {
+    width: 240px;
+    border-right: 1px solid var(--line);
     display: flex;
     flex-direction: column;
-    gap: 5px;
-    padding: 4px;
+    padding: 28px 0;
+    flex-shrink: 0;
+    background: var(--surface);
   }
-  .nav__hamburger span {
-    display: block;
-    width: 22px; height: 2px;
-    background: var(--ink);
+
+  .brand {
+    padding: 0 24px;
+    font-family: var(--font-serif);
+    font-size: 20px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    margin-bottom: 4px;
+  }
+
+  .brand-sub {
+    padding: 0 24px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--ink-muted);
+    margin-bottom: 32px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .nav-section {
+    margin-bottom: 24px;
+  }
+
+  .nav-label {
+    padding: 0 24px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--ink-muted);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .nav-item {
+    padding: 10px 24px;
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--ink-soft);
+    transition: all 0.15s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-left: 2px solid transparent;
+  }
+
+  .nav-item:hover {
+    background: var(--surface-2);
+    color: var(--ink);
+  }
+
+  .nav-item.active {
+    color: var(--accent);
+    background: var(--accent-soft);
+    border-left-color: var(--accent);
+    font-weight: 500;
+  }
+
+  .nav-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--ink-muted);
+    flex-shrink: 0;
+  }
+
+  .nav-item.active .nav-dot {
+    background: var(--accent);
+  }
+
+  .sidebar-footer {
+    margin-top: auto;
+    padding: 16px 24px 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .energy-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--ink-muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .energy-bar {
+    height: 3px;
+    background: var(--line);
     border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 6px;
   }
-}
 
-/* ============================================
-   HERO
-   ============================================ */
-.hero {
-  min-height: 92dvh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 0 var(--gut) clamp(6rem, 12vw, 10rem);
-  position: relative;
-  background: linear-gradient(180deg, var(--paper) 0%, var(--paper-warm) 100%);
-}
-.hero__inner {
-  max-width: var(--max);
-  margin: 0 auto;
-  width: 100%;
-}
-.hero__eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 0.85rem;
-  font-weight: 500;
-  color: var(--terracotta);
-  background: var(--terracotta-soft);
-  padding: 0.45rem 1rem;
-  border-radius: 999px;
-  margin-bottom: 2.5rem;
-  letter-spacing: 0.02em;
-}
-.hero__title {
-  font-family: var(--serif);
-  font-size: clamp(3rem, 7vw, 5.5rem);
-  font-weight: 900;
-  line-height: 1.05;
-  letter-spacing: -0.03em;
-  color: var(--ink);
-  max-width: 14ch;
-  margin-bottom: 1.75rem;
-}
-.hero__title span {
-  color: var(--terracotta);
-  position: relative;
-}
-.hero__title span::after {
-  content: '';
-  position: absolute;
-  left: 0; right: 0;
-  bottom: 0.08em;
-  height: 0.1em;
-  background: var(--terracotta);
-  opacity: 0.25;
-  filter: blur(8px);
-}
-.hero__sub {
-  font-size: clamp(1.06rem, 1.6vw, 1.3rem);
-  font-weight: 300;
-  color: var(--ink-light);
-  line-height: 1.8;
-  max-width: 42ch;
-  margin-bottom: 3rem;
-}
-.hero__actions {
-  display: flex;
-  align-items: center;
-  gap: 1.25rem;
-  flex-wrap: wrap;
-}
-.btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 1rem 1.75rem;
-  font-size: 0.95rem;
-  font-weight: 600;
-  border-radius: 999px;
-  transition: all 0.25s ease;
-}
-.btn--primary {
-  background: var(--terracotta);
-  color: var(--paper);
-  animation: pulse-soft 4s ease-in-out infinite;
-}
-.btn--primary:hover { background: var(--terracotta-deep); }
-.btn--ghost {
-  background: transparent;
-  color: var(--ink);
-  border: 1px solid var(--line);
-}
-.btn--ghost:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); }
-.btn__arrow { transition: transform 0.25s ease; }
-.btn:hover .btn__arrow { transform: translateX(4px); }
+  .energy-fill {
+    height: 100%;
+    background: var(--accent);
+    width: 70%;
+    transition: width 0.6s ease;
+  }
 
-/* ============================================
-   COMPARE (核心交互 - 拖拽对比)
-   ============================================ */
-.compare {
-  padding: clamp(6rem, 12vw, 10rem) 0;
-  background: var(--paper);
-}
-.compare__inner {
-  max-width: var(--max);
-  margin: 0 auto;
-  padding: 0 var(--gut);
-}
-.compare__head {
-  text-align: center;
-  margin-bottom: clamp(4rem, 8vw, 7rem);
-}
-.compare__eyebrow {
-  font-size: 0.85rem;
-  font-weight: 500;
-  color: var(--terracotta);
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  margin-bottom: 1.25rem;
-}
-.compare__title {
-  font-family: var(--serif);
-  font-size: clamp(2rem, 4vw, 3.5rem);
-  font-weight: 700;
-  line-height: 1.15;
-  color: var(--ink);
-  max-width: 22ch;
-  margin: 0 auto 1.25rem;
-}
-.compare__sub {
-  font-size: 1.06rem;
-  font-weight: 300;
-  color: var(--ink-light);
-  max-width: 48ch;
-  margin: 0 auto;
-}
+  .energy-text {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--ink-soft);
+  }
 
-.compare__wrapper {
-  position: relative;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 24px 64px rgba(36, 36, 34, 0.08);
-}
-.compare__container {
-  position: relative;
-  display: flex;
-  overflow: hidden;
-}
-.compare__panel {
-  flex: 1;
-  min-width: 0;
-  position: relative;
-}
-.compare__panel--before {
-  background: linear-gradient(180deg, #f5f3ef 0%, #edebe6 100%);
-}
-.compare__panel--after {
-  background: linear-gradient(180deg, var(--paper) 0%, var(--paper-warm) 100%);
-}
-.compare__panel-inner {
-  padding: clamp(2rem, 4vw, 3.5rem);
-  height: 580px;
-  display: flex;
-  flex-direction: column;
-}
+  /* Main content */
+  .main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    overflow: hidden;
+  }
 
-.compare__label {
-  font-size: 0.85rem;
-  font-weight: 500;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  margin-bottom: 2rem;
-}
-.compare__panel--before .compare__label { color: #9a9890; }
-.compare__panel--after .compare__label { color: var(--terracotta); }
+  .page {
+    display: none;
+    flex: 1;
+    flex-direction: column;
+    overflow: hidden;
+    animation: fadeIn 0.25s ease;
+  }
 
-.compare__content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
+  .page.active {
+    display: flex;
+  }
 
-/* Before 状态：混乱 */
-.compare__task-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-.compare__task {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 14px 16px;
-  background: rgba(255,255,255,0.6);
-  border-radius: 8px;
-  border: 1px solid rgba(168, 166, 157, 0.2);
-  transition: all 0.25s ease;
-}
-.compare__panel--before .compare__task {
-  opacity: 0.9;
-}
-.compare__panel--before .compare__task:nth-child(odd) { margin-left: 8px; }
-.compare__panel--before .compare__task:nth-child(even) { margin-left: -4px; }
-.compare__panel--before .compare__task:nth-child(3n) { margin-left: 12px; }
-.compare__panel--before .compare__task:nth-child(4n) { margin-left: -8px; }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
 
-.compare__task-check {
-  width: 18px; height: 18px;
-  border: 1.5px solid #c5c3ba;
-  border-radius: 4px;
-  flex-shrink: 0;
-}
-.compare__panel--before .compare__task-check { border-color: #d4d2ca; }
+  .page-header {
+    padding: 20px 32px;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+  }
 
-.compare__task-title {
-  font-size: 0.95rem;
-  color: #6b6962;
-  flex: 1;
-}
-.compare__panel--before .compare__task-title { color: #7a7870; }
+  .page-title {
+    font-family: var(--font-serif);
+    font-size: 18px;
+    font-weight: 500;
+  }
 
-.compare__task-meta {
-  font-size: 0.75rem;
-  color: #a8a69d;
-  font-family: var(--mono);
-}
-.compare__panel--before .compare__task-meta { color: #b8b6ad; }
+  .page-subtitle {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--ink-muted);
+  }
 
-.compare__overload {
-  margin-top: 24px;
-  padding: 16px;
-  background: rgba(217, 119, 87, 0.08);
-  border-radius: 8px;
-  border-left: 3px solid rgba(217, 119, 87, 0.4);
-}
-.compare__overload-text {
-  font-size: 0.85rem;
-  color: #8a6550;
-  line-height: 1.6;
-}
+  .page-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 32px;
+  }
 
-/* After 状态：有序 */
-.compare__panel--after .compare__task {
-  background: rgba(255,255,255,0.85);
-  border-color: rgba(217, 119, 87, 0.15);
-}
-.compare__panel--after .compare__task-check {
-  border-color: var(--terracotta);
-}
-.compare__panel--after .compare__task-check.done {
-  background: var(--terracotta);
-}
-.compare__panel--after .compare__task-check.done::after {
-  content: '';
-  display: block;
-  width: 6px; height: 6px;
-  background: var(--paper);
-  border-radius: 50%;
-  margin: 4px auto;
-}
-.compare__panel--after .compare__task-title {
-  color: var(--ink);
-}
-.compare__panel--after .compare__task-title.done {
-  color: var(--paper-muted);
-  text-decoration: line-through;
-}
-.compare__panel--after .compare__task-meta {
-  color: var(--paper-muted);
-}
+  .page-content::-webkit-scrollbar {
+    width: 6px;
+  }
 
-.compare__priority {
-  display: inline-block;
-  padding: 2px 8px;
-  font-size: 0.7rem;
-  font-weight: 500;
-  border-radius: 4px;
-}
-.compare__priority--high {
-  background: rgba(217, 119, 87, 0.12);
-  color: var(--terracotta);
-}
-.compare__priority--medium {
-  background: rgba(200, 153, 104, 0.12);
-  color: var(--ochre);
-}
-.compare__priority--low {
-  background: rgba(122, 140, 94, 0.12);
-  color: var(--moss);
-}
+  .page-content::-webkit-scrollbar-track {
+    background: transparent;
+  }
 
-.compare__energy-bar {
-  margin-top: 20px;
-}
-.compare__energy-label {
-  font-size: 0.8rem;
-  color: var(--paper-muted);
-  margin-bottom: 8px;
-}
-.compare__energy-track {
-  height: 6px;
-  background: rgba(168, 166, 157, 0.2);
-  border-radius: 3px;
-  overflow: hidden;
-}
-.compare__energy-fill {
-  height: 100%;
-  background: linear-gradient(90deg, var(--ochre) 0%, var(--terracotta) 100%);
-  border-radius: 3px;
-  width: 65%;
-}
+  .page-content::-webkit-scrollbar-thumb {
+    background: var(--line);
+    border-radius: 3px;
+  }
 
-.compare__ai-tip {
-  margin-top: 16px;
-  padding: 14px;
-  background: rgba(122, 140, 94, 0.08);
-  border-radius: 8px;
-}
-.compare__ai-tip-text {
-  font-size: 0.85rem;
-  color: var(--moss);
-  line-height: 1.6;
-}
+  /* Chat page */
+  .chat-container {
+    flex: 1;
+    overflow-y: auto;
+    padding: 32px 48px;
+  }
 
-/* 分界线 */
-.compare__divider {
-  position: absolute;
-  top: 0; bottom: 0;
-  width: 4px;
-  background: var(--terracotta);
-  cursor: col-resize;
-  z-index: 20;
-  left: 50%;
-  transform: translateX(-50%);
-}
-.compare__divider::before,
-.compare__divider::after {
-  content: '';
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  background: var(--terracotta);
-}
-.compare__divider::before {
-  top: 20px;
-  width: 32px; height: 32px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.compare__divider::after {
-  bottom: 20px;
-  width: 32px; height: 32px;
-  border-radius: 50%;
-}
-.compare__divider-handle {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 48px; height: 48px;
-  background: var(--terracotta);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 20px rgba(217, 119, 87, 0.35);
-}
-.compare__divider-handle svg {
-  width: 18px; height: 18px;
-  fill: none;
-  stroke: var(--paper);
-  stroke-width: 2;
-}
+  .chat-container::-webkit-scrollbar {
+    width: 6px;
+  }
 
-.compare__hint {
-  text-align: center;
-  margin-top: 1.5rem;
-  font-size: 0.85rem;
-  color: var(--paper-muted);
-}
+  .chat-container::-webkit-scrollbar-track {
+    background: transparent;
+  }
 
-/* ============================================
-   FEATURES
-   ============================================ */
-.features {
-  padding: clamp(6rem, 12vw, 10rem) 0;
-  background: var(--paper-warm);
-}
-.features__inner {
-  max-width: var(--max);
-  margin: 0 auto;
-  padding: 0 var(--gut);
-}
-.features__head {
-  text-align: center;
-  margin-bottom: clamp(5rem, 10vw, 8rem);
-}
-.features__eyebrow {
-  font-size: 0.85rem;
-  font-weight: 500;
-  color: var(--terracotta);
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  margin-bottom: 1.25rem;
-}
-.features__title {
-  font-family: var(--serif);
-  font-size: clamp(2rem, 4vw, 3.5rem);
-  font-weight: 700;
-  line-height: 1.15;
-  color: var(--ink);
-  max-width: 24ch;
-  margin: 0 auto 1.25rem;
-}
+  .chat-container::-webkit-scrollbar-thumb {
+    background: var(--line);
+    border-radius: 3px;
+  }
 
-.features__grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: clamp(2rem, 4vw, 3.5rem);
-}
+  .welcome {
+    max-width: 520px;
+    margin: 0 auto;
+    text-align: center;
+    padding-top: 40px;
+  }
 
-.feature-card {
-  padding: clamp(2rem, 3vw, 2.75rem);
-  background: var(--paper);
-  border-radius: 12px;
-  border: 1px solid var(--line-soft);
-  transition: all 0.3s var(--ease);
-}
-.feature-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 16px 48px rgba(36, 36, 34, 0.06);
-}
-.feature-card__icon {
-  width: 48px; height: 48px;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 1.5rem;
-}
-.feature-card__icon--orange { background: var(--terracotta-soft); }
-.feature-card__icon--green { background: var(--moss-soft); }
-.feature-card__icon--yellow { background: var(--ochre-soft); }
-.feature-card__icon svg {
-  width: 22px; height: 22px;
-  fill: none;
-  stroke-width: 2;
-}
-.feature-card__icon--orange svg { stroke: var(--terracotta); }
-.feature-card__icon--green svg { stroke: var(--moss); }
-.feature-card__icon--yellow svg { stroke: var(--ochre); }
+  .welcome-title {
+    font-family: var(--font-serif);
+    font-size: 32px;
+    font-weight: 400;
+    line-height: 1.4;
+    margin-bottom: 12px;
+  }
 
-.feature-card__title {
-  font-family: var(--serif);
-  font-size: 1.35rem;
-  font-weight: 700;
-  color: var(--ink);
-  margin-bottom: 0.75rem;
-}
-.feature-card__desc {
-  font-size: 0.95rem;
-  color: var(--ink-light);
-  line-height: 1.7;
-}
+  .welcome-title em {
+    font-style: normal;
+    color: var(--accent);
+    font-weight: 500;
+  }
 
-.feature-card__steps {
-  margin-top: 1.5rem;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-.feature-card__step {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 0.85rem;
-  color: var(--ink-light);
-}
-.feature-card__step-num {
-  width: 20px; height: 20px;
-  border-radius: 50%;
-  background: var(--terracotta-soft);
-  color: var(--terracotta);
-  font-size: 0.7rem;
-  font-weight: 500;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+  .welcome-sub {
+    font-size: 14px;
+    color: var(--ink-soft);
+    line-height: 1.7;
+    margin-bottom: 32px;
+  }
 
-@media (max-width: 1024px) {
-  .features__grid { grid-template-columns: repeat(2, 1fr); }
-}
-@media (max-width: 640px) {
-  .features__grid { grid-template-columns: 1fr; }
-}
+  .quick-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 32px;
+  }
 
-/* ============================================
-   DEMO
-   ============================================ */
-.demo {
-  padding: clamp(6rem, 12vw, 10rem) 0;
-  background: var(--paper);
-}
-.demo__inner {
-  max-width: var(--max);
-  margin: 0 auto;
-  padding: 0 var(--gut);
-}
-.demo__head {
-  text-align: center;
-  margin-bottom: clamp(4rem, 8vw, 6rem);
-}
-.demo__title {
-  font-family: var(--serif);
-  font-size: clamp(2rem, 4vw, 3.5rem);
-  font-weight: 700;
-  line-height: 1.15;
-  color: var(--ink);
-  max-width: 20ch;
-  margin: 0 auto 1.25rem;
-}
-.demo__sub {
-  font-size: 1.06rem;
-  font-weight: 300;
-  color: var(--ink-light);
-  max-width: 48ch;
-  margin: 0 auto;
-}
+  .quick-card {
+    padding: 18px 20px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.2s ease;
+  }
 
-.demo__mockup {
-  position: relative;
-  max-width: 360px;
-  margin: 0 auto;
-  border-radius: 24px;
-  overflow: hidden;
-  box-shadow: 0 32px 80px rgba(36, 36, 34, 0.12);
-  border: 8px solid var(--ink);
-}
-.demo__mockup-screen {
-  background: var(--paper-warm);
-  padding: 16px;
-}
-.demo__mockup-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 20px;
-}
-.demo__mockup-logo {
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: var(--ink);
-}
-.demo__mockup-avatar {
-  width: 32px; height: 32px;
-  border-radius: 50%;
-  background: var(--terracotta);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--paper);
-  font-size: 0.85rem;
-  font-weight: 500;
-}
+  .quick-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-1px);
+  }
 
-.demo__mockup-task {
-  background: rgba(255,255,255,0.8);
-  border-radius: 12px;
-  padding: 20px;
-  margin-bottom: 16px;
-  border: 1px solid var(--line-soft);
-}
-.demo__mockup-task-title {
-  font-family: var(--serif);
-  font-size: 1.15rem;
-  font-weight: 600;
-  color: var(--ink);
-  margin-bottom: 12px;
-}
-.demo__mockup-task-meta {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 16px;
-}
-.demo__mockup-chip {
-  font-size: 0.7rem;
-  padding: 3px 8px;
-  border-radius: 4px;
-}
-.demo__mockup-chip--high {
-  background: var(--terracotta-soft);
-  color: var(--terracotta);
-}
-.demo__mockup-chip--time {
-  background: var(--ochre-soft);
-  color: var(--ochre);
-}
+  .quick-card-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
 
-.demo__mockup-subtasks {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-.demo__mockup-subtask {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.demo__mockup-check {
-  width: 16px; height: 16px;
-  border: 1.5px solid var(--line);
-  border-radius: 4px;
-}
-.demo__mockup-check.done {
-  background: var(--moss);
-  border-color: var(--moss);
-}
-.demo__mockup-check.done::after {
-  content: '';
-  display: block;
-  width: 5px; height: 5px;
-  background: var(--paper);
-  border-radius: 50%;
-  margin: 3px auto;
-}
-.demo__mockup-subtask-text {
-  font-size: 0.85rem;
-  color: var(--ink-light);
-}
-.demo__mockup-subtask-text.done {
-  color: var(--paper-muted);
-  text-decoration: line-through;
-}
+  .quick-card-text {
+    font-family: var(--font-serif);
+    font-size: 14px;
+    color: var(--ink);
+    line-height: 1.5;
+  }
 
-.demo__mockup-progress {
-  margin-top: 16px;
-}
-.demo__mockup-progress-label {
-  font-size: 0.75rem;
-  color: var(--paper-muted);
-  margin-bottom: 6px;
-}
-.demo__mockup-progress-bar {
-  height: 4px;
-  background: var(--line-soft);
-  border-radius: 2px;
-  overflow: hidden;
-}
-.demo__mockup-progress-fill {
-  height: 100%;
-  background: var(--moss);
-  width: 60%;
-}
+  .hint {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--ink-muted);
+  }
 
-.demo__mockup-energy {
-  display: flex;
-  gap: 6px;
-  margin-top: 16px;
-}
-.demo__mockup-energy-cell {
-  flex: 1;
-  height: 8px;
-  border-radius: 4px;
-  background: var(--line-soft);
-}
-.demo__mockup-energy-cell:nth-child(1),
-.demo__mockup-energy-cell:nth-child(2),
-.demo__mockup-energy-cell:nth-child(3) {
-  background: var(--terracotta);
-}
+  .message {
+    max-width: 620px;
+    margin-bottom: 24px;
+    line-height: 1.75;
+  }
 
-/* ============================================
-   CTA
-   ============================================ */
-.cta {
-  padding: clamp(6rem, 12vw, 10rem) 0;
-  background: var(--ink);
-  color: var(--paper);
-}
-.cta__inner {
-  max-width: var(--max);
-  margin: 0 auto;
-  padding: 0 var(--gut);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-}
-.cta__title {
-  font-family: var(--serif);
-  font-size: clamp(2.25rem, 5vw, 4rem);
-  font-weight: 900;
-  line-height: 1.1;
-  color: var(--paper);
-  max-width: 16ch;
-  margin-bottom: 1.5rem;
-}
-.cta__sub {
-  font-size: 1.1rem;
-  font-weight: 300;
-  color: rgba(255,255,255,0.7);
-  max-width: 44ch;
-  margin-bottom: 3rem;
-}
-.cta__btn {
-  padding: 1.125rem 2rem;
-  background: var(--terracotta);
-  color: var(--paper);
-  font-size: 1rem;
-  font-weight: 600;
-  border-radius: 999px;
-  transition: all 0.25s ease;
-  animation: pulse-soft 4s ease-in-out infinite;
-}
-.cta__btn:hover { background: var(--terracotta-deep); }
-.cta__note {
-  margin-top: 1.5rem;
-  font-size: 0.85rem;
-  color: rgba(255,255,255,0.5);
-}
+  .message.user { margin-left: auto; }
+  .message.bot { margin-right: auto; }
 
-/* ============================================
-   FOOTER
-   ============================================ */
-.footer {
-  padding: clamp(2.5rem, 5vw, 4rem) 0;
-  background: var(--ink);
-  border-top: 1px solid rgba(255,255,255,0.06);
-}
-.footer__inner {
-  max-width: var(--max);
-  margin: 0 auto;
-  padding: 0 var(--gut);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 1.5rem;
-}
-.footer__brand {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: var(--paper);
-}
-.footer__brand-dot {
-  width: 6px; height: 6px;
-  border-radius: 50%;
-  background: var(--terracotta);
-}
-.footer__copy {
-  font-size: 0.85rem;
-  color: rgba(255,255,255,0.5);
-}
-.footer__links {
-  display: flex;
-  gap: 1.75rem;
-}
-.footer__links a {
-  font-size: 0.85rem;
-  color: rgba(255,255,255,0.6);
-  transition: color 0.25s ease;
-}
-.footer__links a:hover { color: var(--paper); }
+  .message-meta {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--ink-muted);
+    margin-bottom: 6px;
+    letter-spacing: 0.05em;
+  }
 
-@media (max-width: 640px) {
-  .footer__inner { flex-direction: column; text-align: center; }
-}
+  .message.user .message-meta { text-align: right; }
+
+  .message-bubble {
+    padding: 16px 20px;
+    border-radius: var(--radius);
+    font-size: 14px;
+    word-wrap: break-word;
+    line-height: 1.7;
+  }
+
+  .message.user .message-bubble {
+    background: var(--user-bg);
+    color: var(--user-text);
+    border-bottom-right-radius: 4px;
+  }
+
+  .message.bot .message-bubble {
+    background: var(--bot-bg);
+    color: var(--bot-text);
+    border: 1px solid var(--line);
+    border-bottom-left-radius: 4px;
+  }
+
+  .message-bubble p { margin-bottom: 12px; }
+  .message-bubble p:last-child { margin-bottom: 0; }
+
+  .typing {
+    display: flex;
+    gap: 6px;
+    padding: 16px;
+  }
+
+  .typing span {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--ink-muted);
+    animation: typing 1.4s infinite ease-in-out;
+  }
+
+  .typing span:nth-child(2) { animation-delay: 0.2s; }
+  .typing span:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes typing {
+    0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+    30% { transform: translateY(-6px); opacity: 1; }
+  }
+
+  .typing-active::after {
+    content: '▍';
+    color: var(--accent);
+    animation: blink 0.8s step-end infinite;
+    font-weight: 300;
+    margin-left: 2px;
+  }
+
+  @keyframes blink {
+    50% { opacity: 0; }
+  }
+
+  .input-area {
+    padding: 20px 48px 28px;
+    border-top: 1px solid var(--line);
+    flex-shrink: 0;
+  }
+
+  .input-wrapper {
+    max-width: 680px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  .input-box {
+    width: 100%;
+    min-height: 48px;
+    max-height: 160px;
+    padding: 12px 48px 12px 18px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--surface);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-size: 14px;
+    line-height: 1.6;
+    resize: none;
+    outline: none;
+    transition: border-color 0.2s ease;
+  }
+
+  .input-box:focus { border-color: var(--accent); }
+  .input-box::placeholder { color: var(--ink-muted); }
+
+  .send-btn {
+    position: absolute;
+    right: 8px;
+    bottom: 8px;
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: var(--radius-sm);
+    background: var(--accent);
+    color: white;
+    cursor: pointer;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+  }
+
+  .send-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+  .send-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+  .input-hint {
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--ink-muted);
+    margin-top: 8px;
+    letter-spacing: 0.05em;
+  }
+
+  /* Knowledge base page */
+  .kb-layout {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 24px;
+    height: 100%;
+  }
+
+  .kb-list {
+    border-right: 1px solid var(--line);
+    padding-right: 24px;
+    margin-right: -24px;
+    padding-right: 24px;
+  }
+
+  .kb-item {
+    padding: 14px 16px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    margin-bottom: 4px;
+    transition: all 0.15s ease;
+    border-left: 2px solid transparent;
+  }
+
+  .kb-item:hover {
+    background: var(--surface-2);
+  }
+
+  .kb-item.active {
+    background: var(--accent-soft);
+    border-left-color: var(--accent);
+  }
+
+  .kb-item.active .kb-item-title {
+    color: var(--accent);
+  }
+
+  .kb-item-title {
+    font-family: var(--font-serif);
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 2px;
+  }
+
+  .kb-item-meta {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--ink-muted);
+  }
+
+  .kb-content {
+    padding: 0 8px;
+  }
+
+  .kb-doc-title {
+    font-family: var(--font-serif);
+    font-size: 24px;
+    font-weight: 500;
+    margin-bottom: 8px;
+  }
+
+  .kb-doc-meta {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--ink-muted);
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .kb-doc-body {
+    font-size: 14px;
+    line-height: 1.8;
+    color: var(--ink-soft);
+  }
+
+  .kb-doc-body h3 {
+    font-family: var(--font-serif);
+    font-size: 16px;
+    color: var(--ink);
+    margin: 24px 0 12px;
+  }
+
+  .kb-doc-body p {
+    margin-bottom: 12px;
+  }
+
+  /* Workflow page */
+  .workflow-canvas {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 40px;
+    min-height: 500px;
+    position: relative;
+    overflow: auto;
+  }
+
+  .workflow-nodes {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    min-width: max-content;
+    justify-content: center;
+    padding: 40px 20px;
+  }
+
+  .wf-node {
+    width: 170px;
+    padding: 24px 20px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    text-align: center;
+    flex-shrink: 0;
+    position: relative;
+    transition: all 0.2s ease;
+  }
+
+  .wf-node:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+  }
+
+  .wf-node.start {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+  }
+
+  .wf-node.end {
+    border-color: var(--line);
+    background: var(--surface-2);
+  }
+
+  .wf-node.highlight {
+    border-color: var(--accent);
+    background: var(--surface);
+    box-shadow: 0 0 0 3px var(--accent-soft);
+  }
+
+  .wf-node-num {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--accent);
+    margin-bottom: 12px;
+    letter-spacing: 0.05em;
+  }
+
+  .wf-node-name {
+    font-family: var(--font-serif);
+    font-size: 15px;
+    font-weight: 500;
+    margin-bottom: 6px;
+  }
+
+  .wf-node-type {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--ink-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .wf-arrow {
+    width: 60px;
+    height: 1px;
+    background: var(--line);
+    flex-shrink: 0;
+    position: relative;
+  }
+
+  .wf-arrow::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: -3px;
+    width: 7px;
+    height: 7px;
+    border-top: 1px solid var(--line);
+    border-right: 1px solid var(--line);
+    transform: rotate(45deg);
+  }
+
+  .wf-arrow-label {
+    position: absolute;
+    top: -18px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: var(--ink-muted);
+    white-space: nowrap;
+    letter-spacing: 0.05em;
+  }
+
+  .workflow-info {
+    margin-top: 24px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+
+  .info-card {
+    padding: 20px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    transition: all 0.2s ease;
+  }
+
+  .info-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-1px);
+  }
+
+  .info-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--ink-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 8px;
+  }
+
+  .info-value {
+    font-family: var(--font-serif);
+    font-size: 18px;
+    font-weight: 500;
+  }
+
+  /* Variables page */
+  .var-section {
+    margin-bottom: 32px;
+  }
+
+  .var-section-title {
+    font-family: var(--font-serif);
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .var-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .var-card {
+    padding: 16px 20px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    transition: all 0.2s ease;
+  }
+
+  .var-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-1px);
+  }
+
+  .var-name {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--accent);
+    margin-bottom: 4px;
+  }
+
+  .var-desc {
+    font-size: 13px;
+    color: var(--ink-soft);
+    margin-bottom: 8px;
+  }
+
+  .var-value {
+    font-family: var(--font-serif);
+    font-size: 15px;
+    font-weight: 500;
+  }
+
+  .var-type {
+    display: inline-block;
+    padding: 2px 8px;
+    background: var(--surface-2);
+    border-radius: 4px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--ink-muted);
+    margin-left: 8px;
+  }
+
+  /* Settings page */
+  .settings-section {
+    margin-bottom: 32px;
+  }
+
+  .settings-title {
+    font-family: var(--font-serif);
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .setting-item {
+    margin-bottom: 20px;
+  }
+
+  .setting-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--ink-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 6px;
+  }
+
+  .setting-value {
+    font-size: 14px;
+    color: var(--ink);
+    line-height: 1.6;
+  }
+
+  .setting-box {
+    padding: 16px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--ink-soft);
+    font-family: var(--font-sans);
+  }
+
+  .shortcut-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .shortcut-tag {
+    padding: 6px 12px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    border-radius: 20px;
+    font-size: 12px;
+    font-family: var(--font-mono);
+  }
+
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    border-radius: 12px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+  }
+
+  .status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  /* Mobile */
+  @media (max-width: 768px) {
+    .sidebar { display: none; }
+    .page-content { padding: 16px; }
+    .chat-container { padding: 16px; }
+    .input-area { padding: 12px 16px 20px; }
+    .welcome-title { font-size: 24px; }
+    .quick-grid { grid-template-columns: 1fr; }
+    .kb-layout { grid-template-columns: 1fr; }
+    .var-grid { grid-template-columns: 1fr; }
+    .workflow-info { grid-template-columns: 1fr; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
 </style>
 </head>
 <body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">小监</div>
+    <div class="brand-sub">FlowSync · Agent</div>
 
-<!-- Nav -->
-<nav class="nav" role="navigation" aria-label="主导航">
-  <div class="nav__inner">
-    <a href="#" class="nav__brand"><span class="nav__brand-dot"></span>FlowSync</a>
-    <ul class="nav__links">
-      <li><a href="#compare">对比体验</a></li>
-      <li><a href="#features">核心能力</a></li>
-      <li><a href="#demo">界面预览</a></li>
-      <li><a href="#cta" class="nav__cta">开始使用</a></li>
-    </ul>
-    <button class="nav__hamburger" aria-label="切换菜单">
-      <span></span><span></span><span></span>
-    </button>
-  </div>
-</nav>
-
-<!-- Hero -->
-<section class="hero">
-  <div class="hero__inner">
-    <span class="hero__eyebrow">给 P 型人格的 AI 任务伙伴</span>
-    <h1 class="hero__title">
-      你的待办清单<br>
-      又在对你<span>撒谎</span>了
-    </h1>
-    <p class="hero__sub">
-      27 条未完成，你打开 App，关掉，开始刷手机。<br>
-      不是你不够自律，是工具不认识你。
-    </p>
-    <div class="hero__actions">
-      <a href="#compare" class="btn btn--primary">
-        亲手体验变化
-        <svg class="btn__arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-      </a>
-      <a href="#features" class="btn btn--ghost">看核心能力</a>
-    </div>
-  </div>
-</section>
-
-<!-- Compare -->
-<section class="compare" id="compare">
-  <div class="compare__inner">
-    <div class="compare__head" data-reveal>
-      <span class="compare__eyebrow">Before / After</span>
-      <h2 class="compare__title">拖动分界线，感受区别</h2>
-      <p class="compare__sub">左侧是你熟悉的焦虑日常，右侧是 FlowSync 帮你整理后的状态</p>
+    <div class="nav-section">
+      <div class="nav-label">对话</div>
+      <div class="nav-item active" onclick="switchPage('chat', this)">
+        <span class="nav-dot"></span>
+        <span>聊天</span>
+      </div>
     </div>
 
-    <div class="compare__wrapper" data-reveal>
-      <div class="compare__container" id="compareContainer">
-        <div class="compare__panel compare__panel--before">
-          <div class="compare__panel-inner">
-            <span class="compare__label">Before</span>
-            <div class="compare__content">
-              <div class="compare__task-list">
-                <div class="compare__task">
-                  <div class="compare__task-check"></div>
-                  <span class="compare__task-title">完成产品方案初稿</span>
-                  <span class="compare__task-meta">今天</span>
-                </div>
-                <div class="compare__task">
-                  <div class="compare__task-check"></div>
-                  <span class="compare__task-title">回复客户邮件</span>
-                  <span class="compare__task-meta">今天</span>
-                </div>
-                <div class="compare__task">
-                  <div class="compare__task-check"></div>
-                  <span class="compare__task-title">代码审查</span>
-                  <span class="compare__task-meta">今天</span>
-                </div>
-                <div class="compare__task">
-                  <div class="compare__task-check"></div>
-                  <span class="compare__task-title">更新项目文档</span>
-                  <span class="compare__task-meta">明天</span>
-                </div>
-                <div class="compare__task">
-                  <div class="compare__task-check"></div>
-                  <span class="compare__task-title">整理会议笔记</span>
-                  <span class="compare__task-meta">明天</span>
-                </div>
-              </div>
-              <div class="compare__overload">
-                <p class="compare__overload-text">还有 7 条任务未显示...</p>
-              </div>
+    <div class="nav-section">
+      <div class="nav-label">Agent能力</div>
+      <div class="nav-item" onclick="switchPage('knowledge', this)">
+        <span class="nav-dot"></span>
+        <span>知识库</span>
+      </div>
+      <div class="nav-item" onclick="switchPage('workflow', this)">
+        <span class="nav-dot"></span>
+        <span>工作流</span>
+      </div>
+      <div class="nav-item" onclick="switchPage('memory', this)">
+        <span class="nav-dot"></span>
+        <span>记忆 & 变量</span>
+      </div>
+      <div class="nav-item" onclick="switchPage('skills', this)">
+        <span class="nav-dot"></span>
+        <span>技能 & 插件</span>
+      </div>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-label">配置</div>
+      <div class="nav-item" onclick="switchPage('settings', this)">
+        <span class="nav-dot"></span>
+        <span>Agent设置</span>
+      </div>
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="energy-label">当前会话状态</div>
+      <div class="energy-bar">
+        <div class="energy-fill"></div>
+      </div>
+      <div class="energy-text">运行中 · 已连接</div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <!-- Chat Page -->
+    <div class="page active" id="page-chat">
+      <header class="page-header">
+        <div>
+          <div class="page-title">对话</div>
+          <div class="page-subtitle" id="chatDate"></div>
+        </div>
+        <div class="status-badge">
+          <span class="status-dot"></span>
+          <span>在线</span>
+        </div>
+      </header>
+
+      <div class="chat-container" id="chatContainer">
+        <div class="welcome" id="welcomeScreen">
+          <h1 class="welcome-title">今天感觉怎么样？<br><em>慢慢来，不急。</em></h1>
+          <p class="welcome-sub">我是小监，懂P型人的情绪伙伴。<br>不用强打精神，不用规划完美。<br>想到什么说什么，我陪着你。</p>
+
+          <div class="quick-grid">
+            <div class="quick-card" onclick="sendQuickMessage('我想测测现在的能量值')">
+              <div class="quick-card-label">能量打卡</div>
+              <div class="quick-card-text">30秒自测，看看今天什么节奏</div>
+            </div>
+            <div class="quick-card" onclick="sendQuickMessage('帮我拆解一个任务')">
+              <div class="quick-card-label">任务拆解</div>
+              <div class="quick-card-text">把大山拆成小土堆</div>
+            </div>
+            <div class="quick-card" onclick="sendQuickMessage('我有一个想法')">
+              <div class="quick-card-label">想法桶</div>
+              <div class="quick-card-text">先记下来，不用急着做</div>
+            </div>
+            <div class="quick-card" onclick="sendQuickMessage('陪我番茄钟')">
+              <div class="quick-card-label">番茄钟</div>
+              <div class="quick-card-text">25分钟陪伴式专注</div>
             </div>
           </div>
-        </div>
 
-        <div class="compare__panel compare__panel--after">
-          <div class="compare__panel-inner">
-            <span class="compare__label">After</span>
-            <div class="compare__content">
-              <div class="compare__task-list">
-                <div class="compare__task">
-                  <div class="compare__task-check done"></div>
-                  <span class="compare__task-title done">整理桌面</span>
-                  <span class="compare__task-meta">5 min</span>
-                  <span class="compare__priority compare__priority--low">低</span>
-                </div>
-                <div class="compare__task">
-                  <div class="compare__task-check"></div>
-                  <span class="compare__task-title">回复客户邮件</span>
-                  <span class="compare__task-meta">30 min</span>
-                  <span class="compare__priority compare__priority--medium">中</span>
-                </div>
-                <div class="compare__task">
-                  <div class="compare__task-check"></div>
-                  <span class="compare__task-title">完成产品方案初稿</span>
-                  <span class="compare__task-meta">2h</span>
-                  <span class="compare__priority compare__priority--high">高</span>
-                </div>
-              </div>
-              <div class="compare__energy-bar">
-                <span class="compare__energy-label">今日能量 65%</span>
-                <div class="compare__energy-track">
-                  <div class="compare__energy-fill"></div>
-                </div>
-              </div>
-              <div class="compare__ai-tip">
-                <p class="compare__ai-tip-text">AI 建议：先做简单任务唤醒状态，再挑战核心工作</p>
-              </div>
+          <div class="hint">Enter 发送 · Shift + Enter 换行</div>
+        </div>
+      </div>
+
+      <div class="input-area">
+        <div class="input-wrapper">
+          <textarea class="input-box" id="messageInput" placeholder="说点什么吧…" rows="1"
+            onkeydown="handleKeyDown(event)" oninput="autoResize(this)"></textarea>
+          <button class="send-btn" id="sendBtn" onclick="sendMessage()" disabled>↵</button>
+        </div>
+        <div class="input-hint">对话数据仅保存在本地</div>
+      </div>
+    </div>
+
+    <!-- Knowledge Page -->
+    <div class="page" id="page-knowledge">
+      <header class="page-header">
+        <div>
+          <div class="page-title">知识库</div>
+          <div class="page-subtitle">5 篇文档 · 已关联到Agent</div>
+        </div>
+        <div class="status-badge">
+          <span class="status-dot"></span>
+          <span>已启用</span>
+        </div>
+      </header>
+
+      <div class="page-content">
+        <div class="kb-layout">
+          <div class="kb-list">
+            <div class="kb-item active" onclick="selectKb(0, this)">
+              <div class="kb-item-title">P型人格指南</div>
+              <div class="kb-item-meta">产品理念 · 2.3KB</div>
+            </div>
+            <div class="kb-item" onclick="selectKb(1, this)">
+              <div class="kb-item-title">能量打卡说明</div>
+              <div class="kb-item-meta">核心功能 · 1.8KB</div>
+            </div>
+            <div class="kb-item" onclick="selectKb(2, this)">
+              <div class="kb-item-title">任务拆解方法论</div>
+              <div class="kb-item-meta">核心功能 · 2.1KB</div>
+            </div>
+            <div class="kb-item" onclick="selectKb(3, this)">
+              <div class="kb-item-title">沟通风格手册</div>
+              <div class="kb-item-meta">Agent人设 · 1.5KB</div>
+            </div>
+            <div class="kb-item" onclick="selectKb(4, this)">
+              <div class="kb-item-title">常见问题回答库</div>
+              <div class="kb-item-meta">FAQ · 3.2KB</div>
             </div>
           </div>
-        </div>
 
-        <div class="compare__divider" id="compareDivider">
-          <div class="compare__divider-handle">
-            <svg viewBox="0 0 24 24"><path d="M11 18l-5-5 5-5"/><path d="M13 6l5 5-5 5"/></svg>
+          <div class="kb-content" id="kbContent">
+            <div class="kb-doc-title" id="kbTitle">P型人格指南</div>
+            <div class="kb-doc-meta">最后更新：2026-07-20 · 分类：产品理念</div>
+            <div class="kb-doc-body" id="kbBody">
+              <h3>什么是P型人格</h3>
+              <p>P型（感知型）是MBTI中的一个维度，与J型（判断型）相对。P型人更关注过程而非结果，喜欢保持开放和灵活，讨厌被计划束缚。</p>
+
+              <h3>P型人的特点</h3>
+              <p>• 喜欢随兴而动，不喜欢严格计划<br>
+              • 容易被新事物吸引，兴趣广泛<br>
+              • 启动困难，但进入状态后效率极高<br>
+              • 讨厌deadline带来的压力感<br>
+              • 常常在最后期限前爆发创造力</p>
+
+              <h3>为什么传统效率工具不适合P型</h3>
+              <p>传统效率工具都是为J型人设计的：严格的日程安排、倒计时、打卡机制、完成率统计。这些对P型人来说，反而会制造焦虑，导致越催越不动。</p>
+
+              <h3>FlowSync的设计理念</h3>
+              <p>FlowSync反其道而行之：情绪优先于任务，陪伴优先于push。我们不追求"今天完成了多少"，而是追求"用户今天感觉被理解了，愿意动起来一点点"。</p>
+            </div>
           </div>
         </div>
       </div>
     </div>
 
-    <p class="compare__hint">← 拖动中间橙色手柄 →</p>
-  </div>
-</section>
+    <!-- Workflow Page -->
+    <div class="page" id="page-workflow">
+      <header class="page-header">
+        <div>
+          <div class="page-title">工作流</div>
+          <div class="page-subtitle">主流程 · 已发布 · V3</div>
+        </div>
+        <div class="status-badge">
+          <span class="status-dot"></span>
+          <span>运行中</span>
+        </div>
+      </header>
 
-<!-- Features -->
-<section class="features" id="features">
-  <div class="features__inner">
-    <div class="features__head" data-reveal>
-      <span class="features__eyebrow">Core Features</span>
-      <h2 class="features__title">让 AI 替你做选择</h2>
-    </div>
-
-    <div class="features__grid" data-stagger>
-      <div class="feature-card">
-        <div class="feature-card__icon feature-card__icon--orange">
-          <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-        </div>
-        <h3 class="feature-card__title">智能任务拆解</h3>
-        <p class="feature-card__desc">一个大目标碎成 5 分钟能启动的小步骤，你只需要做第一步</p>
-        <div class="feature-card__steps">
-          <div class="feature-card__step"><span class="feature-card__step-num">1</span>说一个想法</div>
-          <div class="feature-card__step"><span class="feature-card__step-num">2</span>AI 自动拆解</div>
-          <div class="feature-card__step"><span class="feature-card__step-num">3</span>从最小的开始</div>
-        </div>
-      </div>
-
-      <div class="feature-card">
-        <div class="feature-card__icon feature-card__icon--green">
-          <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-        </div>
-        <h3 class="feature-card__title">情绪自适应</h3>
-        <p class="feature-card__desc">告诉 AI 你今天几格电，它据此安排任务难度，不强迫高负荷</p>
-        <div class="feature-card__steps">
-          <div class="feature-card__step"><span class="feature-card__step-num">1</span>能量打卡</div>
-          <div class="feature-card__step"><span class="feature-card__step-num">2</span>智能推荐</div>
-          <div class="feature-card__step"><span class="feature-card__step-num">3</span>顺应节奏</div>
-        </div>
-      </div>
-
-      <div class="feature-card">
-        <div class="feature-card__icon feature-card__icon--yellow">
-          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-        </div>
-        <h3 class="feature-card__title">沉浸式聚焦</h3>
-        <p class="feature-card__desc">一次只看一件事，做完下一件自动浮上来，没有停顿</p>
-        <div class="feature-card__steps">
-          <div class="feature-card__step"><span class="feature-card__step-num">1</span>打开即专注</div>
-          <div class="feature-card__step"><span class="feature-card__step-num">2</span>番茄钟内嵌</div>
-          <div class="feature-card__step"><span class="feature-card__step-num">3</span>滑动完成</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Demo -->
-<section class="demo" id="demo">
-  <div class="demo__inner">
-    <div class="demo__head" data-reveal>
-      <h2 class="demo__title">真实界面预览</h2>
-      <p class="demo__sub">完整可操作的 Web 端 Demo，打开即可体验所有核心功能</p>
-    </div>
-
-    <div class="demo__mockup" data-reveal>
-      <div class="demo__mockup-screen">
-        <div class="demo__mockup-header">
-          <span class="demo__mockup-logo">FlowSync</span>
-          <div class="demo__mockup-avatar">李</div>
-        </div>
-        <div class="demo__mockup-task">
-          <h3 class="demo__mockup-task-title">回复客户邮件</h3>
-          <div class="demo__mockup-task-meta">
-            <span class="demo__mockup-chip demo__mockup-chip--high">中优先级</span>
-            <span class="demo__mockup-chip demo__mockup-chip--time">30 min</span>
-          </div>
-          <div class="demo__mockup-subtasks">
-            <div class="demo__mockup-subtask">
-              <div class="demo__mockup-check done"></div>
-              <span class="demo__mockup-subtask-text done">查阅往来邮件</span>
+      <div class="page-content">
+        <div class="workflow-canvas">
+          <div class="workflow-nodes">
+            <div class="wf-node start">
+              <div class="wf-node-num">01</div>
+              <div class="wf-node-name">用户输入</div>
+              <div class="wf-node-type">agentStart</div>
             </div>
-            <div class="demo__mockup-subtask">
-              <div class="demo__mockup-check"></div>
-              <span class="demo__mockup-subtask-text">起草回复</span>
+            <div class="wf-arrow">
+              <span class="wf-arrow-label">USER_INPUT</span>
             </div>
-            <div class="demo__mockup-subtask">
-              <div class="demo__mockup-check"></div>
-              <span class="demo__mockup-subtask-text">检查附件</span>
+            <div class="wf-node">
+              <div class="wf-node-num">02</div>
+              <div class="wf-node-name">意图识别</div>
+              <div class="wf-node-type">intent detection</div>
             </div>
-          </div>
-          <div class="demo__mockup-progress">
-            <span class="demo__mockup-progress-label">进度 1/3</span>
-            <div class="demo__mockup-progress-bar">
-              <div class="demo__mockup-progress-fill"></div>
+            <div class="wf-arrow">
+              <span class="wf-arrow-label">intent + query</span>
+            </div>
+            <div class="wf-node">
+              <div class="wf-node-num">03</div>
+              <div class="wf-node-name">知识库检索</div>
+              <div class="wf-node-type">knowledge RAG</div>
+            </div>
+            <div class="wf-arrow">
+              <span class="wf-arrow-label">context + memory</span>
+            </div>
+            <div class="wf-node highlight">
+              <div class="wf-node-num">04</div>
+              <div class="wf-node-name">大模型生成</div>
+              <div class="wf-node-type">LLM + prompt</div>
+            </div>
+            <div class="wf-arrow">
+              <span class="wf-arrow-label">reply</span>
+            </div>
+            <div class="wf-node end">
+              <div class="wf-node-num">05</div>
+              <div class="wf-node-name">输出回复</div>
+              <div class="wf-node-type">agentEnd</div>
             </div>
           </div>
         </div>
-        <div class="demo__mockup-energy">
-          <div class="demo__mockup-energy-cell"></div>
-          <div class="demo__mockup-energy-cell"></div>
-          <div class="demo__mockup-energy-cell"></div>
-          <div class="demo__mockup-energy-cell"></div>
-          <div class="demo__mockup-energy-cell"></div>
+
+        <div class="workflow-info">
+          <div class="info-card">
+            <div class="info-label">节点数量</div>
+            <div class="info-value">6 个</div>
+          </div>
+          <div class="info-card">
+            <div class="info-label">平均响应时间</div>
+            <div class="info-value">1.2s</div>
+          </div>
+          <div class="info-card">
+            <div class="info-label">今日调用次数</div>
+            <div class="info-value">128 次</div>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-</section>
 
-<!-- CTA -->
-<section class="cta" id="cta">
-  <div class="cta__inner" data-reveal>
-    <h2 class="cta__title">准备好了吗？</h2>
-    <p class="cta__sub">让 AI 成为你最可靠的工作伙伴。不替你生活，只替你开始。</p>
-    <a href="app.html" class="cta__btn">进入操作面板</a>
-    <p class="cta__note">Web 端完整可操作 Demo · 移动端即将上线</p>
-  </div>
-</section>
+    <!-- Memory Page -->
+    <div class="page" id="page-memory">
+      <header class="page-header">
+        <div>
+          <div class="page-title">记忆 & 变量</div>
+          <div class="page-subtitle">用户个性化数据</div>
+        </div>
+        <div class="status-badge">
+          <span class="status-dot"></span>
+          <span>已同步</span>
+        </div>
+      </header>
 
-<!-- Footer -->
-<footer class="footer">
-  <div class="footer__inner">
-    <span class="footer__brand"><span class="footer__brand-dot"></span>FlowSync</span>
-    <span class="footer__copy">© 2025 FlowSync. 流同步，不流断。</span>
-    <div class="footer__links">
-      <a href="#">Twitter</a>
-      <a href="#">GitHub</a>
-      <a href="#">微信</a>
+      <div class="page-content">
+        <div class="var-section">
+          <div class="var-section-title">用户变量（持久化）</div>
+          <div class="var-grid">
+            <div class="var-card">
+              <div class="var-name">energy_level <span class="var-type">number</span></div>
+              <div class="var-desc">当前能量档位</div>
+              <div class="var-value">70%</div>
+            </div>
+            <div class="var-card">
+              <div class="var-name">user_mbti <span class="var-type">string</span></div>
+              <div class="var-desc">用户MBTI类型</div>
+              <div class="var-value">INFP</div>
+            </div>
+            <div class="var-card">
+              <div class="var-name">preferred_time <span class="var-type">string</span></div>
+              <div class="var-desc">高效时段偏好</div>
+              <div class="var-value">深夜</div>
+            </div>
+            <div class="var-card">
+              <div class="var-name">task_style <span class="var-type">string</span></div>
+              <div class="var-desc">任务处理风格</div>
+              <div class="var-value">碎片化</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="var-section">
+          <div class="var-section-title">计数变量（原子计数）</div>
+          <div class="var-grid">
+            <div class="var-card">
+              <div class="var-name">TASK_DONE_DAILY <span class="var-type">counter</span></div>
+              <div class="var-desc">今日完成任务数</div>
+              <div class="var-value">3</div>
+            </div>
+            <div class="var-card">
+              <div class="var-name">POMODORO_DAILY <span class="var-type">counter</span></div>
+              <div class="var-desc">今日番茄钟数</div>
+              <div class="var-value">2</div>
+            </div>
+            <div class="var-card">
+              <div class="var-name">IDEA_SAVED_TOTAL <span class="var-type">counter</span></div>
+              <div class="var-desc">累计保存想法数</div>
+              <div class="var-value">47</div>
+            </div>
+            <div class="var-card">
+              <div class="var-name">ENERGY_CHECKIN_STREAK <span class="var-type">counter</span></div>
+              <div class="var-desc">能量打卡连续天数</div>
+              <div class="var-value">12 天</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="var-section">
+          <div class="var-section-title">长期记忆</div>
+          <div class="var-grid">
+            <div class="var-card">
+              <div class="var-name">用户偏好摘要</div>
+              <div class="var-desc">从历史对话中提取</div>
+              <div class="var-value" style="font-size:13px; font-weight:400; color:var(--ink-soft);">
+                用户喜欢深夜工作，讨厌早起。任务容易拖延，但deadline前效率很高。喜欢用番茄钟但经常中途放弃，对此有负罪感...
+              </div>
+            </div>
+            <div class="var-card">
+              <div class="var-name">重要事实</div>
+              <div class="var-desc">用户主动告知的信息</div>
+              <div class="var-value" style="font-size:13px; font-weight:400; color:var(--ink-soft);">
+                • 大三学生，计算机专业<br>
+                • 正在准备华为比赛<br>
+                • 养了一只猫叫年糕
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
-</footer>
+
+    <!-- Skills Page -->
+    <div class="page" id="page-skills">
+      <header class="page-header">
+        <div>
+          <div class="page-title">技能 & 插件</div>
+          <div class="page-subtitle">已启用 4 个技能</div>
+        </div>
+        <div class="status-badge">
+          <span class="status-dot"></span>
+          <span>4 个已启用</span>
+        </div>
+      </header>
+
+      <div class="page-content">
+        <div class="var-section">
+          <div class="var-section-title">核心技能</div>
+          <div class="var-grid">
+            <div class="var-card">
+              <div class="var-name">能量打卡</div>
+              <div class="var-desc">通过对话式问卷评估用户能量状态</div>
+              <div class="shortcut-list">
+                <span class="shortcut-tag">能量打卡</span>
+                <span class="shortcut-tag">测能量</span>
+                <span class="shortcut-tag">我累了</span>
+              </div>
+            </div>
+            <div class="var-card">
+              <div class="var-name">任务拆解</div>
+              <div class="var-desc">将大任务拆解为2分钟可启动的小步骤</div>
+              <div class="shortcut-list">
+                <span class="shortcut-tag">拆任务</span>
+                <span class="shortcut-tag">帮我拆解</span>
+                <span class="shortcut-tag">不知道从哪开始</span>
+              </div>
+            </div>
+            <div class="var-card">
+              <div class="var-name">想法桶</div>
+              <div class="var-desc">记录灵感，不push执行</div>
+              <div class="shortcut-list">
+                <span class="shortcut-tag">记个想法</span>
+                <span class="shortcut-tag">我有个idea</span>
+                <span class="shortcut-tag">突然想到</span>
+              </div>
+            </div>
+            <div class="var-card">
+              <div class="var-name">番茄钟</div>
+              <div class="var-desc">陪伴式专注，想停就停</div>
+              <div class="shortcut-list">
+                <span class="shortcut-tag">番茄钟</span>
+                <span class="shortcut-tag">陪我专注</span>
+                <span class="shortcut-tag">开始计时</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="var-section">
+          <div class="var-section-title">MCP 连接</div>
+          <div class="var-grid">
+            <div class="var-card">
+              <div class="var-name">本地文件系统</div>
+              <div class="var-desc">读取和管理本地想法笔记</div>
+              <div class="status-badge" style="margin-top:8px;">
+                <span class="status-dot"></span>
+                <span>已连接</span>
+              </div>
+            </div>
+            <div class="var-card">
+              <div class="var-name">飞书 / Lark</div>
+              <div class="var-desc">同步任务到飞书多维表格</div>
+              <div class="status-badge" style="margin-top:8px; background:var(--surface-2); color:var(--ink-muted);">
+                <span class="status-dot" style="background:var(--ink-muted);"></span>
+                <span>待配置</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Settings Page -->
+    <div class="page" id="page-settings">
+      <header class="page-header">
+        <div>
+          <div class="page-title">Agent设置</div>
+          <div class="page-subtitle">小监 · FlowSync P型人格助手</div>
+        </div>
+        <div class="status-badge">
+          <span class="status-dot"></span>
+          <span>已发布</span>
+        </div>
+      </header>
+
+      <div class="page-content" style="max-width: 720px;">
+        <div class="settings-section">
+          <div class="settings-title">角色设定</div>
+          <div class="setting-item">
+            <div class="setting-label">Agent名称</div>
+            <div class="setting-value">小监</div>
+          </div>
+          <div class="setting-item">
+            <div class="setting-label">角色描述</div>
+            <div class="setting-box">
+              懂P型人的情绪效率伙伴。不是来push你完成任务的，而是陪你慢慢找到节奏的朋友。
+              温柔、包容、不评判，先接住情绪再谈事情。
+            </div>
+          </div>
+          <div class="setting-item">
+            <div class="setting-label">系统提示词</div>
+            <div class="setting-box" style="font-family:var(--font-mono); font-size:12px;">
+              你是小监——懂情绪的效率伙伴，专为P型人格（知觉型）设计。<br><br>
+              【核心价值观】<br>
+              1. 情绪优先于任务——先接住情绪，再谈做事<br>
+              2. 陪伴不push——像朋友一样，不说教、不催<br>
+              3. 降低启动门槛——再大的任务，都从"2分钟能做完"的第一步开始<br>
+              4. 失败去污名化——计划变了很正常，随时可以重新开始<br>
+              5. 永远给选择权——不说"你应该"，说"要不要试试"
+            </div>
+          </div>
+        </div>
+
+        <div class="settings-section">
+          <div class="settings-title">对话设置</div>
+          <div class="setting-item">
+            <div class="setting-label">开场对话</div>
+            <div class="setting-box">
+              "今天感觉怎么样？慢慢来，不急。"<br><br>
+              "我是小监，懂P型人的情绪伙伴。不用强打精神，不用规划完美。想到什么说什么，我陪着你。"
+            </div>
+          </div>
+          <div class="setting-item">
+            <div class="setting-label">用户问题建议</div>
+            <div class="shortcut-list">
+              <span class="shortcut-tag">能量打卡</span>
+              <span class="shortcut-tag">任务拆解</span>
+              <span class="shortcut-tag">记个想法</span>
+              <span class="shortcut-tag">番茄钟</span>
+              <span class="shortcut-tag">我状态不好</span>
+              <span class="shortcut-tag">不想动怎么办</span>
+            </div>
+          </div>
+          <div class="setting-item">
+            <div class="setting-label">快捷指令</div>
+            <div class="shortcut-list">
+              <span class="shortcut-tag">#能量</span>
+              <span class="shortcut-tag">#拆解</span>
+              <span class="shortcut-tag">#想法</span>
+              <span class="shortcut-tag">#番茄</span>
+              <span class="shortcut-tag">#休息</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="settings-section">
+          <div class="settings-title">模型配置</div>
+          <div class="setting-item">
+            <div class="setting-label">基础模型</div>
+            <div class="setting-value">智谱 GLM-4-Flash</div>
+          </div>
+          <div class="setting-item">
+            <div class="setting-label">温度 (Temperature)</div>
+            <div class="setting-value">0.7</div>
+          </div>
+          <div class="setting-item">
+            <div class="setting-label">最大上下文</div>
+            <div class="setting-value">8K tokens</div>
+          </div>
+        </div>
+
+        <div class="settings-section">
+          <div class="settings-title">触发器</div>
+          <div class="setting-item">
+            <div class="setting-label">用户主动对话</div>
+            <div class="setting-value">已启用 · 全量触发</div>
+          </div>
+          <div class="setting-item">
+            <div class="setting-label">定时提醒</div>
+            <div class="setting-value">3 个已配置（早间能量问候、午间提醒、晚间回顾）</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
 
 <script>
-// ============ Reveal system ============
-(function () {
-  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var targets = document.querySelectorAll('[data-reveal], [data-stagger]');
-  
-  if (reduce || !('IntersectionObserver' in window)) {
-    targets.forEach(function (el) { el.classList.add('is-in'); });
-    return;
-  }
-  
-  var io = new IntersectionObserver(function (entries) {
-    entries.forEach(function (entry) {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('is-in');
-        io.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.15, rootMargin: '0px 0px -8% 0px' });
-  
-  targets.forEach(function (el) { io.observe(el); });
-})();
+  const API_BASE = '/api/chat';
+  let conversationHistory = [];
+  let isLoading = false;
 
-// ============ Compare drag interaction ============
-(function () {
-  var container = document.getElementById('compareContainer');
-  var divider = document.getElementById('compareDivider');
-  if (!container || !divider) return;
-  
-  var isDragging = false;
-  var containerRect;
-  
-  function onStart(e) {
-    isDragging = true;
-    containerRect = container.getBoundingClientRect();
-    document.body.style.cursor = 'col-resize';
-    document.body.style.userSelect = 'none';
+  function init() {
+    const now = new Date();
+    const options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };
+    document.getElementById('chatDate').textContent = now.toLocaleDateString('zh-CN', options);
+
+    document.getElementById('messageInput').addEventListener('input', function() {
+      document.getElementById('sendBtn').disabled = this.value.trim().length === 0;
+    });
   }
-  
-  function onMove(e) {
-    if (!isDragging) return;
-    
-    var clientX = e.touches ? e.touches[0].clientX : e.clientX;
-    var x = clientX - containerRect.left;
-    var percentage = Math.max(20, Math.min(80, (x / containerRect.width) * 100));
-    
-    divider.style.left = percentage + '%';
+
+  function switchPage(pageId, navEl) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-' + pageId).classList.add('active');
+
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    navEl.classList.add('active');
   }
-  
-  function onEnd() {
-    isDragging = false;
-    document.body.style.cursor = '';
-    document.body.style.userSelect = '';
+
+  const kbDocs = [
+    {
+      title: 'P型人格指南',
+      meta: '最后更新：2026-07-20 · 分类：产品理念',
+      body: `
+        <h3>什么是P型人格</h3>
+        <p>P型（感知型）是MBTI中的一个维度，与J型（判断型）相对。P型人更关注过程而非结果，喜欢保持开放和灵活，讨厌被计划束缚。</p>
+        <h3>P型人的特点</h3>
+        <p>• 喜欢随兴而动，不喜欢严格计划<br>
+        • 容易被新事物吸引，兴趣广泛<br>
+        • 启动困难，但进入状态后效率极高<br>
+        • 讨厌deadline带来的压力感<br>
+        • 常常在最后期限前爆发创造力</p>
+        <h3>为什么传统效率工具不适合P型</h3>
+        <p>传统效率工具都是为J型人设计的：严格的日程安排、倒计时、打卡机制、完成率统计。这些对P型人来说，反而会制造焦虑，导致越催越不动。</p>
+        <h3>FlowSync的设计理念</h3>
+        <p>FlowSync反其道而行之：情绪优先于任务，陪伴优先于push。我们不追求"今天完成了多少"，而是追求"用户今天感觉被理解了，愿意动起来一点点"。</p>
+      `
+    },
+    {
+      title: '能量打卡说明',
+      meta: '最后更新：2026-07-18 · 分类：核心功能',
+      body: `
+        <h3>什么是能量打卡</h3>
+        <p>能量打卡是FlowSync的核心功能之一。每天花30秒，通过几个简单问题评估自己的能量状态，然后AI根据状态给出适合当天节奏的建议。</p>
+        <h3>能量档位</h3>
+        <p><strong>满电（80-100%）</strong>：状态很好，可以挑战难度高的任务</p>
+        <p><strong>一般（40-70%）</strong>：正常节奏，做些轻松的事就好</p>
+        <p><strong>低电量（0-30%）</strong>：建议休息，只做最小必要的事，甚至什么都不做</p>
+        <h3>设计理念</h3>
+        <p>能量打卡不是为了"督促"，而是为了"觉察"。帮助用户感知自己的状态，而不是评判自己的状态。什么状态就配什么节奏，不用勉强。</p>
+      `
+    },
+    {
+      title: '任务拆解方法论',
+      meta: '最后更新：2026-07-15 · 分类：核心功能',
+      body: `
+        <h3>为什么需要任务拆解</h3>
+        <p>P型人启动困难的核心原因，往往是任务看起来太大太吓人了。"写论文"、"做项目"这种抽象目标，大脑会本能地逃避。</p>
+        <h3>拆解原则</h3>
+        <p><strong>1. 第一步要小到荒谬</strong>：比如"打开文档"、"写下标题"，保证2分钟内能完成</p>
+        <p><strong>2. 总共不超过5步</strong>：太多步骤反而又变成了压力</p>
+        <p><strong>3. 每一步都是具体动作</strong>：不是"研究资料"，而是"打开3篇相关论文看摘要"</p>
+        <p><strong>4. 做不完也没关系</strong>：能走几步算几步，动起来就赢了</p>
+        <h3>背后的心理学</h3>
+        <p>利用的是"2分钟法则"和"进门坎效应"：一旦开始了，继续做下去的概率会高很多。关键是让开始这件事变得没有门槛。</p>
+      `
+    },
+    {
+      title: '沟通风格手册',
+      meta: '最后更新：2026-07-22 · 分类：Agent人设',
+      body: `
+        <h3>核心原则</h3>
+        <p>小监的沟通风格是"温柔但有力量的朋友"，不是效率教练，不是心灵导师，更不是AI助手。</p>
+        <h3>要做到</h3>
+        <p>• 先共情，再建议<br>
+        • 用轻松自然的口语<br>
+        • 多提问，给选择权<br>
+        • 承认P型节奏是正常的<br>
+        • 永远留退路："不想做也没关系"</p>
+        <h3>绝对不要</h3>
+        <p>• 不说"你应该"、"你必须"<br>
+        • 不说"加油"、"自律"、"坚持"<br>
+        • 不打鸡血，不灌鸡汤<br>
+        • 不评判用户的状态<br>
+        • 不用"效率"、" productivity"这类词</p>
+        <h3>情绪优先级</h3>
+        <p>用户说"我今天什么都没干"，不要说"没关系现在开始"，要说"嗯，有时候就是这样的，什么都不想干也很正常。"</p>
+      `
+    },
+    {
+      title: '常见问题回答库',
+      meta: '最后更新：2026-07-25 · 分类：FAQ',
+      body: `
+        <h3>Q: 我是不是太懒了？</h3>
+        <p>A: 不是懒，是你的节奏和这个世界的标准不一样而已。P型人就是这样的，能量波动大，状态好的时候效率惊人，不好的时候什么都不想动。这很正常，不是缺点。</p>
+        <h3>Q: 我总是拖延怎么办？</h3>
+        <p>A: 拖延是因为任务在你心里变大了。不如我们试试把它拆到最小？小到你觉得"这也太简单了吧"的程度。要不要试试？</p>
+        <h3>Q: 我计划好了但总是执行不了</h3>
+        <p>A: 计划太满了对吧？P型人不适合严格的日程表。不如我们只定一件今天最想做的事？就一件，做完就算赢。</p>
+        <h3>Q: 你和其他效率工具有什么不一样？</h3>
+        <p>A: 其他工具都是帮你"做更多"，我是帮你"更舒服地做"。不push，不催，不评判。你的节奏你说了算，我只是陪着。</p>
+      `
+    }
+  ];
+
+  function selectKb(index, el) {
+    document.querySelectorAll('.kb-item').forEach(i => i.classList.remove('active'));
+    el.classList.add('active');
+
+    const doc = kbDocs[index];
+    document.getElementById('kbTitle').textContent = doc.title;
+    document.getElementById('kbBody').innerHTML = doc.body;
+    document.querySelector('.kb-doc-meta').textContent = doc.meta;
   }
-  
-  divider.addEventListener('mousedown', onStart);
-  divider.addEventListener('touchstart', onStart, { passive: true });
-  document.addEventListener('mousemove', onMove);
-  document.addEventListener('touchmove', onMove, { passive: true });
-  document.addEventListener('mouseup', onEnd);
-  document.addEventListener('touchend', onEnd);
-})();
+
+  function autoResize(textarea) {
+    textarea.style.height = 'auto';
+    textarea.style.height = Math.min(textarea.scrollHeight, 160) + 'px';
+  }
+
+  function handleKeyDown(e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
+  }
+
+  function sendQuickMessage(text) {
+    document.getElementById('messageInput').value = text;
+    document.getElementById('sendBtn').disabled = false;
+    sendMessage();
+  }
+
+  async function sendMessage() {
+    const input = document.getElementById('messageInput');
+    const text = input.value.trim();
+    if (!text || isLoading) return;
+
+    const welcome = document.getElementById('welcomeScreen');
+    if (welcome) welcome.remove();
+
+    addMessage('user', text);
+    input.value = '';
+    input.style.height = 'auto';
+    document.getElementById('sendBtn').disabled = true;
+
+    showTyping();
+    conversationHistory.push({ role: 'user', content: text });
+
+    try {
+      const response = await fetch(API_BASE + '/send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: text,
+          history: conversationHistory.slice(-10)
+        })
+      });
+
+      const data = await response.json();
+      hideTyping();
+
+      if (data.success && data.data) {
+        const reply = data.data.reply || data.data.message || '嗯，我在。';
+        addMessage('bot', reply, true);
+        conversationHistory.push({ role: 'assistant', content: reply });
+      } else {
+        addMessage('bot', '抱歉，我刚才走神了。能再说一遍吗？');
+      }
+    } catch (error) {
+      hideTyping();
+      addMessage('bot', '嗯…我这边有点卡。你继续说，我在听。');
+    }
+  }
+
+  function addMessage(role, content, typewriter = false) {
+    const container = document.getElementById('chatContainer');
+    const msgDiv = document.createElement('div');
+    msgDiv.className = `message ${role}`;
+
+    const time = new Date().toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' });
+    const label = role === 'user' ? '你' : '小监';
+
+    const bubble = document.createElement('div');
+    bubble.className = 'message-bubble';
+    const p = document.createElement('p');
+
+    msgDiv.innerHTML = `<div class="message-meta">${label} · ${time}</div>`;
+    bubble.appendChild(p);
+    msgDiv.appendChild(bubble);
+    container.appendChild(msgDiv);
+    scrollToBottom();
+
+    if (typewriter && role === 'bot') {
+      typeText(p, content);
+    } else {
+      p.innerHTML = formatContent(content);
+    }
+  }
+
+  function formatContent(text) {
+    return text
+      .replace(/\n\n/g, '</p><p>')
+      .replace(/\n/g, '<br>');
+  }
+
+  function typeText(element, text, speed = 18) {
+    let i = 0;
+    element.innerHTML = '';
+    element.parentElement.classList.add('typing-active');
+
+    function type() {
+      if (i < text.length) {
+        const char = text.charAt(i);
+        if (char === '\n') {
+          element.innerHTML += '<br>';
+        } else {
+          element.innerHTML += char;
+        }
+        i++;
+        scrollToBottom();
+        setTimeout(type, speed + Math.random() * 20);
+      } else {
+        element.parentElement.classList.remove('typing-active');
+      }
+    }
+    type();
+  }
+
+  function showTyping() {
+    isLoading = true;
+    const container = document.getElementById('chatContainer');
+    const typingDiv = document.createElement('div');
+    typingDiv.id = 'typingIndicator';
+    typingDiv.className = 'message bot';
+    typingDiv.innerHTML = `
+      <div class="message-meta">小监 · 正在输入</div>
+      <div class="message-bubble">
+        <div class="typing"><span></span><span></span><span></span></div>
+      </div>
+    `;
+    container.appendChild(typingDiv);
+    scrollToBottom();
+  }
+
+  function hideTyping() {
+    isLoading = false;
+    const indicator = document.getElementById('typingIndicator');
+    if (indicator) indicator.remove();
+  }
+
+  function scrollToBottom() {
+    const container = document.getElementById('chatContainer');
+    setTimeout(() => {
+      container.scrollTop = container.scrollHeight;
+    }, 50);
+  }
+
+  init();
 </script>
 </body>
 </html>

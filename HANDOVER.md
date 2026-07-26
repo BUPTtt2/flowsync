@@ -1,155 +1,214 @@
-# FlowSync 项目交接文档（给 TRAE）
+# FlowSync 项目交接文档（华为比赛版）
 
-> 交接时间：2026-07-16
-> 你是接手这个项目的 TRAE 助手，请通读本文档后全权推进部署工作
+> 交接时间：2026-07-27
+> 项目状态：Web 演示系统完成，参赛材料齐全，智谱 API Key 需自行配置
 
 ---
 
 ## 一、这个项目是什么
 
-**FlowSync** — AI 驱动的任务拆解与执行工具。用户说一句话（如"我要养一只猫"），AI 自动拆解为可执行模块和任务，每个任务旁嵌入工具按钮（地图/路线/天气/航班/高铁/日历/提醒），一键直达外部服务。
+**FlowSync** — 专为 P 型人格（MBTI 感知型）设计的情绪任务伙伴，参加华为比赛。
 
-项目完成度 **85%**，核心功能全部开发完毕。当前唯一目标是：**部署到公网，拿到可访问的在线体验地址，用于比赛提交**。
+核心哲学：**情绪优先于任务，陪伴优先于 push**。不催你，不 judge 你，陪你慢慢找到节奏。
 
----
-
-## 二、当前进度
-
-### 已完成
-
-- 完整前端应用（30+ 功能：AI 生成、任务管理、工具集成、能量自适应、番茄钟、想法桶、甘特图等）
-- 后端服务（Node.js + Express + SQLite）
-- AI 引擎（智谱 GLM-4-Flash，动态生成项目模块任务）
-- 7 种任务级工具集成（高德地图/和风天气/12306/携程/Google Calendar/系统提醒）
-- 安全加固（JWT 强密钥、CORS 配置、登录限流、AI 生成限流）
-- 公开 Demo API 路由（免登录，IP 限流防滥用）
-- 后端支持同时托管前端静态文件（通过环境变量 `SERVE_STATIC=1` 开启）
-- Railway 部署配置文件（Dockerfile + railway.toml + nixpacks.toml）
-
-### 待完成（你的任务）
-
-1. 协助用户将项目推到 GitHub
-2. 在 Railway 部署后端 + 前端
-3. 配置环境变量
-4. 拿到公网域名并验证一切正常
-5. 把完整的 app.html 打包成 zip（备选提交方式）
+### 产品形态
+1. **小艺 Agent**（华为小艺开放平台）— 工作流 JSON 已生成，可导入
+2. **Web 演示系统** — 6 页面 Agent 控制台，可直接演示给评委看
+3. **后端服务** — Node.js + Express + 智谱 AI，提供真实对话能力
 
 ---
 
-## 三、你要做的事（完整流程）
+## 二、快速启动（5 分钟跑起来）
 
-### 第 1 步：确认项目结构
-
-解压项目后，目录结构：
-
-```
-项目根目录/
-├── server/                    # 后端服务（Node.js）
-│   ├── src/
-│   │   ├── app.js             # 入口文件（含静态文件托管逻辑）
-│   │   ├── routes/            # 路由（auth/projects/modules/tasks/reminders/external/energy/demo）
-│   │   ├── services/          # 服务（aiEngine/amapService/reminderService）
-│   │   ├── utils/             # 工具（templateLibrary）
-│   │   └── middleware/        # 中间件（auth）
-│   ├── db/schema.sql          # 数据库初始化
-│   ├── package.json
-│   ├── package-lock.json
-│   ├── Dockerfile             # Docker 构建配置（Node 22）
-│   ├── railway.toml           # Railway 部署配置
-│   ├── nixpacks.toml          # Nixpacks 构建配置
-│   └── .env.example           # 环境变量模板
-├── flowsync/
-│   └── web/
-│       ├── index.html         # 落地页（创意产物 HTML）
-│       ├── app.html           # 完整 App（210KB，30+ 功能）
-│       └── privacy.html       # 隐私政策
-├── docs/
-│   └── android-release-guide.md
-└── HANDOVER.md                # 本文档
+### 1. 克隆项目
+```bash
+git clone <你的仓库地址>
+cd P人push
 ```
 
-### 第 2 步：推到 GitHub
+### 2. 配置环境变量
+```bash
+cp .env.example .env
+```
+然后编辑 `.env`，填入你的智谱 API Key：
+```
+LLM_API_KEY=你的智谱key   # 格式：id.secret，去 open.bigmodel.cn 注册
+```
 
-1. 在 GitHub 新建一个仓库（名字随意，如 `flowsync-app`）
-2. 把项目所有文件推上去
-3. 注意：`.env` 文件已被排除，不会推上去，环境变量在 Railway 里手动配置
+### 3. 启动后端
+```bash
+cd server
+npm install
+npm start
+```
 
-### 第 3 步：部署到 Railway
-
-**前置条件**：用户已注册 Railway 账号（用 GitHub 登录即可）
-
-**部署步骤**：
-
-1. 登录 Railway → **New Project** → **Deploy from GitHub repo**
-2. 选择刚才推的仓库
-3. **重要**：Railway 默认从仓库根目录构建，但后端代码在 `server/` 子目录。需要在 Railway 项目 **Settings** 里把 **Root Directory** 设为 `server/`
-4. **设置环境变量**（在项目 Variables 页添加）：
-
-| 变量名 | 值 | 说明 |
-|--------|-----|------|
-| `JWT_SECRET` | `fs7kP9vQx2mZn4Rb8Lc6Tt3WqY1Ha5Dj7Kg2Mp9Xw4Vr8Bn3Cs6Ft1Yh0Lw7Qe2` | JWT 签名密钥 |
-| `AMAP_API_KEY` | 向用户要 | 高德地图 API Key |
-| `LLM_API_KEY` | 向用户要 | 智谱 AI API Key |
-| `LLM_API_URL` | `https://open.bigmodel.cn/api/paas/v4/chat/completions` | 智谱 API 地址 |
-| `LLM_MODEL` | `glm-4-flash` | 使用的模型 |
-| `CORS_ORIGIN` | `*` | 允许所有来源访问（demo 阶段） |
-| `SERVE_STATIC` | `1` | 开启前端静态文件托管（关键！开启后访问根路径即可看到完整应用） |
-
-5. 点 **Deploy** 等待构建（2-3 分钟）
-6. 构建成功后，去 **Settings → Networking → Generate Domain**，拿到公网域名，格式类似：
-   `https://flowsync-app-production.up.railway.app`
-
-### 第 4 步：验证部署
-
-1. 浏览器打开 `https://你的域名/health`，应返回：
-   `{"success":true,"data":{"status":"ok","time":"..."}}`
-2. 浏览器打开 `https://你的域名/`，应看到 FlowSync 完整应用界面（terracotta 暖色系）
-3. 在应用中输入"我要养一只猫"，点生成，应看到：
-   - 加载动画"Agent 正在虚空排布…"
-   - 2-5 秒后生成模块和任务列表
-   - 每个任务旁有工具按钮（地图/路线/天气等）
-   - 点击工具按钮能跳转到对应服务
-
-### 第 5 步：打包 app.zip（备选提交）
-
-比赛也接受 zip 格式的 HTML 文件上传。把 `flowsync/web/app.html` 单独压缩：
-- 文件名：`FlowSync-Demo.zip`
-- 里面只有 `app.html` 一个文件
-- 注意：zip 里的 app.html 的 API 地址需要改为 Railway 域名，否则打开会连不上后端
+### 4. 打开演示界面
+浏览器访问：**http://localhost:3000/index.html**
 
 ---
 
-## 四、最终交付物
+## 三、目录结构速查
 
-部署完成后，告诉用户以下信息：
-
-| 交付物 | 说明 |
-|--------|------|
-| **在线体验地址** | `https://xxx.up.railway.app`，评审直接打开即可体验完整应用 |
-| `FlowSync-Demo.zip` | 打包好的 app.html，备选提交方式 |
+```
+P人push/
+├── README.md                      # 项目介绍（完整）
+├── PRODUCT.md                     # 产品设计理念
+├── HANDOVER.md                    # 本文档
+├── .env.example                   # 环境变量模板
+├── .gitignore
+│
+├── flowsync/                      # 前端 & 产品素材
+│   ├── web/
+│   │   ├── index.html             # ⭐ Agent 控制台主页（6个页面切换）
+│   │   ├── chat.html              # 单页聊天界面
+│   │   └── app.html               # 旧版完整应用
+│   ├── docs/                      # ⭐ 所有文档和材料
+│   │   ├── PPT内容大纲_20页.md      # 比赛PPT直接抄
+│   │   ├── 演示视频脚本_Web版.md     # 5分钟演示视频逐字稿
+│   │   ├── 项目打包说明.md           # 比赛zip包怎么整理
+│   │   ├── knowledge-base/         # 知识库文档（4篇）
+│   │   ├── FlowSync-V17.json       # 小艺工作流JSON
+│   │   ├── V17_配置清单.md          # 小艺平台配置步骤
+│   │   └── 试运行测试集-V17.md       # Agent测试用例
+│   ├── pages/                      # 产品页面原型
+│   ├── harmonyos/                  # 鸿蒙端代码
+│   └── assets/                     # 设计素材
+│
+└── server/                         # 后端服务
+    ├── src/
+    │   ├── app.js                  # 入口（含静态文件托管）
+    │   ├── routes/
+    │   │   ├── chat.js             # ⭐ AI聊天接口（主要）
+    │   │   ├── auth.js
+    │   │   ├── tasks.js
+    │   │   ├── energy.js
+    │   │   └── ...
+    │   ├── services/
+    │   │   └── aiEngine.js         # AI引擎封装
+    │   └── middleware/
+    ├── db/schema.sql
+    ├── package.json
+    └── .env.example
+```
 
 ---
 
-## 五、常见问题
+## 四、6 个演示页面介绍
 
-**Q: Railway 构建失败？**
-A: 看构建日志。最常见的原因：(1) Root Directory 没设为 `server/`；(2) 环境变量没设全；(3) Dockerfile 路径问题。
+访问 `http://localhost:3000/index.html`，左侧导航切换：
 
-**Q: 打开域名看到应用但 AI 生成失败？**
-A: 检查 `LLM_API_KEY` 和 `LLM_API_URL` 是否正确。AI 生成需要有效的智谱 API Key。
-
-**Q: CORS 跨域错误？**
-A: 确认 `CORS_ORIGIN` 设为 `*`。如果 SERVE_STATIC=1 且前后端同域，通常不会有跨域问题。
-
-**Q: 页面打开是空白？**
-A: 确认 `SERVE_STATIC=1` 已设置。如果没有这个环境变量，后端不会托管前端文件，需要单独部署前端。
-
-**Q: 429 限流错误？**
-A: 正常，AI 生成接口有频率限制。等一分钟再试。
-
-**Q: 应用需要登录吗？**
-A: 完整应用有登录功能，但公开 Demo API（`/api/demo/generate`）免登录。用户可以在应用中注册账号使用完整功能，也可以直接在首页使用 Demo 输入框体验 AI 生成。
+| 页面 | 内容 | 演示时说什么 |
+|---|---|---|
+| **聊天** | 主对话界面，打字机效果，快捷操作卡片 | 展示P型人格对话风格 |
+| **知识库** | 4篇知识库文档列表+详情 | 展示RAG知识库检索能力 |
+| **工作流** | 5节点流程图+统计信息 | 展示Agent工作流架构 |
+| **记忆&变量** | 用户变量+计数变量+长期记忆 | 展示个性化记忆系统 |
+| **技能&插件** | 4个核心技能卡片 | 展示Agent能力矩阵 |
+| **Agent设置** | 头像/人设/开场白/模型配置 | 展示Agent可配置项 |
 
 ---
 
-> 文档结束。接手后请先通读一遍，然后按步骤执行。有任何不确定的地方，直接问用户。祝顺利 ✦
+## 五、比赛材料清单
+
+| 材料 | 文件位置 | 状态 |
+|---|---|---|
+| 作品说明文档（20页PPT） | `flowsync/docs/PPT内容大纲_20页.md` | ✅ 内容就绪，套大赛模板即可 |
+| 演示视频（5分钟） | `flowsync/docs/演示视频脚本_Web版.md` | ✅ 逐字稿就绪，录屏就行 |
+| 演示系统ZIP | 按`项目打包说明.md`整理 | ✅ 结构清楚，打包就行 |
+
+---
+
+## 六、AI 对话说明
+
+### 后端接口
+- **地址**：`POST /api/chat/send`
+- **模型**：智谱 GLM-4-Flash（免费版）
+- **系统Prompt**：P型人格专属，包含四大核心模块
+  1. 能量打卡
+  2. 任务微拆解
+  3. 想法桶
+  4. 柔性番茄钟
+
+### 没有 API Key 也能演示
+代码内置了**兜底回复机制**，如果 API 调用失败，会返回预设的友好回复。
+效果：能演示界面和交互，但内容是固定的。
+
+### 配置有效 Key 后
+真实 AI 回复，支持多轮对话，根据 P 型人格 Prompt 回答。
+
+---
+
+## 七、已知状态 & 待办
+
+### ✅ 已完成
+- Web Agent 控制台 6 页面
+- 聊天打字机效果 + 光标闪烁
+- 深浅模式切换
+- 响应式设计（桌面/移动端）
+- 后端 AI 聊天接口
+- 兜底回复机制（无key也能演示）
+- PPT内容大纲（20页）
+- 演示视频脚本（5分钟逐字稿）
+- 小艺工作流 JSON（V17）
+- 知识库文档（4篇）
+- .gitignore + .env.example
+
+### ⚠️ 需要你做
+1. **换智谱 API Key** — 当前 key 返回 401 失效了
+2. **录演示视频** — 按脚本录屏
+3. **套PPT模板** — 把大纲内容复制到大赛模板
+4. **整理zip包** — 按打包说明整理
+5. **提交比赛** — 上传三份材料
+
+---
+
+## 八、在 TRAE 里继续开发
+
+### 打开项目
+```
+File → Open Folder → 选择 P人push 目录
+```
+
+### 常用命令
+```bash
+# 启动服务
+cd server && npm start
+
+# 健康检查
+curl http://localhost:3000/health
+```
+
+### 主要修改文件
+- 界面：`flowsync/web/index.html`（单文件，HTML+CSS+JS都在里面）
+- AI对话逻辑：`server/src/routes/chat.js`
+- 系统Prompt：`server/src/routes/chat.js` 里的 `SYSTEM_PROMPT`
+- 文档：`flowsync/docs/`
+
+---
+
+## 九、常见问题
+
+**Q: 打开页面显示 "Page not found"？**
+A: 确认 `.env` 里 `SERVE_STATIC=1`，然后重启服务。
+
+**Q: AI 回复都是兜底内容？**
+A: API Key 失效了，换个有效的智谱 key。注册地址：https://open.bigmodel.cn/
+
+**Q: 怎么换深色/浅色模式？**
+A: 聊天页面右上角有主题切换按钮。
+
+**Q: 小艺工作流 JSON 能用吗？**
+A: V17 是最新版，但小艺平台组件经常变动，导入后可能需要手动微调。建议用 Web 版演示更稳。
+
+**Q: 数据库是干嘛的？**
+A: SQLite 存用户、任务等数据。聊天接口不依赖数据库，直接调 AI。
+
+---
+
+## 十、联系 & 备注
+
+- 项目是比赛用，演示优先，代码能跑就行
+- 界面设计遵循 impeccable 风格：文字驱动、大量留白、无图标、暖陶土色
+- 所有文档都在 `flowsync/docs/` 里，随时查阅
+
+> 接手后先跑起来看看效果，然后按待办列表继续推进。有问题随时问。加油 🤍

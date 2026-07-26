@@ -17,8 +17,9 @@ const reminderRoutes = require('./routes/reminders');
 const externalRoutes = require('./routes/external');
 const energyRoutes = require('./routes/energy');
 const demoRoutes = require('./routes/demo');
+const chatRoutes = require('./routes/chat');
 const feedbackRoutes = require('./routes/feedback');
-const teamRoutes = require('./routes/teams');
+// const teamRoutes = require('./routes/teams');
 
 // 启动时自动初始化数据库（执行 schema.sql）
 const schemaPath = path.join(__dirname, '..', 'db', 'schema.sql');
@@ -174,8 +175,9 @@ app.use('/api/reminders', reminderRoutes);
 app.use('/api/external', externalRoutes);
 app.use('/api/energy', energyRoutes);
 app.use('/api/demo', demoRoutes);
+app.use('/api/chat', chatRoutes);
 app.use('/api/feedback', feedbackRoutes);
-app.use('/api/teams', teamRoutes);
+// app.use('/api/teams', teamRoutes);
 app.use('/api', moduleRoutes);
 app.use('/api', taskRoutes);
 
