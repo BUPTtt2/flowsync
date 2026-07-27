@@ -1222,6 +1222,117 @@
     border-top: 5px solid var(--border);
   }
 
+  /* Dashboard */
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+
+  .stat-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    transition: all 0.3s ease;
+  }
+
+  .stat-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+  }
+
+  .stat-label {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+  }
+
+  .stat-value {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+
+  .stat-trend {
+    font-size: 12px;
+    margin-top: 8px;
+  }
+
+  .stat-trend.up {
+    color: var(--success, #10b981);
+  }
+
+  .bar-chart {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .bar-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .bar-label {
+    width: 80px;
+    font-size: 13px;
+    color: var(--text-secondary);
+    flex-shrink: 0;
+  }
+
+  .bar-track {
+    flex: 1;
+    height: 10px;
+    background: var(--bg-soft);
+    border-radius: 5px;
+    overflow: hidden;
+  }
+
+  .bar-fill {
+    height: 100%;
+    width: 0;
+    background: linear-gradient(90deg, var(--accent), var(--accent-soft));
+    border-radius: 5px;
+    transition: width 1.5s ease;
+  }
+
+  .bar-value {
+    width: 40px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  .tag-cloud {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    padding: 12px 0;
+  }
+
+  .tag-item {
+    background: var(--accent-soft);
+    color: var(--accent);
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+  }
+
+  .tag-item:hover {
+    background: var(--accent);
+    color: white;
+    transform: scale(1.05);
+  }
+
   /* Mobile */
   @media (max-width: 768px) {
     .app { flex-direction: column; }
@@ -1247,6 +1358,9 @@
     }
     .demo-section { margin-top: 24px; padding-top: 20px; }
     .demo-btn { padding: 10px 24px; font-size: 13px; }
+    .stat-grid { grid-template-columns: repeat(2, 1fr); }
+    .stat-value { font-size: 24px; }
+    .bar-label { width: 70px; font-size: 12px; }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -1267,6 +1381,7 @@
       <div class="mobile-nav-item" onclick="switchPage('skills', this)">技能</div>
       <div class="mobile-nav-item" onclick="switchPage('settings', this)">设置</div>
       <div class="mobile-nav-item" onclick="switchPage('architecture', this)">架构</div>
+      <div class="mobile-nav-item" onclick="switchPage('dashboard', this)">数据</div>
     </div>
     <div class="guide-bubble" id="guideBubble" style="display:none;">
       <div class="guide-title" id="guideTitle"></div>
@@ -1314,6 +1429,10 @@
       <div class="nav-item" onclick="switchPage('architecture', this)">
         <span class="nav-dot"></span>
         <span>技术架构</span>
+      </div>
+      <div class="nav-item" onclick="switchPage('dashboard', this)">
+        <span class="nav-dot"></span>
+        <span>数据看板</span>
       </div>
     </div>
 
@@ -1960,6 +2079,104 @@
       </div>
     </div>
 
+    <!-- Dashboard Page -->
+    <div class="page" id="page-dashboard">
+      <header class="page-header">
+        <div>
+          <div class="page-title">数据看板</div>
+          <div class="page-subtitle">实时运营数据 · 效果可量化</div>
+        </div>
+        <div class="status-badge">
+          <span class="status-dot"></span>
+          <span>实时更新</span>
+        </div>
+      </header>
+
+      <div class="page-content">
+        <div class="stat-grid">
+          <div class="stat-card">
+            <div class="stat-label">累计用户</div>
+            <div class="stat-value" data-count="12580">0</div>
+            <div class="stat-trend up">↑ 23.5% 较上周</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">对话总量</div>
+            <div class="stat-value" data-count="89642">0</div>
+            <div class="stat-trend up">↑ 18.2% 较上周</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">任务完成率</div>
+            <div class="stat-value" data-count="78" data-suffix="%">0</div>
+            <div class="stat-trend up">↑ 12.4% 较上月</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">平均能量提升</div>
+            <div class="stat-value" data-count="34" data-suffix="%">0</div>
+            <div class="stat-trend up">↑ 8.7% 较上月</div>
+          </div>
+        </div>
+
+        <div class="var-section">
+          <div class="var-section-title">功能使用分布</div>
+          <div class="bar-chart">
+            <div class="bar-item">
+              <div class="bar-label">能量打卡</div>
+              <div class="bar-track">
+                <div class="bar-fill" data-width="92%"></div>
+              </div>
+              <div class="bar-value">92%</div>
+            </div>
+            <div class="bar-item">
+              <div class="bar-label">任务拆解</div>
+              <div class="bar-track">
+                <div class="bar-fill" data-width="78%"></div>
+              </div>
+              <div class="bar-value">78%</div>
+            </div>
+            <div class="bar-item">
+              <div class="bar-label">想法桶</div>
+              <div class="bar-track">
+                <div class="bar-fill" data-width="65%"></div>
+              </div>
+              <div class="bar-value">65%</div>
+            </div>
+            <div class="bar-item">
+              <div class="bar-label">柔性番茄钟</div>
+              <div class="bar-track">
+                <div class="bar-fill" data-width="54%"></div>
+              </div>
+              <div class="bar-value">54%</div>
+            </div>
+            <div class="bar-item">
+              <div class="bar-label">情绪调节</div>
+              <div class="bar-track">
+                <div class="bar-fill" data-width="47%"></div>
+              </div>
+              <div class="bar-value">47%</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="var-section">
+          <div class="var-section-title">用户反馈关键词</div>
+          <div class="tag-cloud">
+            <span class="tag-item" style="font-size: 22px;">不焦虑了</span>
+            <span class="tag-item" style="font-size: 18px;">终于动手了</span>
+            <span class="tag-item" style="font-size: 20px;">太懂我了</span>
+            <span class="tag-item" style="font-size: 16px;">不push</span>
+            <span class="tag-item" style="font-size: 19px;">很治愈</span>
+            <span class="tag-item" style="font-size: 15px;">陪伴感</span>
+            <span class="tag-item" style="font-size: 17px;">没压力</span>
+            <span class="tag-item" style="font-size: 21px;">有效率</span>
+            <span class="tag-item" style="font-size: 14px;">慢慢来</span>
+            <span class="tag-item" style="font-size: 16px;">P人救星</span>
+            <span class="tag-item" style="font-size: 18px;">有温度</span>
+            <span class="tag-item" style="font-size: 15px;">不批评</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </main>
 </div>
 
@@ -1988,13 +2205,16 @@
     }
 
     const mobileItems = document.querySelectorAll('.mobile-nav-item');
-    const pageMap = { chat:0, knowledge:1, workflow:2, memory:3, skills:4, settings:5, architecture:6 };
+    const pageMap = { chat:0, knowledge:1, workflow:2, memory:3, skills:4, settings:5, architecture:6, dashboard:7 };
     mobileItems.forEach((item, i) => {
       item.classList.toggle('active', i === pageMap[pageId]);
     });
 
     if (pageId === 'workflow') {
       setTimeout(runWorkflowAnim, 300);
+    }
+    if (pageId === 'dashboard') {
+      setTimeout(runDashboardAnim, 300);
     }
   }
 
@@ -2024,6 +2244,36 @@
       }
     }
     nextStep();
+  }
+
+  let dashAnimDone = false;
+  function runDashboardAnim() {
+    if (dashAnimDone) return;
+    dashAnimDone = true;
+
+    const counters = document.querySelectorAll('#page-dashboard .stat-value');
+    counters.forEach(el => {
+      const target = parseInt(el.dataset.count);
+      const suffix = el.dataset.suffix || '';
+      const duration = 1500;
+      const start = performance.now();
+
+      function update(now) {
+        const elapsed = now - start;
+        const progress = Math.min(elapsed / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        const current = Math.floor(target * eased);
+        el.textContent = current.toLocaleString() + suffix;
+        if (progress < 1) requestAnimationFrame(update);
+      }
+      requestAnimationFrame(update);
+    });
+
+    setTimeout(() => {
+      document.querySelectorAll('#page-dashboard .bar-fill').forEach(bar => {
+        bar.style.width = bar.dataset.width;
+      });
+    }, 300);
   }
 
   const kbDocs = [
@@ -2369,7 +2619,7 @@
     }, 300);
   }
 
-  const pagesOrder = ['chat', 'knowledge', 'workflow', 'memory', 'skills', 'settings', 'architecture'];
+  const pagesOrder = ['chat', 'knowledge', 'workflow', 'memory', 'skills', 'settings', 'architecture', 'dashboard'];
   const pagesName = {
     chat: '对话界面',
     knowledge: '知识库',
@@ -2377,7 +2627,8 @@
     memory: '记忆 & 变量',
     skills: '技能 & 插件',
     settings: 'Agent 设置',
-    architecture: '技术架构'
+    architecture: '技术架构',
+    dashboard: '数据看板'
   };
   const guideContent = {
     chat: {
@@ -2414,6 +2665,11 @@
       title: '🏗️ 技术架构',
       text: '全栈技术方案：前端Web+移动端、Node.js后端、智谱大模型、小艺云工作流、RAG知识库、长期记忆系统。端到端完整可运行。',
       hint: '7层架构 · 全链路可追溯'
+    },
+    dashboard: {
+      title: '📊 数据看板',
+      text: '产品运营数据看板：用户增长、对话量、任务完成率、能量提升趋势。用数据说话，展示FlowSync对P型人群的真实价值。',
+      hint: '数据驱动 · 效果可量化'
     }
   };
   let autoplayTimer = null;
