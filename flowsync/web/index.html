@@ -341,6 +341,104 @@
     color: var(--ink-muted);
   }
 
+  .demo-section {
+    margin-top: 32px;
+    text-align: center;
+    padding-top: 28px;
+    border-top: 1px solid var(--line);
+  }
+
+  .demo-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--ink-muted);
+    letter-spacing: 0.1em;
+    margin-bottom: 12px;
+  }
+
+  .demo-btn {
+    padding: 12px 28px;
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: var(--radius);
+    font-family: var(--font-serif);
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    letter-spacing: 0.02em;
+  }
+
+  .demo-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(217, 119, 87, 0.3);
+  }
+
+  .demo-hint {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--ink-muted);
+    margin-top: 10px;
+  }
+
+  .demo-control {
+    position: sticky;
+    bottom: 0;
+    background: var(--bg);
+    border-top: 1px solid var(--line);
+    padding: 8px 32px;
+    z-index: 100;
+  }
+
+  .demo-progress {
+    height: 2px;
+    background: var(--line);
+    border-radius: 1px;
+    overflow: hidden;
+    margin-bottom: 8px;
+  }
+
+  .demo-progress-bar {
+    height: 100%;
+    background: var(--accent);
+    width: 0%;
+    transition: width 0.3s ease;
+  }
+
+  .demo-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .demo-info > span {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--ink-muted);
+  }
+
+  .demo-btns {
+    display: flex;
+    gap: 8px;
+  }
+
+  .demo-btns button {
+    padding: 4px 12px;
+    background: transparent;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--ink);
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .demo-btns button:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
   .message {
     max-width: 620px;
     margin-bottom: 24px;
@@ -969,7 +1067,24 @@
             </div>
           </div>
 
+          <div class="demo-section">
+            <div class="demo-label">· 快速演示 ·</div>
+            <button class="demo-btn" onclick="startDemo()">▶ 一键演示四大功能</button>
+            <div class="demo-hint">90秒自动展示，可随时暂停</div>
+          </div>
+
           <div class="hint">Enter 发送 · Shift + Enter 换行</div>
+        </div>
+      </div>
+
+      <div class="demo-control" id="demoControl" style="display:none;">
+        <div class="demo-progress"><div class="demo-progress-bar" id="demoBar"></div></div>
+        <div class="demo-info">
+          <span id="demoStep">演示中…</span>
+          <div class="demo-btns">
+            <button onclick="toggleDemo()" id="demoToggleBtn">⏸ 暂停</button>
+            <button onclick="stopDemo()">✕ 结束</button>
+          </div>
         </div>
       </div>
 
@@ -1654,6 +1769,80 @@
     setTimeout(() => {
       container.scrollTop = container.scrollHeight;
     }, 50);
+  }
+
+  const demoScript = [
+    { role: 'user', text: '我今天状态好差，什么都不想做…', label: '1/4 能量打卡' },
+    { role: 'bot', text: '嗯…听起来今天电量不太够的样子。没关系，这种感觉我懂。\n\n先花10秒钟，告诉我你现在的感觉更接近哪一种？\n\n🟢 还行，能做事但没什么劲\n🟡 有点累，只想瘫着\n🔴 很down，动都不想动', label: '1/4 能量打卡' },
+    { role: 'user', text: '黄色吧，有点累', label: '1/4 能量打卡' },
+    { role: 'bot', text: '好，那今天就按"低电量模式"来。\n\n不安排难的事，不逼自己。今天的目标只有一个：舒服地过完今天。\n\n如果实在想做点什么，就挑一件"2分钟就能做完"的小事——比如倒杯水、整理一下桌面。做完了就算大获全胜。\n\n你觉得这样可以吗？', label: '1/4 能量打卡' },
+    { role: 'user', text: '嗯…那我想把论文开题搞了，但感觉好难', label: '2/4 任务拆解' },
+    { role: 'bot', text: '论文开题啊，听着就头大。这种大任务最容易卡住了，太正常了。\n\n我们不搞"完成开题"这么大的目标，我们拆到能抬脚就行。你看这样行不行：\n\n**第一步（5分钟）**：打开文档，把标题写上\n**第二步（10分钟）**：列3个你想研究的点，不用想好不好\n**第三步（15分钟）**：搜3篇相关论文，存到文件夹里\n\n就这三步。做完如果不想继续，完全可以停。\n\n要不要先从第一步开始？就5分钟。', label: '2/4 任务拆解' },
+    { role: 'user', text: '好，我试试', label: '2/4 任务拆解' },
+    { role: 'bot', text: '👏 光说"试试"就已经很棒了。\n\n记住：做不完也没关系，能打开文档就是胜利。\n\n对了，要不要我陪你番茄钟？25分钟，到点提醒你，想停就停。', label: '3/4 番茄钟' },
+    { role: 'user', text: '可以，来吧', label: '3/4 番茄钟' },
+    { role: 'bot', text: '好，那我们开始啦。🍅\n\n25分钟，你做你的，我陪着。\n\n不想做了随时说停，不用有任何心理负担。\n\n……（25分钟后）\n\n时间到啦。\n\n做得怎么样？不管做了多少，能坐下来开始就已经赢了。快说说，刚才有进展吗？', label: '3/4 番茄钟' },
+    { role: 'user', text: '写完标题和三点了！感觉也没那么难', label: '3/4 番茄钟' },
+    { role: 'bot', text: '你看！我说什么来着～ 一抬脚就发现路其实没那么难走。\n\n标题+三个点，这已经超棒了。是不是感觉心里那块石头轻了一点？\n\n今天就到这里也完全可以。不过——我突然有个想法，你想不想听？', label: '4/4 想法桶' },
+    { role: 'user', text: '什么想法？', label: '4/4 想法桶' },
+    { role: 'bot', text: '我在想，你可以把"论文开题拆成小步骤"这个方法，以后也用在别的事情上。\n\n就是那种——"先不想要不要做完，先想第一步是什么"的思路。\n\n不过这就是个想法而已，记下来就行，不用现在就做什么。😊\n\n今天做得够多了，去休息吧。你今天已经很棒啦。', label: '4/4 想法桶' },
+  ];
+
+  let demoIndex = 0;
+  let demoTimer = null;
+  let demoPaused = false;
+
+  function startDemo() {
+    const welcome = document.getElementById('welcomeScreen');
+    if (welcome) welcome.remove();
+    document.getElementById('demoControl').style.display = 'block';
+    demoIndex = 0;
+    demoPaused = false;
+    playNextDemo();
+  }
+
+  function playNextDemo() {
+    if (demoPaused) return;
+    if (demoIndex >= demoScript.length) {
+      document.getElementById('demoStep').textContent = '演示完成 ✓';
+      document.getElementById('demoToggleBtn').textContent = '↻ 重播';
+      return;
+    }
+
+    const item = demoScript[demoIndex];
+    const progress = ((demoIndex + 1) / demoScript.length) * 100;
+    document.getElementById('demoBar').style.width = progress + '%';
+    document.getElementById('demoStep').textContent = item.label;
+
+    if (item.role === 'user') {
+      addMessage('user', item.text);
+      demoIndex++;
+      demoTimer = setTimeout(playNextDemo, 800);
+    } else {
+      addMessage('bot', item.text, true);
+      demoIndex++;
+      const delay = Math.min(item.text.length * 35 + 1500, 8000);
+      demoTimer = setTimeout(playNextDemo, delay);
+    }
+  }
+
+  function toggleDemo() {
+    if (demoIndex >= demoScript.length) {
+      demoIndex = 0;
+      document.getElementById('demoToggleBtn').textContent = '⏸ 暂停';
+      playNextDemo();
+      return;
+    }
+    demoPaused = !demoPaused;
+    document.getElementById('demoToggleBtn').textContent = demoPaused ? '▶ 继续' : '⏸ 暂停';
+    if (!demoPaused) playNextDemo();
+  }
+
+  function stopDemo() {
+    clearTimeout(demoTimer);
+    demoIndex = demoScript.length;
+    demoPaused = false;
+    document.getElementById('demoControl').style.display = 'none';
   }
 
   init();
