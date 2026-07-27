@@ -65,6 +65,61 @@
     display: flex;
     height: 100vh;
     overflow: hidden;
+    position: relative;
+  }
+
+  .guide-bubble {
+    position: absolute;
+    top: 24px;
+    right: 48px;
+    z-index: 200;
+    max-width: 320px;
+    padding: 20px 24px;
+    background: var(--surface);
+    border: 1px solid var(--accent);
+    border-radius: var(--radius);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+    animation: slideIn 0.4s ease;
+  }
+
+  .guide-bubble::before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    right: 32px;
+    width: 14px;
+    height: 14px;
+    background: var(--surface);
+    border-top: 1px solid var(--accent);
+    border-left: 1px solid var(--accent);
+    transform: rotate(45deg);
+  }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .guide-title {
+    font-family: var(--font-serif);
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+
+  .guide-text {
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--ink);
+    margin-bottom: 10px;
+  }
+
+  .guide-hint {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--ink-muted);
+    letter-spacing: 0.05em;
   }
 
   /* Sidebar */
@@ -1060,6 +1115,11 @@
 </head>
 <body>
 <div class="app">
+    <div class="guide-bubble" id="guideBubble" style="display:none;">
+      <div class="guide-title" id="guideTitle"></div>
+      <div class="guide-text" id="guideText"></div>
+      <div class="guide-hint" id="guideHint"></div>
+    </div>
   <aside class="sidebar">
     <div class="brand">小监</div>
     <div class="brand-sub">FlowSync · Agent</div>
@@ -1973,6 +2033,38 @@
     skills: '技能 & 插件',
     settings: 'Agent 设置'
   };
+  const guideContent = {
+    chat: {
+      title: '💬 对话能力',
+      text: '这是FlowSync的核心对话界面。用户说一句话，小监就能识别意图——是想测能量、拆任务、记想法，还是需要番茄钟陪伴。',
+      hint: '支持自然语言触发，无需记忆指令'
+    },
+    knowledge: {
+      title: '📚 知识库 RAG',
+      text: '4篇专属知识库文档，包含P型人格指南、番茄工作法、情绪调节、任务拆解方法论。所有回答都会检索相关知识，保证专业准确。',
+      hint: '检索增强生成 · 知识可扩展'
+    },
+    workflow: {
+      title: '🔗 Agent 工作流',
+      text: '完整的云工作流架构：用户输入 → 意图识别 → 知识库检索 → 记忆读取 → 大模型生成 → 输出回复。5个核心节点，全链路可追溯。',
+      hint: '点击节点可查看流转路径'
+    },
+    memory: {
+      title: '🧠 长期记忆系统',
+      text: '三层记忆体系：用户变量（持久化偏好）、计数变量（原子化统计）、长期记忆（对话中提取的用户画像）。越聊越懂你。',
+      hint: '能量值/MBTI/高效时段/任务风格'
+    },
+    skills: {
+      title: '⚡ 四大核心技能',
+      text: '能量打卡、任务拆解、想法桶、柔性番茄钟——专为P型人格设计的四大能力。不催你、不push你，陪着你慢慢找到节奏。',
+      hint: '情绪优先 · 降低启动门槛'
+    },
+    settings: {
+      title: '⚙️ Agent 配置',
+      text: '完整的Agent配置体系：角色人设、系统提示词、开场对话、快捷指令、模型参数。所有设置都可以自定义，打造专属的效率伙伴。',
+      hint: '智谱 GLM-4-Flash · P型人格专属Prompt'
+    }
+  };
   let autoplayTimer = null;
   let autoplayIndex = 0;
   let autoplayRunning = false;
@@ -1990,7 +2082,7 @@
     autoplayIndex = 0;
     document.getElementById('autoplayBtn').classList.add('active');
     document.getElementById('autoplayIcon').textContent = '⏸';
-    document.getElementById('autoplayText').textContent = '轮播中…';
+    document.getElementById('autoplayText').textContent = '讲解中…';
     playNextPage();
   }
 
@@ -2000,6 +2092,7 @@
     document.getElementById('autoplayBtn').classList.remove('active');
     document.getElementById('autoplayIcon').textContent = '▶';
     document.getElementById('autoplayText').textContent = '自动轮播';
+    document.getElementById('guideBubble').style.display = 'none';
   }
 
   function playNextPage() {
@@ -2015,9 +2108,20 @@
         switchPage(pageId, item);
       }
     });
+
+    const guide = guideContent[pageId];
+    const bubble = document.getElementById('guideBubble');
+    document.getElementById('guideTitle').textContent = guide.title;
+    document.getElementById('guideText').textContent = guide.text;
+    document.getElementById('guideHint').textContent = guide.hint;
+    bubble.style.display = 'block';
+    bubble.style.animation = 'none';
+    bubble.offsetHeight;
+    bubble.style.animation = '';
+
     document.title = `FlowSync · ${pagesName[pageId]}`;
     autoplayIndex++;
-    autoplayTimer = setTimeout(playNextPage, 4000);
+    autoplayTimer = setTimeout(playNextPage, 5000);
   }
 
   init();
