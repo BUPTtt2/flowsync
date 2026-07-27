@@ -884,6 +884,12 @@
 
   .wf-arrow.active {
     background: var(--accent);
+    animation: flowLine 1s ease infinite;
+  }
+
+  @keyframes flowLine {
+    0% { background-position: 0 0; }
+    100% { background-position: 20px 0; }
   }
 
   .wf-arrow.active::after {
@@ -1736,6 +1742,38 @@
     mobileItems.forEach((item, i) => {
       item.classList.toggle('active', i === pageMap[pageId]);
     });
+
+    if (pageId === 'workflow') {
+      setTimeout(runWorkflowAnim, 300);
+    }
+  }
+
+  let wfAnimTimer = null;
+  function runWorkflowAnim() {
+    clearTimeout(wfAnimTimer);
+    const nodes = document.querySelectorAll('#workflowNodes .wf-node');
+    const arrows = document.querySelectorAll('#workflowNodes .wf-arrow');
+    nodes.forEach(n => { n.classList.remove('highlight', 'active'); });
+    arrows.forEach(a => a.classList.remove('active'));
+
+    let step = 0;
+    function nextStep() {
+      if (step < nodes.length) {
+        for (let i = 0; i <= step; i++) {
+          nodes[i].classList.add('highlight');
+          if (i === step) nodes[i].classList.add('active');
+          else nodes[i].classList.remove('active');
+        }
+        for (let i = 0; i < step; i++) {
+          arrows[i]?.classList.add('active');
+        }
+        step++;
+        wfAnimTimer = setTimeout(nextStep, 600);
+      } else {
+        nodes[nodes.length - 1].classList.remove('active');
+      }
+    }
+    nextStep();
   }
 
   const kbDocs = [
