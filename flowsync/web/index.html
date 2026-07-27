@@ -487,6 +487,25 @@
     box-shadow: 0 6px 20px rgba(217, 119, 87, 0.3);
   }
 
+  .demo-btn.secondary {
+    background: var(--card);
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+  }
+
+  .demo-btn.secondary:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    box-shadow: none;
+  }
+
+  .demo-btn-row {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-bottom: 12px;
+  }
+
   .demo-hint {
     font-family: var(--font-mono);
     font-size: 10px;
@@ -1488,9 +1507,12 @@
           </div>
 
           <div class="demo-section">
-            <div class="demo-label">· 快速演示 ·</div>
-            <button class="demo-btn" onclick="startDemo()">▶ 一键演示四大功能</button>
-            <div class="demo-hint">90秒自动展示，可随时暂停</div>
+            <div class="demo-label">· 快速体验 ·</div>
+            <div class="demo-btn-row">
+              <button class="demo-btn" onclick="startDemo()">▶ 一键演示</button>
+              <button class="demo-btn secondary" onclick="startGuideMode()">📢 讲解模式</button>
+            </div>
+            <div class="demo-hint">一键演示：90秒自动对话 · 讲解模式：自动轮播8页+讲解</div>
           </div>
 
           <div class="hint">Enter 发送 · Shift + Enter 换行</div>
@@ -2675,6 +2697,11 @@
   let autoplayTimer = null;
   let autoplayIndex = 0;
   let autoplayRunning = false;
+
+  function startGuideMode() {
+    if (autoplayRunning) return;
+    startAutoplay();
+  }
 
   function toggleAutoplay() {
     if (autoplayRunning) {
