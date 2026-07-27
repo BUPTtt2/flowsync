@@ -18,15 +18,29 @@
 
 ---
 
-## 二、快速启动（5 分钟跑起来）
+## 二、快速启动
 
-### 1. 克隆项目
+### 方式一：一键启动（推荐）
+
+**Windows**：双击 `start.bat`
+**Mac/Linux**：双击 `start.sh`（需先 `chmod +x start.sh`）
+
+脚本会自动：
+1. 检测并安装依赖（首次启动）
+2. 启动后端服务
+3. 自动打开浏览器跳转到演示页面
+
+---
+
+### 方式二：手动启动（5 分钟）
+
+#### 1. 克隆项目
 ```bash
 git clone <你的仓库地址>
 cd P人push
 ```
 
-### 2. 配置环境变量
+#### 2. 配置环境变量
 ```bash
 cp .env.example .env
 ```
@@ -35,14 +49,14 @@ cp .env.example .env
 LLM_API_KEY=你的智谱key   # 格式：id.secret，去 open.bigmodel.cn 注册
 ```
 
-### 3. 启动后端
+#### 3. 启动后端
 ```bash
 cd server
 npm install
 npm start
 ```
 
-### 4. 打开演示界面
+#### 4. 打开演示界面
 浏览器访问：**http://localhost:3000/index.html**
 
 ---
@@ -54,6 +68,8 @@ P人push/
 ├── README.md                      # 项目介绍（完整）
 ├── PRODUCT.md                     # 产品设计理念
 ├── HANDOVER.md                    # 本文档
+├── start.bat                      # ⭐ Windows一键启动脚本
+├── start.sh                       # ⭐ Mac/Linux一键启动脚本
 ├── .env.example                   # 环境变量模板
 ├── .gitignore
 │
