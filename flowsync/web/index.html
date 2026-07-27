@@ -947,6 +947,14 @@
     line-height: 1.6;
   }
 
+  .setting-hint {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--ink-muted);
+    margin-top: 8px;
+    letter-spacing: 0.03em;
+  }
+
   .setting-box {
     padding: 16px;
     background: var(--surface);
@@ -1502,22 +1510,23 @@
           <div class="setting-item">
             <div class="setting-label">用户问题建议</div>
             <div class="shortcut-list">
-              <span class="shortcut-tag">能量打卡</span>
-              <span class="shortcut-tag">任务拆解</span>
-              <span class="shortcut-tag">记个想法</span>
-              <span class="shortcut-tag">番茄钟</span>
-              <span class="shortcut-tag">我状态不好</span>
-              <span class="shortcut-tag">不想动怎么办</span>
+              <span class="shortcut-tag" onclick="sendFromSettings('测测能量')">能量打卡</span>
+              <span class="shortcut-tag" onclick="sendFromSettings('帮我拆解一个任务')">任务拆解</span>
+              <span class="shortcut-tag" onclick="sendFromSettings('我有一个想法')">记个想法</span>
+              <span class="shortcut-tag" onclick="sendFromSettings('陪我番茄钟')">番茄钟</span>
+              <span class="shortcut-tag" onclick="sendFromSettings('我状态不好')">我状态不好</span>
+              <span class="shortcut-tag" onclick="sendFromSettings('不想动怎么办')">不想动怎么办</span>
             </div>
+            <div class="setting-hint">点击跳转到聊天并发送</div>
           </div>
           <div class="setting-item">
             <div class="setting-label">快捷指令</div>
             <div class="shortcut-list">
-              <span class="shortcut-tag">#能量</span>
-              <span class="shortcut-tag">#拆解</span>
-              <span class="shortcut-tag">#想法</span>
-              <span class="shortcut-tag">#番茄</span>
-              <span class="shortcut-tag">#休息</span>
+              <span class="shortcut-tag" onclick="sendFromSettings('#能量')">#能量</span>
+              <span class="shortcut-tag" onclick="sendFromSettings('#拆解')">#拆解</span>
+              <span class="shortcut-tag" onclick="sendFromSettings('#想法')">#想法</span>
+              <span class="shortcut-tag" onclick="sendFromSettings('#番茄')">#番茄</span>
+              <span class="shortcut-tag" onclick="sendFromSettings('#休息')">#休息</span>
             </div>
           </div>
         </div>
@@ -1909,6 +1918,15 @@
     arrows.forEach((a, i) => {
       a.classList.toggle('active', i < step);
     });
+  }
+
+  function sendFromSettings(text) {
+    switchPage('chat', document.querySelector('.nav-item:first-child'));
+    setTimeout(() => {
+      const input = document.getElementById('messageInput');
+      input.value = text;
+      sendMessage();
+    }, 300);
   }
 
   init();
