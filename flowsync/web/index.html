@@ -1125,6 +1125,103 @@
     50% { opacity: 0.4; }
   }
 
+  /* Architecture */
+  .arch-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin-bottom: 32px;
+  }
+
+  .arch-layer {
+    display: flex;
+    align-items: stretch;
+    gap: 16px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 20px;
+    transition: all 0.3s ease;
+  }
+
+  .arch-layer:hover {
+    border-color: var(--accent);
+    transform: translateX(4px);
+  }
+
+  .arch-layer-num {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    background: var(--accent);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+
+  .arch-layer-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    justify-content: center;
+  }
+
+  .arch-layer-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+    letter-spacing: -0.015em;
+  }
+
+  .arch-layer-desc {
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+
+  .arch-tags {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-top: 4px;
+  }
+
+  .arch-tag {
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-size: 11px;
+    font-weight: 500;
+    padding: 2px 10px;
+    border-radius: 20px;
+    letter-spacing: -0.01em;
+  }
+
+  .arch-connector {
+    width: 2px;
+    height: 20px;
+    background: var(--border);
+    margin: 0 0 0 38px;
+    position: relative;
+  }
+
+  .arch-connector::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid var(--border);
+  }
+
   /* Mobile */
   @media (max-width: 768px) {
     .app { flex-direction: column; }
@@ -1169,6 +1266,7 @@
       <div class="mobile-nav-item" onclick="switchPage('memory', this)">记忆</div>
       <div class="mobile-nav-item" onclick="switchPage('skills', this)">技能</div>
       <div class="mobile-nav-item" onclick="switchPage('settings', this)">设置</div>
+      <div class="mobile-nav-item" onclick="switchPage('architecture', this)">架构</div>
     </div>
     <div class="guide-bubble" id="guideBubble" style="display:none;">
       <div class="guide-title" id="guideTitle"></div>
@@ -1212,6 +1310,10 @@
       <div class="nav-item" onclick="switchPage('settings', this)">
         <span class="nav-dot"></span>
         <span>Agent设置</span>
+      </div>
+      <div class="nav-item" onclick="switchPage('architecture', this)">
+        <span class="nav-dot"></span>
+        <span>技术架构</span>
       </div>
     </div>
 
@@ -1710,6 +1812,154 @@
         </div>
       </div>
     </div>
+
+    <!-- Architecture Page -->
+    <div class="page" id="page-architecture">
+      <header class="page-header">
+        <div>
+          <div class="page-title">技术架构</div>
+          <div class="page-subtitle">全栈方案 · 端到端可运行</div>
+        </div>
+        <div class="status-badge">
+          <span class="status-dot"></span>
+          <span>7 层架构</span>
+        </div>
+      </header>
+
+      <div class="page-content">
+        <div class="arch-stack">
+          <div class="arch-layer">
+            <div class="arch-layer-num">L1</div>
+            <div class="arch-layer-content">
+              <div class="arch-layer-title">用户端</div>
+              <div class="arch-layer-desc">Web 控制台 · HarmonyOS App · 小艺 Agent</div>
+              <div class="arch-tags">
+                <span class="arch-tag">HTML/CSS/JS</span>
+                <span class="arch-tag">ArkTS</span>
+                <span class="arch-tag">响应式</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="arch-connector"></div>
+
+          <div class="arch-layer">
+            <div class="arch-layer-num">L2</div>
+            <div class="arch-layer-content">
+              <div class="arch-layer-title">API 网关</div>
+              <div class="arch-layer-desc">RESTful API · JWT 鉴权 · IP 限流</div>
+              <div class="arch-tags">
+                <span class="arch-tag">Express</span>
+                <span class="arch-tag">CORS</span>
+                <span class="arch-tag">Rate Limit</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="arch-connector"></div>
+
+          <div class="arch-layer">
+            <div class="arch-layer-num">L3</div>
+            <div class="arch-layer-content">
+              <div class="arch-layer-title">Agent 编排层</div>
+              <div class="arch-layer-desc">意图识别 · 工作流调度 · 工具调用</div>
+              <div class="arch-tags">
+                <span class="arch-tag">17 意图分类</span>
+                <span class="arch-tag">云工作流</span>
+                <span class="arch-tag">Function Call</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="arch-connector"></div>
+
+          <div class="arch-layer">
+            <div class="arch-layer-num">L4</div>
+            <div class="arch-layer-content">
+              <div class="arch-layer-title">大模型层</div>
+              <div class="arch-layer-desc">智谱 GLM-4-Flash · 系统 Prompt 工程</div>
+              <div class="arch-tags">
+                <span class="arch-tag">GLM-4-Flash</span>
+                <span class="arch-tag">P型人格Prompt</span>
+                <span class="arch-tag">多轮对话</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="arch-connector"></div>
+
+          <div class="arch-layer">
+            <div class="arch-layer-num">L5</div>
+            <div class="arch-layer-content">
+              <div class="arch-layer-title">记忆系统</div>
+              <div class="arch-layer-desc">用户变量 · 计数变量 · 长期记忆</div>
+              <div class="arch-tags">
+                <span class="arch-tag">SQLite</span>
+                <span class="arch-tag">向量检索</span>
+                <span class="arch-tag">画像提取</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="arch-connector"></div>
+
+          <div class="arch-layer">
+            <div class="arch-layer-num">L6</div>
+            <div class="arch-layer-content">
+              <div class="arch-layer-title">知识库 RAG</div>
+              <div class="arch-layer-desc">P型人格指南 · 番茄工作法 · 情绪调节</div>
+              <div class="arch-tags">
+                <span class="arch-tag">4 篇文档</span>
+                <span class="arch-tag">检索增强</span>
+                <span class="arch-tag">可扩展</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="arch-connector"></div>
+
+          <div class="arch-layer">
+            <div class="arch-layer-num">L7</div>
+            <div class="arch-layer-content">
+              <div class="arch-layer-title">基础设施</div>
+              <div class="arch-layer-desc">小艺开放平台 · 智谱 API · Railway 部署</div>
+              <div class="arch-tags">
+                <span class="arch-tag">小艺云工作流</span>
+                <span class="arch-tag">智谱AI</span>
+                <span class="arch-tag">Docker</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="var-section">
+          <div class="var-section-title">技术选型亮点</div>
+          <div class="var-grid" style="grid-template-columns: repeat(2, 1fr);">
+            <div class="info-card">
+              <div class="info-label">前端</div>
+              <div class="info-value" style="font-size:14px;">单文件 HTML 架构</div>
+              <div class="info-desc">零依赖，打开即用，易于分发</div>
+            </div>
+            <div class="info-card">
+              <div class="info-label">后端</div>
+              <div class="info-value" style="font-size:14px;">Node.js + Express</div>
+              <div class="info-desc">轻量高效，快速迭代部署</div>
+            </div>
+            <div class="info-card">
+              <div class="info-label">AI</div>
+              <div class="info-value" style="font-size:14px;">智谱 GLM-4-Flash</div>
+              <div class="info-desc">免费额度充足，响应速度快</div>
+            </div>
+            <div class="info-card">
+              <div class="info-label">Agent</div>
+              <div class="info-value" style="font-size:14px;">小艺云工作流</div>
+              <div class="info-desc">可视化编排，低代码搭建</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </main>
 </div>
 
@@ -1738,7 +1988,7 @@
     }
 
     const mobileItems = document.querySelectorAll('.mobile-nav-item');
-    const pageMap = { chat:0, knowledge:1, workflow:2, memory:3, skills:4, settings:5 };
+    const pageMap = { chat:0, knowledge:1, workflow:2, memory:3, skills:4, settings:5, architecture:6 };
     mobileItems.forEach((item, i) => {
       item.classList.toggle('active', i === pageMap[pageId]);
     });
@@ -2119,14 +2369,15 @@
     }, 300);
   }
 
-  const pagesOrder = ['chat', 'knowledge', 'workflow', 'memory', 'skills', 'settings'];
+  const pagesOrder = ['chat', 'knowledge', 'workflow', 'memory', 'skills', 'settings', 'architecture'];
   const pagesName = {
     chat: '对话界面',
     knowledge: '知识库',
     workflow: '工作流',
     memory: '记忆 & 变量',
     skills: '技能 & 插件',
-    settings: 'Agent 设置'
+    settings: 'Agent 设置',
+    architecture: '技术架构'
   };
   const guideContent = {
     chat: {
@@ -2158,6 +2409,11 @@
       title: '⚙️ Agent 配置',
       text: '完整的Agent配置体系：角色人设、系统提示词、开场对话、快捷指令、模型参数。所有设置都可以自定义，打造专属的效率伙伴。',
       hint: '智谱 GLM-4-Flash · P型人格专属Prompt'
+    },
+    architecture: {
+      title: '🏗️ 技术架构',
+      text: '全栈技术方案：前端Web+移动端、Node.js后端、智谱大模型、小艺云工作流、RAG知识库、长期记忆系统。端到端完整可运行。',
+      hint: '7层架构 · 全链路可追溯'
     }
   };
   let autoplayTimer = null;
