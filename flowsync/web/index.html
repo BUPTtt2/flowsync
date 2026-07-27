@@ -183,6 +183,37 @@
     color: var(--ink-soft);
   }
 
+  .autoplay-btn {
+    width: 100%;
+    margin-top: 14px;
+    padding: 10px 14px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--ink);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+    letter-spacing: 0.05em;
+  }
+
+  .autoplay-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--accent-soft);
+  }
+
+  .autoplay-btn.active {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--accent-soft);
+  }
+
   /* Main content */
   .main {
     flex: 1;
@@ -1075,6 +1106,10 @@
         <div class="energy-fill"></div>
       </div>
       <div class="energy-text">运行中 · 已连接</div>
+      <button class="autoplay-btn" id="autoplayBtn" onclick="toggleAutoplay()">
+        <span id="autoplayIcon">▶</span>
+        <span id="autoplayText">自动轮播</span>
+      </button>
     </div>
   </aside>
 
@@ -1927,6 +1962,62 @@
       input.value = text;
       sendMessage();
     }, 300);
+  }
+
+  const pagesOrder = ['chat', 'knowledge', 'workflow', 'memory', 'skills', 'settings'];
+  const pagesName = {
+    chat: '对话界面',
+    knowledge: '知识库',
+    workflow: '工作流',
+    memory: '记忆 & 变量',
+    skills: '技能 & 插件',
+    settings: 'Agent 设置'
+  };
+  let autoplayTimer = null;
+  let autoplayIndex = 0;
+  let autoplayRunning = false;
+
+  function toggleAutoplay() {
+    if (autoplayRunning) {
+      stopAutoplay();
+    } else {
+      startAutoplay();
+    }
+  }
+
+  function startAutoplay() {
+    autoplayRunning = true;
+    autoplayIndex = 0;
+    document.getElementById('autoplayBtn').classList.add('active');
+    document.getElementById('autoplayIcon').textContent = '⏸';
+    document.getElementById('autoplayText').textContent = '轮播中…';
+    playNextPage();
+  }
+
+  function stopAutoplay() {
+    autoplayRunning = false;
+    clearTimeout(autoplayTimer);
+    document.getElementById('autoplayBtn').classList.remove('active');
+    document.getElementById('autoplayIcon').textContent = '▶';
+    document.getElementById('autoplayText').textContent = '自动轮播';
+  }
+
+  function playNextPage() {
+    if (!autoplayRunning) return;
+    if (autoplayIndex >= pagesOrder.length) {
+      stopAutoplay();
+      return;
+    }
+    const pageId = pagesOrder[autoplayIndex];
+    const navItems = document.querySelectorAll('.nav-item');
+    navItems.forEach((item, i) => {
+      if (i === autoplayIndex) {
+        switchPage(pageId, item);
+      }
+    });
+    document.title = `FlowSync · ${pagesName[pageId]}`;
+    autoplayIndex++;
+    autoplayTimer = setTimeout(playNextPage, 4000);
   }
 
   init();
